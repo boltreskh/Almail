@@ -1,3 +1,49 @@
+// Importações do Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, getDoc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Variáveis globais do Firebase (fornecidas pelo ambiente Canvas)
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+// Inicializa firebaseConfig de forma mais robusta
+let firebaseConfig = {};
+try {
+    if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+        const parsedConfig = JSON.parse(__firebase_config);
+        // Garante que parsedConfig é um objeto e não nulo/array
+        if (typeof parsedConfig === 'object' && parsedConfig !== null && !Array.isArray(parsedConfig)) {
+            firebaseConfig = parsedConfig;
+        }
+    }
+} catch (e) {
+    console.warn("Não foi possível analisar __firebase_config. Usando configuração padrão vazia.", e);
+}
+
+// Se firebaseConfig ainda estiver vazia ou faltando projectId, forneça um mínimo padrão
+if (!firebaseConfig.projectId) {
+    console.warn("projectId do Firebase não encontrado na configuração fornecida. Os recursos do Firebase serão desativados.");
+    firebaseConfig = {
+        apiKey: "AIzaSyBLyIuKHL1QGtixLrvkwb-SvWrwcD7zRxA",
+        authDomain: "almail-9b8d9.firebaseapp.com",
+        projectId: "almail-9b8d9",
+        storageBucket: "almail-9b8d9.firebasestorage.app",
+        messagingSenderId: "842016603414",
+        appId: "1:842016603414:web:1fb43568432d8b7e9ba437",
+        measurementId: "G-YFJTNHDHGP"
+    };
+}
+
+const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+// Inicializa o Firebase
+let app;
+let db;
+let auth;
+let userId = null; // ID do usuário autenticado ou anônimo
+let isAuthReady = false; // Flag para indicar que a autenticação foi concluída
+
+// Elementos do DOM
 const notificationModalOverlay = document.getElementById('notification-modal-overlay');
 const modalStartButton = document.getElementById('modal-start-button');
 const chatContainer = document.getElementById('chat-container');
