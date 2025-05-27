@@ -65,7 +65,7 @@ const translations = {
         errorMessage: 'Ocorreu um erro. Por favor, tente novamente.',
         inputPlaceholder: 'Pergunte à Almail...',
         sendButtonAria: 'Enviar Mensagem',
-        footerCopyright: '&copy; 2025 Almail Suporte IA. Todos os direitos reservados.',
+        footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
         footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.',
         welcomeMessage: "Olá! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender seus clientes. Para otimizar nosso atendimento, por favor, me informe o *nome do cliente* que você está atendendo. Se não for para um cliente específico, podemos seguir normalmente. Estou aqui para ajudar!",
         systemInstructions: `Você é a Almail, uma assistente virtual especializada em suporte para Cartões do Mercado Pago.
@@ -146,7 +146,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         errorMessage: 'An error occurred. Please try again.',
         inputPlaceholder: 'Ask Almail...',
         sendButtonAria: 'Send Message',
-        footerCopyright: '&copy; 2025 Almail AI Support. All rights reserved.',
+        footerCopyright: '© 2025 Almail AI Support. All rights reserved.',
         footerDisclaimer: 'This AI uses public data and does not store Mercado Pago information.',
         welcomeMessage: "Hello! I'm Almail, your virtual assistant specialized in support for Mercado Pago Cards. I'm here to help you serve your customers. To optimize our service, please inform me the *customer's name* you are assisting. If it's not for a specific customer, we can proceed normally. I'm here to help!",
         systemInstructions: `You are Almail, a virtual assistant specialized in support for Mercado Pago Cards.
@@ -227,7 +227,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         errorMessage: 'Ocurrió un error. Por favor, inténtalo de nuevo.',
         inputPlaceholder: 'Pregunta a Almail...',
         sendButtonAria: 'Enviar Mensaje',
-        footerCopyright: '&copy; 2025 Almail Soporte IA. Todos los derechos reservados.',
+        footerCopyright: '© 2025 Almail Soporte IA. Todos los derechos reservados.',
         footerDisclaimer: 'Esta IA utiliza datos públicos y no almacena información de Mercado Pago.',
         welcomeMessage: "¡Hola! Soy Almail, tu asistente virtual especializada en soporte para Tarjetas de Mercado Pago. Estoy aquí para ayudarte a atender a tus clientes. Para optimizar nuestro servicio, por favor, infórmame el *nombre del cliente* al que estás asistiendo. Si no es para un cliente específico, podemos continuar normalmente. ¡Estoy aquí para ayudarte!",
         systemInstructions: `Eres Almail, una asistente virtual especializada en soporte para Tarjetas de Mercado Pago.
