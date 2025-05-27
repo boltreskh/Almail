@@ -1,0 +1,922 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --font-primary: 'Poppins', sans-serif;
+
+    /* Light Mode Colors */
+    --lm-bg-body: #f0f4f8; /* Cinza azulado muito claro */
+    --lm-bg-app: #ffffff;
+    --lm-bg-chat: #f8f9fa; /* Fundo do chat um pouco mais escuro que o app */
+    --lm-text-primary: #1a202c; /* Quase preto */
+    --lm-text-secondary: #4a5568; /* Cinza escuro */
+    --lm-text-tertiary: #718096; /* Cinza médio */
+    --lm-border-color: #e2e8f0; /* Cinza claro para bordas */
+    --lm-shadow-color: rgba(0, 0, 0, 0.08);
+    --lm-accent-primary: #3b82f6; /* Azul primário */
+    --lm-accent-secondary: #2563eb; /* Azul mais escuro */
+    --lm-header-bg: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+    --lm-footer-bg: #e9ecef;
+    --lm-modal-bg: #ffffff;
+    --lm-modal-overlay: rgba(0, 0, 0, 0.3);
+    --lm-button-bg: var(--lm-accent-primary);
+    --lm-button-text: #ffffff;
+    --lm-button-hover-bg: var(--lm-accent-secondary);
+    --lm-control-button-bg: #f0f4f8;
+    --lm-control-button-text: var(--lm-text-secondary);
+    --lm-control-button-hover-bg: #e2e8f0;
+    --lm-user-message-bg: linear-gradient(135deg, var(--lm-accent-primary) 0%, var(--lm-accent-secondary) 100%);
+    --lm-user-message-text: #ffffff;
+    --lm-ai-message-bg: #e9ecef; /* Cinza claro para mensagens da IA */
+    --lm-ai-message-text: var(--lm-text-primary);
+    --lm-input-bg: #ffffff;
+    --lm-input-border: var(--lm-border-color);
+    --lm-input-focus-border: var(--lm-accent-primary);
+    --lm-input-text: var(--lm-text-primary);
+    --lm-loading-bg: #e9ecef;
+    --lm-loading-text: var(--lm-text-secondary);
+    --lm-error-bg: #fee2e2; /* Fundo vermelho claro para erro */
+    --lm-error-text: #dc2626; /* Vermelho escuro para texto de erro */
+
+    /* Cores da logo para o tema claro - PADRONIZADAS */
+    --almail-logo-color-light-1: #3b82f6; /* Cor inicial do gradiente do modal */
+    --almail-logo-color-light-2: #8b5cf6; /* Cor final do gradiente do modal */
+    --almail-logo-stroke-light: var(--lm-text-primary); /* Cor do traço para o tema claro, agora adaptável */
+
+    /* Cores para feedback */
+    --lm-feedback-button-bg: #e2e8f0;
+    --lm-feedback-button-text: #718096;
+    --lm-feedback-button-hover-bg: #cbd5e0;
+    --lm-feedback-liked-bg: #4CAF50; /* Verde para gostei */
+    --lm-feedback-liked-text: #ffffff;
+    --lm-feedback-disliked-bg: #F44336; /* Vermelho para não gostei */
+    --lm-feedback-disliked-text: #ffffff;
+}
+
+html[data-theme='dark'] {
+    --dm-bg-body: #0d1117; /* GitHub dark background */
+    --dm-bg-app: #161b22; /* GitHub dark container */
+    --dm-bg-chat: #0d1117; /* Mesmo que o body para um look mais imersivo */
+    --dm-text-primary: #c9d1d9; /* GitHub dark text */
+    --dm-text-secondary: #8b949e; /* GitHub dark secondary text */
+    --dm-text-tertiary: #586069; /* GitHub dark tertiary text */
+    --dm-border-color: #30363d; /* GitHub dark border */
+    --dm-shadow-color: rgba(0, 0, 0, 0.3);
+    --dm-accent-primary: #58a6ff; /* Azul claro vibrante */
+    --dm-accent-secondary: #3b82f6; /* Azul um pouco mais escuro */
+    --dm-header-bg: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    --dm-footer-bg: #111827;
+    --dm-modal-bg: #1f2937; /* Azul acinzentado escuro para modais */
+    --dm-modal-overlay: rgba(0, 0, 0, 0.7);
+    --dm-button-bg: var(--dm-accent-primary);
+    --dm-button-text: #0d1117; /* Texto escuro no botão claro */
+    --dm-button-hover-bg: var(--dm-accent-secondary);
+    --dm-control-button-bg: #21262d; /* GitHub dark button */
+    --dm-control-button-text: var(--dm-text-primary);
+    --dm-control-button-hover-bg: #30363d;
+    --dm-user-message-bg: linear-gradient(135deg, var(--dm-accent-primary) 0%, var(--dm-accent-secondary) 100%);
+    --dm-user-message-text: #ffffff;
+    --dm-ai-message-bg: #21262d; /* Cinza escuro para mensagens da IA */
+    --dm-ai-message-text: var(--dm-text-primary);
+    --dm-input-bg: #0d1117; /* Fundo do input igual ao body */
+    --dm-input-border: var(--dm-border-color);
+    --dm-input-focus-border: var(--dm-accent-primary);
+    --dm-input-text: var(--dm-text-primary);
+    --dm-loading-bg: #21262d;
+    --dm-loading-text: var(--dm-text-secondary);
+    --dm-error-bg: #4b1f1f; /* Fundo vermelho escuro para erro */
+    --dm-error-text: #ff8989; /* Vermelho claro para texto de erro */
+
+    /* Cores da logo para o tema escuro - PADRONIZADAS */
+    --almail-logo-color-dark-1: #3b82f6; /* Cor inicial do gradiente do modal */
+    --almail-logo-color-dark-2: #8b5cf6; /* Cor final do gradiente do modal */
+    --almail-logo-stroke-dark: #c9d1d9; /* Cor do traço para o tema escuro (texto primário) */
+
+    /* Cores para feedback */
+    --dm-feedback-button-bg: #30363d;
+    --dm-feedback-button-text: #8b949e;
+    --dm-feedback-button-hover-bg: #444c56;
+    --dm-feedback-liked-bg: #28a745; /* Verde para gostei */
+    --dm-feedback-liked-text: #ffffff;
+    --dm-feedback-disliked-bg: #cb2431; /* Vermelho para não gostei */
+    --dm-feedback-disliked-text: #ffffff;
+}
+
+/* Define as variáveis CSS com base no tema */
+body {
+    background-color: var(--lm-bg-body);
+    color: var(--lm-text-primary);
+    font-family: var(--font-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+html[data-theme='dark'] body {
+    background-color: var(--dm-bg-body);
+    color: var(--dm-text-primary);
+}
+
+/* Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px; /* Espaçamento nas laterais em telas menores */
+    overflow: hidden; /* Evitar scrollbar desnecessário no body */
+}
+
+/* App Wrapper */
+.app-wrapper {
+    width: 100%;
+    max-width: 900px; /* Um pouco menor para elegância */
+    height: calc(100vh - 32px); /* Ajusta à altura da viewport com padding */
+    max-height: 800px; /* Limite máximo de altura */
+    display: flex;
+    flex-direction: column;
+    border-radius: 24px; /* Bordas mais arredondadas */
+    box-shadow: 0 20px 40px var(--lm-shadow-color);
+    overflow: hidden;
+    background-color: var(--lm-bg-app);
+    border: 1px solid var(--lm-border-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+html[data-theme='dark'] .app-wrapper {
+    background-color: var(--dm-bg-app);
+    border-color: var(--dm-border-color);
+    box-shadow: 0 20px 40px var(--dm-shadow-color);
+}
+
+/* Modais (Notificação e Tutorial) */
+.notification-modal-overlay,
+.tutorial-modal-overlay,
+.confirmation-modal-overlay { /* Adicionado o novo modal */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    background-color: var(--lm-modal-overlay);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+html[data-theme='dark'] .notification-modal-overlay,
+html[data-theme='dark'] .tutorial-modal-overlay,
+html[data-theme='dark'] .confirmation-modal-overlay { /* Adicionado o novo modal */
+    background-color: var(--dm-modal-overlay);
+}
+
+.notification-modal-overlay.show,
+.tutorial-modal-overlay.show,
+.confirmation-modal-overlay.show { /* Adicionado o novo modal */
+    opacity: 1;
+    visibility: visible;
+}
+
+.notification-modal-content,
+.tutorial-modal-content,
+.confirmation-modal-content { /* Adicionado o novo modal */
+    background-color: var(--lm-modal-bg);
+    color: var(--lm-text-primary);
+    border-radius: 16px;
+    padding: 32px 40px;
+    max-width: 550px; /* Um pouco mais estreito */
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    position: relative; /* Para o botão de fechar do tutorial */
+}
+html[data-theme='dark'] .notification-modal-content,
+html[data-theme='dark'] .tutorial-modal-content,
+html[data-theme='dark'] .confirmation-modal-content { /* Adicionado o novo modal */
+    background-color: var(--dm-modal-bg);
+    color: var(--dm-text-primary);
+}
+
+.notification-modal-overlay.show .notification-modal-content,
+.tutorial-modal-overlay.show .tutorial-modal-content,
+.confirmation-modal-overlay.show .confirmation-modal-content { /* Adicionado o novo modal */
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal-icon-container {
+    margin-bottom: 24px;
+}
+.modal-icon-container svg {
+    filter: drop-shadow(0px 4px 10px rgba(59, 130, 246, 0.4));
+}
+html[data-theme='dark'] .modal-icon-container svg {
+     filter: drop-shadow(0px 4px 10px rgba(88, 166, 255, 0.3));
+}
+
+
+.notification-modal-content h2 {
+    font-size: 1.75rem; /* Ajuste de tamanho */
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+.notification-modal-content p {
+    font-size: 1rem;
+    color: var(--lm-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+html[data-theme='dark'] .notification-modal-content p {
+    color: var(--dm-text-secondary);
+}
+.notification-modal-content .credits {
+    font-size: 0.8rem;
+    color: var(--lm-text-tertiary);
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+html[data-theme='dark'] .notification-modal-content .credits {
+    color: var(--dm-text-tertiary);
+}
+
+/* Botão Start/OK dos Modais */
+.start-button {
+    background: var(--lm-button-bg);
+    color: var(--lm-button-text);
+    padding: 12px 32px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+html[data-theme='dark'] .start-button {
+    background: var(--dm-button-bg);
+    color: var(--dm-button-text);
+    box-shadow: 0 4px 15px rgba(88, 166, 255, 0.2);
+}
+
+.start-button:hover {
+    background-color: var(--lm-button-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+html[data-theme='dark'] .start-button:hover {
+    background-color: var(--dm-button-hover-bg);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Tutorial Modal Específico */
+.tutorial-modal-content .close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--lm-text-tertiary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+html[data-theme='dark'] .tutorial-modal-content .close-button {
+    color: var(--dm-text-tertiary);
+}
+.tutorial-modal-content .close-button:hover {
+    color: var(--lm-text-primary);
+    background-color: rgba(0,0,0,0.05);
+}
+html[data-theme='dark'] .tutorial-modal-content .close-button:hover {
+    color: var(--dm-text-primary);
+    background-color: rgba(255,255,255,0.08);
+}
+.tutorial-modal-content .close-button i {
+    width: 24px;
+    height: 24px;
+}
+
+#tutorial-content {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 10px; /* Espaço para scrollbar */
+    color: var(--lm-text-secondary);
+    line-height: 1.7;
+}
+html[data-theme='dark'] #tutorial-content {
+     color: var(--dm-text-secondary);
+}
+#tutorial-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--lm-accent-primary);
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+html[data-theme='dark'] #tutorial-content h3 {
+    color: var(--dm-accent-primary);
+}
+#tutorial-content ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
+#tutorial-content li {
+    margin-bottom: 6px;
+}
+
+/* Chat Container */
+.chat-container {
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+}
+
+/* Chat Header */
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--lm-header-bg);
+    border-bottom: 1px solid var(--lm-border-color);
+    color: var(--lm-text-primary);
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    min-height: 80px;
+}
+html[data-theme='dark'] .chat-header {
+    background: var(--dm-header-bg);
+    border-color: var(--dm-border-color);
+    color: var(--dm-text-primary);
+}
+
+.almail-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.almail-logo {
+    transition: transform 0.3s ease;
+    width: 48px;
+    height: 48px;
+}
+.almail-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Estilos para as cores da logo baseadas no tema */
+.almail-logo .logo-stop-color-1 {
+    stop-color: var(--almail-logo-color-light-1);
+}
+.almail-logo .logo-stop-color-2 {
+    stop-color: var(--almail-logo-color-light-2);
+}
+html[data-theme='dark'] .almail-logo .logo-stop-color-1 {
+    stop-color: var(--almail-logo-color-dark-1);
+}
+html[data-theme='dark'] .almail-logo .logo-stop-color-2 {
+    stop-color: var(--almail-logo-color-dark-2);
+}
+
+/* Estilos para a cor do traço da logo baseados no tema */
+.almail-logo .logo-stroke {
+    stroke: var(--almail-logo-stroke-light);
+}
+.almail-logo .logo-fill-arrow {
+    fill: var(--almail-logo-stroke-light);
+}
+
+html[data-theme='dark'] .almail-logo .logo-stroke {
+    stroke: var(--almail-logo-stroke-dark);
+}
+html[data-theme='dark'] .almail-logo .logo-fill-arrow {
+    fill: var(--almail-logo-stroke-dark);
+}
+
+
+.chat-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.header-subtitle {
+    font-size: 0.8rem;
+    color: var(--lm-text-tertiary);
+    margin-left: -100px;
+    font-weight: 500;
+}
+html[data-theme='dark'] .header-subtitle {
+    color: var(--dm-text-tertiary);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.control-button {
+    background-color: var(--lm-control-button-bg);
+    color: var(--lm-control-button-text);
+    border: 1px solid var(--lm-border-color);
+    border-radius: 10px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+html[data-theme='dark'] .control-button {
+    background-color: var(--dm-control-button-bg);
+    color: var(--dm-control-button-text);
+    border-color: var(--dm-border-color);
+}
+.control-button:hover {
+    background-color: var(--lm-control-button-hover-bg);
+    border-color: var(--lm-accent-primary);
+    color: var(--lm-accent-primary);
+    transform: translateY(-1px);
+}
+html[data-theme='dark'] .control-button:hover {
+    background-color: var(--dm-control-button-hover-bg);
+    border-color: var(--dm-accent-primary);
+    color: var(--dm-accent-primary);
+}
+.control-button i, .control-button span i {
+    width: 22px;
+    height: 22px;
+}
+
+/* Estilo para o seletor de idioma */
+#language-selector {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 1px solid var(--lm-border-color);
+    background-color: var(--lm-control-button-bg);
+    color: var(--lm-control-button-text);
+    cursor: pointer;
+    appearance: none; /* Remove o estilo padrão do select */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E"); /* Seta para baixo */
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 1.2em;
+    padding-right: 28px; /* Espaço para a seta */
+    min-width: 120px; /* Largura mínima para o texto completo */
+}
+
+html[data-theme='dark'] #language-selector {
+    border: 1px solid var(--dm-border-color);
+    background-color: var(--dm-control-button-bg);
+    color: var(--dm-control-button-text);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23c9d1d9'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E"); /* Seta para baixo para tema escuro */
+}
+
+#language-selector:hover {
+    border-color: var(--lm-accent-primary);
+    background-color: var(--lm-control-button-hover-bg);
+}
+
+html[data-theme='dark'] #language-selector:hover {
+    border-color: var(--dm-accent-primary);
+    background-color: var(--dm-control-button-hover-bg);
+}
+
+
+/* Chat Messages Area */
+.chat-messages {
+    flex-grow: 1;
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--lm-bg-chat);
+    transition: background-color 0.3s ease;
+}
+html[data-theme='dark'] .chat-messages {
+    background-color: var(--dm-bg-chat);
+}
+/* Custom scrollbar */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--lm-border-color);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+html[data-theme='dark'] .chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--dm-border-color);
+}
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: var(--lm-text-tertiary);
+}
+html[data-theme='dark'] .chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: var(--dm-text-tertiary);
+}
+
+
+/* Message Bubbles */
+.message-bubble {
+    max-width: 75%;
+    padding: 12px 18px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    line-height: 1.6;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: messageFadeIn 0.4s ease forwards;
+}
+
+@keyframes messageFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-message {
+    background: var(--lm-user-message-bg);
+    color: var(--lm-user-message-text);
+    align-self: flex-end;
+    border-bottom-right-radius: 6px;
+}
+html[data-theme='dark'] .user-message {
+    background: var(--dm-user-message-bg);
+    color: var(--dm-user-message-text);
+}
+
+.ai-message {
+    background-color: var(--lm-ai-message-bg);
+    color: var(--lm-ai-message-text);
+    align-self: flex-start;
+    border-bottom-left-radius: 6px;
+}
+html[data-theme='dark'] .ai-message {
+    background-color: var(--dm-ai-message-bg);
+    color: var(--dm-ai-message-text);
+}
+.ai-message strong {
+    color: var(--lm-accent-primary);
+}
+html[data-theme='dark'] .ai-message strong {
+    color: var(--dm-accent-primary);
+}
+.ai-message em {
+    font-style: italic;
+}
+.ai-message ul, .ai-message ol {
+    margin-left: 20px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.ai-message br + br {
+    display: block;
+    content: "";
+    margin-top: 8px;
+}
+
+/* Feedback Buttons */
+.feedback-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.feedback-button {
+    background-color: var(--lm-feedback-button-bg);
+    color: var(--lm-feedback-button-text);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+html[data-theme='dark'] .feedback-button {
+    background-color: var(--dm-feedback-button-bg);
+    color: var(--dm-feedback-button-text);
+}
+
+.feedback-button i {
+    width: 16px;
+    height: 16px;
+}
+
+.feedback-button:hover:not(:disabled) {
+    background-color: var(--lm-feedback-button-hover-bg);
+    transform: translateY(-1px);
+}
+html[data-theme='dark'] .feedback-button:hover:not(:disabled) {
+    background-color: var(--dm-feedback-button-hover-bg);
+}
+
+.feedback-button.liked {
+    background-color: var(--lm-feedback-liked-bg);
+    color: var(--lm-feedback-liked-text);
+}
+html[data-theme='dark'] .feedback-button.liked {
+    background-color: var(--dm-feedback-liked-bg);
+    color: var(--dm-feedback-liked-text);
+}
+
+.feedback-button.disliked {
+    background-color: var(--lm-feedback-disliked-bg);
+    color: var(--lm-feedback-disliked-text);
+}
+html[data-theme='dark'] .feedback-button.disliked {
+    background-color: var(--dm-feedback-disliked-bg);
+    color: var(--dm-feedback-disliked-text);
+}
+
+.feedback-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* Loading Indicator */
+.loading-indicator {
+    opacity: 0; /* Começa invisível */
+    transition: opacity 0.3s ease; /* Transição para o fade in/out */
+    align-self: flex-start;
+    margin-left: 24px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background-color: var(--lm-loading-bg);
+    color: var(--lm-loading-text);
+    border-radius: 18px;
+    border-bottom-left-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+html[data-theme='dark'] .loading-indicator {
+    background-color: var(--dm-loading-bg);
+    color: var(--dm-loading-text);
+}
+.loading-indicator.show { /* Classe adicionada pelo JS */
+    opacity: 1;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 3px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    opacity: 0.7;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error Message */
+.error-message {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--lm-error-bg);
+    color: var(--lm-error-text);
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin: 0 24px 16px 24px;
+    text-align: center;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+html[data-theme='dark'] .error-message {
+    background-color: var(--dm-error-bg);
+    color: var(--dm-error-text);
+}
+.error-message.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: flex;
+}
+.error-message i {
+    width: 18px;
+    height: 18px;
+}
+
+/* Chat Input Area */
+.chat-input-area {
+    display: flex;
+    align-items: flex-end;
+    padding: 16px 24px;
+    border-top: 1px solid var(--lm-border-color);
+    background-color: var(--lm-bg-app);
+    gap: 12px;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+html[data-theme='dark'] .chat-input-area {
+    border-color: var(--dm-border-color);
+    background-color: var(--dm-bg-app);
+}
+
+.chat-input {
+    flex-grow: 1;
+    padding: 12px 18px;
+    border: 1px solid var(--lm-input-border);
+    border-radius: 12px;
+    outline: none;
+    resize: none;
+    min-height: 50px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-color: var(--lm-input-bg);
+    color: var(--lm-input-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+}
+html[data-theme='dark'] .chat-input {
+    border-color: var(--dm-input-border);
+    background-color: var(--dm-input-bg);
+    color: var(--dm-input-text);
+}
+.chat-input::placeholder {
+    color: var(--lm-text-tertiary);
+    opacity: 0.8;
+}
+html[data-theme='dark'] .chat-input::placeholder {
+    color: var(--dm-text-tertiary);
+}
+.chat-input:focus {
+    border-color: var(--lm-input-focus-border);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+html[data-theme='dark'] .chat-input:focus {
+    border-color: var(--dm-input-focus-border);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+}
+
+.send-button {
+    background: var(--lm-button-bg);
+    color: var(--lm-button-text);
+    border: none;
+    border-radius: 12px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+}
+html[data-theme='dark'] .send-button {
+    background: var(--dm-button-bg);
+    color: var(--dm-button-text);
+}
+.send-button:hover {
+    background-color: var(--lm-button-hover-bg);
+    transform: scale(1.05);
+}
+html[data-theme='dark'] .send-button:hover {
+    background-color: var(--dm-button-hover-bg);
+}
+.send-button i {
+    width: 24px;
+    height: 24px;
+}
+
+/* App Footer */
+.app-footer {
+    padding: 12px 24px;
+    font-size: 0.75rem;
+    text-align: center;
+    background-color: var(--lm-footer-bg);
+    color: var(--lm-text-tertiary);
+    border-top: 1px solid var(--lm-border-color);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+html[data-theme='dark'] .app-footer {
+    background-color: var(--dm-footer-bg);
+    color: var(--dm-text-tertiary);
+    border-color: var(--dm-border-color);
+}
+.app-footer p {
+    margin: 4px 0;
+    line-height: 1.5;
+}
+.app-footer .disclaimer {
+    opacity: 0.8;
+}
+
+/* Tailwind Overrides or Utilities (if needed) */
+.hidden {
+    display: none !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+    }
+    .app-wrapper {
+        max-width: 100%;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+    }
+    .notification-modal-content,
+    .tutorial-modal-content,
+    .confirmation-modal-content {
+        max-width: 90%;
+        padding: 24px;
+    }
+    .chat-header {
+        padding: 12px 16px;
+        min-height: 70px;
+    }
+    .almail-logo-container svg {
+        width: 36px;
+        height: 36px;
+    }
+    .header-subtitle {
+        display: none;
+    }
+    .control-button {
+        width: 40px;
+        height: 40px;
+    }
+    .control-button i, .control-button span i {
+        width: 20px;
+        height: 20px;
+    }
+    .chat-messages {
+        padding: 16px;
+    }
+    .chat-input-area {
+        padding: 12px 16px;
+        gap: 8px;
+    }
+    .chat-input {
+        min-height: 46px;
+        padding: 10px 14px;
+    }
+    .send-button {
+        width: 46px;
+        height: 46px;
+    }
+    .app-footer {
+        padding: 10px 16px;
+        font-size: 0.7rem;
+    }
+    #language-selector {
+        min-width: 100px; /* Ajusta largura para telas menores */
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        padding-right: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .notification-modal-content h2,
+    .tutorial-modal-content h2,
+    .confirmation-modal-content h2 {
+        font-size: 1.5rem;
+    }
+    .notification-modal-content p,
+    .confirmation-modal-content p {
+        font-size: 0.9rem;
+    }
+    .start-button {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+    }
+    .chat-header h1 {
+        font-size: 1.1rem;
+    }
+    .message-bubble {
+        max-width: 85%;
+        padding: 10px 14px;
+    }
+}
