@@ -16,21 +16,20 @@
                 <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="modalLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                            <stop offset="0%" class="logo-stop-color-1" />
+                            <stop offset="100%" class="logo-stop-color-2" />
                         </linearGradient>
                     </defs>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M50 0C22.3858 0 0 22.3858 0 50C0 77.6142 22.3858 100 50 100C77.6142 100 100 77.6142 100 50C100 22.3858 77.6142 0 50 0ZM50 10C72.0914 10 90 27.9086 90 50C90 72.0914 72.0914 90 50 90C27.9086 90 10 72.0914 10 50C10 27.9086 27.9086 10 50 10Z" fill="url(#modalLogoGradient)"/>
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold" data-i18n="welcomeModalTitle">Bem-vindo(a) ao Almail Suporte IA!</h2>
-            <p class="text-lg" data-i18n="welcomeModalSubtitle">
-                Sua assistente inteligente para otimizar o suporte no time de Cartões do Mercado Pago.
+            <h2 class="text-3xl font-bold" data-i18n="creditsModalTitle">Créditos</h2>
+            <p class="text-lg" data-i18n="creditsModalSubtitle">
+                Uma ferramenta de suporte inteligente para o time de Cartões do Mercado Pago.
             </p>
-            <p class="text-sm credits" data-i18n="welcomeModalCredits">
-                Criado por: Lucas Carneiro, Lucas Candido & Time de Cartões (Concentrix).
-            </p>
-            <button id="modal-start-button" class="start-button" data-i18n="welcomeModalButton">Começar Agora</button>
+            <div class="credits-list" data-i18n="creditsModalDescription">
+                </div>
+            <button id="modal-start-button" class="start-button" data-i18n="creditsModalButton">Entendi</button>
         </div>
     </div>
 
@@ -74,8 +73,21 @@
         </div>
     </div>
 
+    <div class="confirmation-modal-overlay" id="custom-confirm-overlay">
+        <div class="confirmation-modal-content" id="custom-confirm-content">
+            <div class="modal-icon-container">
+                <i data-feather="alert-triangle" class="text-yellow-500" style="width: 60px; height: 60px;"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-4" id="custom-confirm-message"></h2>
+            <div class="flex justify-center gap-4">
+                <button id="custom-confirm-yes" class="start-button" data-i18n="restartConfirmYes">Sim</button>
+                <button id="custom-confirm-no" class="start-button" data-i18n="restartConfirmNo">Não</button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-wrapper" id="app-wrapper">
-        <div class="chat-container" id="chat-container">
+        <div class="top-section">
             <div class="chat-header">
                 <div class="almail-logo-container">
                     <svg class="almail-logo" width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,44 +110,84 @@
                 </div>
                 <span class="header-subtitle" data-i18n="headerSubtitle">Suporte IA - Cartões</span>
                 <div class="header-controls">
-                    <select id="language-selector" class="control-button">
-                        <option value="pt-BR">Português</option>
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                    </select>
+                    <button id="home-button" class="control-button" aria-label="Voltar para o Início" data-i18n="homeButtonAria">
+                        <i data-feather="home"></i>
+                    </button>
+                    <button id="language-toggle-button" class="control-button language-toggle-button">
+                        <i data-feather="globe"></i>
+                        <span id="current-language-text">PT</span>
+                    </button>
                     <button id="tutorial-button" class="control-button" aria-label="Abrir Tutorial" data-i18n="tutorialButtonAria">
                         <i data-feather="help-circle"></i>
                     </button>
                     <button id="theme-toggle" class="control-button" aria-label="Alternar Tema" data-i18n="themeToggleButtonAria">
                         <span id="theme-icon"><i data-feather="moon"></i></span>
                     </button>
-                    <button id="restart-button" class="control-button" aria-label="Reiniciar Conversa" data-i18n="restartButtonAria">
-                        <i data-feather="refresh-cw"></i>
+                    <button id="main-sidebar-toggle-button" class="control-button" aria-label="Alternar Histórico">
+                        <i data-feather="chevron-left"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="chat-messages" id="chat-messages">
+            <div class="content-area" id="content-area">
+                <div class="initial-screen" id="initial-screen">
+                    <div class="initial-screen-content">
+                        <svg class="almail-logo-large" width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="largeLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" class="logo-stop-color-1" />
+                                    <stop offset="100%" class="logo-stop-color-2" />
+                                </linearGradient>
+                                <filter id="largeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M50 0C22.3858 0 0 22.3858 0 50C0 77.6142 22.3858 100 50 100C77.6142 100 100 77.6142 100 50C100 22.3858 77.6142 0 50 0ZM50 10C72.0914 10 90 27.9086 90 50C90 72.0914 72.0914 90 50 90C27.9086 90 10 72.0914 10 50C10 27.9086 27.9086 10 50 10Z" fill="url(#largeLogoGradient)" filter="url(#largeGlow)"/>
+                        </svg>
+                        <h2 class="text-3xl font-bold mt-6" data-i18n="initialScreenTitle">Bem-vindo(a) à Almail Suporte IA!</h2>
+                        <p class="text-lg mt-4" data-i18n="initialScreenSubtitle">Sua assistente inteligente para otimizar o suporte no time de Cartões do Mercado Pago.</p>
+                        <p class="text-md mt-2 text-gray-600" data-i18n="initialScreenDescription">Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados a cartões. Clique em "Nova Conversa" para começar a interagir com a IA.</p>
+                        <button id="start-chat-button" class="start-button mt-8" data-i18n="startChatButton">Iniciar Nova Conversa</button>
+                    </div>
                 </div>
 
-            <div class="loading-indicator" id="loading-indicator">
-                <div class="spinner"></div>
-                <span data-i18n="typingIndicator">Almail está digitando...</span>
-            </div>
+                <div class="chat-and-input-area hidden" id="chat-and-input-area">
+                    <div class="chat-messages" id="chat-messages">
+                    </div>
 
-            <div class="error-message hidden" id="error-message">
-                <i data-feather="alert-triangle"></i>
-                <span data-i18n="errorMessage">Ocorreu um erro. Por favor, tente novamente.</span>
-            </div>
+                    <div class="loading-indicator" id="loading-indicator">
+                        <div class="spinner"></div>
+                        <span data-i18n="typingIndicator">Almail está digitando...</span>
+                    </div>
 
-            <div class="chat-input-area">
-                <textarea id="user-input" class="chat-input" placeholder="Pergunte à Almail..." rows="1" data-i18n="inputPlaceholder"></textarea>
-                <button id="send-button" class="send-button" aria-label="Enviar Mensagem" data-i18n="sendButtonAria">
-                    <i data-feather="send"></i>
-                </button>
+                    <div class="error-message hidden" id="error-message">
+                        <i data-feather="alert-triangle"></i>
+                        <span data-i18n="errorMessage">Ocorreu um erro. Por favor, tente novamente.</span>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <textarea id="user-input" class="chat-input" placeholder="Pergunte à Almail..." rows="1" data-i18n="inputPlaceholder"></textarea>
+                        <button id="send-button" class="send-button" aria-label="Enviar Mensagem" data-i18n="sendButtonAria">
+                            <i data-feather="send"></i>
+                        </button>
+                    </div>
+                </div>
+                <aside class="conversation-history-sidebar" id="conversation-history-sidebar">
+                    <div class="sidebar-header">
+                        <h3 data-i18n="historyTitle">Histórico de Conversas</h3>
+                        </div>
+                    <ul id="history-list" class="history-list">
+                        </ul>
+                    <div class="sidebar-footer">
+                        <p data-i18n="userIdDisplay">ID do Usuário: <span id="user-id-text">Carregando...</span></p>
+                    </div>
+                </aside>
             </div>
         </div>
-
         <footer class="app-footer">
             <p data-i18n="footerCopyright">© 2025 Almail Suporte IA. Todos os direitos reservados.</p>
             <p class="disclaimer" data-i18n="footerDisclaimer">Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.</p>
