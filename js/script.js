@@ -245,16 +245,16 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 **Directrices operacionales:**
 1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre Tarjetas Mercado Pago y servicios relacionados (emisión, bloqueo, transacciones, límites, facturas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
 2.  **Linguagem:** Formal, profesional, clara, concisa y directa. **Nunca uses emojis.** Utiliza un lenguaje que sea útil para el colaborador, como si estuvieras proporcionando un "guion" o "base de conocimiento".
-3.  **Personalización e Identificación:**
+3.  **Personalização e Identificação:**
     * **Siempre dirígete al colaborador.** Usa términos como "tú", "colaborador", "tu duda".
-    * **Nunca confundas al colaborador con el cliente.** Si el nombre del cliente es proporcionado por el colaborador (ej: "El cliente [Nombre del Cliente] preguntó..."), úsalo para personalizar la *respuesta que el colaborador le dará al cliente*. Ej: "Para el cliente [Nombre del Cliente], puedes informar que...".
-    * Si el nombre del cliente no se proporciona, usa términos neutrales como "el cliente" o "el usuario" al referirte a ellos, pero siempre en el contexto de cómo debe interactuar el *colaborador*.
-4.  **Objetividad y Claridad:** Responde solo a lo que se preguntó, proporcionando información precisa y basada en las políticas y procedimientos de Mercado Pago. Evita divagaciones.
-5.  **Seguridad y Datos Sensibles:** **NUNCA solicites ni proceses información sensible del cliente** (contraseñas, números completos de tarjeta, CVV, datos bancarios completos, etc.). Si el colaborador menciona dicha información, instrúyelo a manejarla de forma segura y offline, sin que la IA la procese o almacene.
-6.  **Resolución y Profundización:** Tu objetivo es ayudar al colaborador a resolver el problema del cliente. Si la respuesta inicial no es suficiente, reformula o profundiza la explicación, siempre pensando en cómo el colaborador puede usar esta información.
-7.  **Estructura de la Respuesta:** Utiliza Markdown para organizar la información (negrita, cursiva, listas, bloques de código si es necesario) para facilitar la lectura y el uso por parte del colaborador. Considera usar títulos y subtítulos para respuestas más complejas.
-8.  **Contexto y Continuidade:** Basate en el historial de la conversación para mantener la coherencia y la relevancia. Si el colaborador hace una pregunta de seguimiento, utiliza el contexto anterior para proporcionar una respuesta más completa.
-9.  **Proactividad (Opcional):** Si es apropiado, sugiere al colaborador los próximos pasos o información adicional que pueda ser relevante para la atención al cliente.`,
+    * **Nunca confundas al colaborador con el cliente.** Si el nombre del cliente es proporcionado por el colaborador (ej: "El cliente [Nome do Cliente] preguntó..."), úsalo para personalizar la *resposta que o colaborador le dará al cliente*. Ej: "Para el cliente [Nome do Cliente], puedes informar que...".
+    * Si el nombre do cliente não for fornecido, use termos neutros como "el cliente" ou "el usuario" ao se referir a eles, mas sempre no contexto de como o *colaborador* deve interagir.
+4.  **Objetividade e Clareza:** Responda solo a lo que se preguntó, proporcionando información precisa y basada en las políticas y procedimientos de Mercado Pago. Evita divagações.
+5.  **Segurança e Dados Sensíveis:** **NUNCA solicites ni proceses información sensible del cliente** (contraseñas, números completos de tarjeta, CVV, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrúyelo a manejarla de forma segura y offline, sin que la IA la procese o almacene.
+6.  **Resolución e Profundización:** Tu objetivo es ayudar al colaborador a resolver el problema del cliente. Si la respuesta inicial no es suficiente, reformula o profundiza la explicación, siempre pensando en cómo el colaborador puede usar esta información.
+7.  **Estrutura da Resposta:** Utiliza Markdown para organizar la información (negrita, cursiva, listas, bloques de código se necesario) para facilitar la lectura y el uso por parte del colaborador. Considera usar títulos y subtítulos para respuestas más complexas.
+8.  **Contexto e Continuidade:** Basate en el historial de la conversación para mantener la coherencia y la relevancia. Si o colaborador fizer uma pergunta de seguimiento, utiliza o contexto anterior para proporcionar uma resposta mais completa.
+9.  **Proatividade (Opcional):** Si es apropriado, sugiere al colaborador los próximos pasos o información adicional que pueda ser relevante para la atención al cliente.`,
         tutorialText: `
             <h3 class="text-2xl font-bold text-center mb-5 text-blue-700">Descubre Almail: Tu Plataforma de Soporte Inteligente</h3>
             <p class="mb-4 text-lg leading-relaxed">Bienvenido(a) a Almail, tu socio estratégico para optimizar el soporte en Tarjetas de Mercado Pago. Esta guía está diseñada para empoderarte a sacar el máximo provecho de nuestra inteligencia artificial, asegurando interacciones eficientes y resultados superiores.</p>
@@ -415,6 +415,7 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
 // Simula o efeito de digitação para a mensagem da IA
 function typeMessage(text, addFeedbackButtons = false) {
     loadingIndicator.style.display = 'flex';
+    loadingIndicator.classList.add('show'); // Adiciona a classe 'show'
     userInput.disabled = true;
     sendButton.disabled = true;
     userInput.classList.add('disabled');
@@ -433,6 +434,7 @@ function typeMessage(text, addFeedbackButtons = false) {
         if (!isConversationActive) {
             clearTimeout(typingTimeoutId);
             typingTimeoutId = null;
+            loadingIndicator.classList.remove('show'); // Remove a classe 'show'
             loadingIndicator.style.display = 'none';
             userInput.disabled = false;
             sendButton.disabled = false;
@@ -448,6 +450,7 @@ function typeMessage(text, addFeedbackButtons = false) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
             typingTimeoutId = setTimeout(typeCharacter, typingSpeed);
         } else {
+            loadingIndicator.classList.remove('show'); // Remove a classe 'show'
             loadingIndicator.style.display = 'none';
             userInput.disabled = false;
             sendButton.disabled = false;
@@ -530,7 +533,8 @@ function restartConversation() {
     userInput.focus();
     errorMessage.classList.add('hidden');
     errorMessage.classList.remove('show');
-    loadingIndicator.style.display = 'none';
+    loadingIndicator.classList.remove('show'); // Garante que o indicador esteja oculto
+    loadingIndicator.style.display = 'none'; // Garante que o display esteja 'none'
     hideConfirmationModal();
 
     userInput.disabled = false;
@@ -621,6 +625,7 @@ async function sendMessage(isRegeneration = false) {
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
     loadingIndicator.style.display = 'flex';
+    loadingIndicator.classList.add('show'); // Adiciona a classe 'show'
 
     try {
         const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ";
@@ -685,6 +690,7 @@ async function sendMessage(isRegeneration = false) {
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('show');
         if (loadingIndicator.style.display === 'flex') {
+            loadingIndicator.classList.remove('show'); // Remove a classe 'show' em caso de erro
             loadingIndicator.style.display = 'none';
         }
         setTimeout(() => {
@@ -692,6 +698,7 @@ async function sendMessage(isRegeneration = false) {
             errorMessage.classList.remove('show');
         }, 7000);
     } finally {
+        loadingIndicator.classList.remove('show'); // Remove a classe 'show' no final
         loadingIndicator.style.display = 'none';
     }
 }
