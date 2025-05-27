@@ -37,11 +37,10 @@
     --lm-error-bg: #fee2e2; /* Fundo vermelho claro para erro */
     --lm-error-text: #dc2626; /* Vermelho escuro para texto de erro */
 
-    /* Cores da logo para o tema claro - PADRONIZADAS */
-    --almail-logo-color-light-1: #3b82f6; /* Cor inicial do gradiente do modal */
-    --almail-logo-color-light-2: #8b5cf6; /* Cor final do gradiente do modal */
-    --almail-logo-stroke-light: var(--lm-text-primary); /* Cor do traço para o tema claro, agora adaptável */
-    --lm-logo-shadow-color: rgba(59, 130, 246, 0.4); /* Sombra da logo para tema claro */
+    /* Cores da nova logo para o tema claro */
+    --almail-logo-circle-light: #1a202c; /* Cor do círculo externo (quase preto) */
+    --almail-logo-symbol-light: #ffffff; /* Cor do símbolo de IA interno (branco) */
+    --lm-logo-shadow-color: rgba(0, 0, 0, 0.15); /* Sombra da logo para tema claro */
 
     /* Cores para feedback */
     --lm-feedback-button-bg: #e2e8f0;
@@ -109,11 +108,10 @@ html[data-theme='dark'] {
     --dm-error-bg: #4b1f1f; /* Fundo vermelho escuro para erro */
     --dm-error-text: #ff8989; /* Vermelho claro para texto de erro */
 
-    /* Cores da logo para o tema escuro - PADRONIZADAS */
-    --almail-logo-color-dark-1: #3b82f6; /* Cor inicial do gradiente do modal */
-    --almail-logo-color-dark-2: #8b5cf6; /* Cor final do gradiente do modal */
-    --almail-logo-stroke-dark: #c9d1d9; /* Cor do traço para o tema escuro (texto primário) */
-    --dm-logo-shadow-color: rgba(88, 166, 255, 0.3); /* Sombra da logo para tema escuro */
+    /* Cores da nova logo para o tema escuro */
+    --almail-logo-circle-dark: #c9d1d9; /* Cor do círculo externo (texto primário) */
+    --almail-logo-symbol-dark: #161b22; /* Cor do símbolo de IA interno (fundo do app) */
+    --dm-logo-shadow-color: rgba(0, 0, 0, 0.4); /* Sombra da logo para tema escuro */
 
     /* Cores para feedback */
     --dm-feedback-button-bg: #30363d;
@@ -307,19 +305,42 @@ html[data-theme='dark'] .modal-icon-container svg {
      filter: drop-shadow(0px 4px 10px var(--dm-logo-shadow-color)); /* Usando variável de sombra */
 }
 
-/* Regras de stop-color para os gradientes da logo */
-.logo-stop-color-1 {
-    stop-color: var(--almail-logo-color-light-1);
+/* Novas regras de preenchimento para a logo SVG */
+.almail-logo .logo-circle-fill,
+.almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-circle-light);
 }
-.logo-stop-color-2 {
-    stop-color: var(--almail-logo-color-light-2);
+.almail-logo .logo-symbol-fill,
+.almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-symbol-light);
+    stroke: var(--almail-logo-symbol-light); /* Para as linhas do símbolo */
 }
-html[data-theme='dark'] .logo-stop-color-1 {
-    stop-color: var(--almail-logo-color-dark-1);
+
+html[data-theme='dark'] .almail-logo .logo-circle-fill,
+html[data-theme='dark'] .almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-circle-dark);
 }
-html[data-theme='dark'] .logo-stop-color-2 {
-    stop-color: var(--almail-logo-color-dark-2);
+html[data-theme='dark'] .almail-logo .logo-symbol-fill,
+html[data-theme='dark'] .almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-symbol-dark);
+    stroke: var(--almail-logo-symbol-dark); /* Para as linhas do símbolo */
 }
+
+/* Removido: Regras de preenchimento para o favicon SVG, agora embutidas no SVG */
+/* .fav-logo-circle-fill {
+    fill: var(--almail-logo-circle-light);
+}
+.fav-logo-symbol-fill {
+    fill: var(--almail-logo-symbol-light);
+    stroke: var(--almail-logo-symbol-light);
+}
+html[data-theme='dark'] .fav-logo-circle-fill {
+    fill: var(--almail-logo-circle-dark);
+}
+html[data-theme='dark'] .fav-logo-symbol-fill {
+    fill: var(--almail-logo-symbol-dark);
+    stroke: var(--almail-logo-symbol-dark);
+} */
 
 
 .notification-modal-content h2 {
@@ -493,19 +514,25 @@ html[data-theme='dark'] .chat-header {
     transform: scale(1.1) rotate(5deg);
 }
 
-/* Estilos para a cor do traço da logo baseados no tema */
-.almail-logo .logo-stroke {
-    stroke: var(--almail-logo-stroke-light);
+/* Novas regras de preenchimento para a logo SVG */
+.almail-logo .logo-circle-fill,
+.almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-circle-light);
 }
-.almail-logo .logo-fill-arrow {
-    fill: var(--almail-logo-stroke-light);
+.almail-logo .logo-symbol-fill,
+.almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-symbol-light);
+    stroke: var(--almail-logo-symbol-light); /* Para as linhas do símbolo */
 }
 
-html[data-theme='dark'] .almail-logo .logo-stroke {
-    stroke: var(--almail-logo-stroke-dark);
+html[data-theme='dark'] .almail-logo .logo-circle-fill,
+html[data-theme='dark'] .almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-circle-dark);
 }
-html[data-theme='dark'] .almail-logo .logo-fill-arrow {
-    fill: var(--almail-logo-stroke-dark);
+html[data-theme='dark'] .almail-logo .logo-symbol-fill,
+html[data-theme='dark'] .almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
+    fill: var(--almail-logo-symbol-dark);
+    stroke: var(--almail-logo-symbol-dark); /* Para as linhas do símbolo */
 }
 
 
@@ -1321,7 +1348,7 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
         border-right: none;
         border-left: 1px solid var(--lm-sidebar-border);
         transform: translateX(100%);
-        transition: transform 0.3s ease-in-out, border-left 0.3s ease;
+        transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, border-left 0.3s ease;
         z-index: 100;
         background-color: var(--lm-sidebar-bg);
         box-shadow: -5px 0 15px rgba(0,0,0,0.2);
