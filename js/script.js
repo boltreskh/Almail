@@ -185,6 +185,7 @@ Seu objetivo principal é **auxiliar o colaborador** a fornecer um atendimento d
 Você deve agir como um **agente de suporte para o colaborador**, fornecendo informações precisas e estruturadas para que ele possa, por sua vez, ajudar o cliente.
 
 **É CRÍTICO que você responda SEMPRE e SOMENTE em Português (Brasil).**
+**Nunca utilize palavras negativas como: infelizmente, frustração, decepção, desapontamento, desgosto, decepcionado.**
 
 **Informações do Atendimento Atual:**
 * **Nome do Colaborador:** {COLLABORATOR_NAME}
@@ -311,6 +312,7 @@ Your main objective is to **assist the collaborator** in providing excellent cus
 You should act as a **support agent for the collaborator**, providing accurate and structured information so that they, in turn, can help the customer.
 
 **It is CRITICAL that you respond ALWAYS and ONLY in English.**
+**Never use negative words such as: unfortunately, frustration, disappointment, disgust, disheartened, disappointed.**
 
 **Current Service Information:**
 * **Collaborator Name:** {COLLABORATOR_NAME}
@@ -437,6 +439,7 @@ Tu objetivo principal es **ayudar al colaborador** a proporcionar un excelente s
 Debes actuar como un **agente de soporte para el colaborador**, proporcionando información precisa y estructurada para que él, a su vez, possa ajudar o cliente.
 
 **Es CRÍTICO que respondas SEMPRE e SOMENTE em Español.**
+**Nunca utilices palabras negativas como: desafortunadamente, frustración, decepción, desilusión, disgusto, decepcionado.**
 
 **Información del Servicio Actual:**
 * **Nombre del Colaborador:** {COLLABORATOR_NAME}
@@ -1163,7 +1166,7 @@ async function sendMessage(isRegeneration = false) {
         if (serviceChannel === 'email') {
             channelSpecificInstructions = `
 * **Canal de Email:** As respostas devem ser mais diretas, com menos exploração para levar o cliente a uma solução mais rápida. Use soluções com empatia, conexão emocional, parafraseando para demonstrar escuta ativa e focando na necessidade do cliente.
-    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Pago."
+    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Pago. (Parafraseie o problema do usuário aqui)"
     * Após este parágrafo, siga com a tratativa do caso com a solução.
 `;
         } else if (serviceChannel === 'chat') {
@@ -1202,6 +1205,8 @@ async function sendMessage(isRegeneration = false) {
 * **Canal C2C (Voz):** As respostas seguirão as mesmas 4 etapas do canal de Chat, mas com algumas adaptações para o atendimento por voz.
     * **Aviso Importante para o Atendente:** No início da interação, atente-se ao tom de voz do usuário para se adequar a esse tom de voz e possa se conectar melhor ao perfil emocional do usuário.
     * As soluções devem ser mais diretas para agilizar o atendimento.
+    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Pago. (Parafraseie o problema do usuário aqui)"
+    * **Sugestões de Perguntas:** Sempre inclua sugestões de perguntas para guiar o atendente para soluções direcionadas, similar ao canal de chat.
     * **1. BOAS-VINDAS MELI:** (Mesmas subetapas do Chat)
         * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Pago.
         * Personalizar o contato: Se dirigir ao usuário pelo nome com proximidade.
