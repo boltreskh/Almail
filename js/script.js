@@ -44,8 +44,9 @@ let userId = null; // ID do usuário autenticado ou anônimo
 let isAuthReady = false; // Flag para indicar que a autenticação foi concluída
 
 // Elementos do DOM
-const notificationModalOverlay = document.getElementById('notification-modal-overlay');
-const modalStartButton = document.getElementById('modal-start-button');
+const creditsModalOverlay = document.getElementById('credits-modal-overlay'); // NOVO: Modal de créditos
+const creditsCloseButton = document.getElementById('credits-close-button'); // NOVO: Botão de fechar do modal de créditos
+const creditsOkButton = document.getElementById('credits-ok-button'); // NOVO: Botão "Entendi" do modal de créditos
 
 // Novos elementos para o modal de dados iniciais
 const initialDataModalOverlay = document.getElementById('initial-data-modal-overlay');
@@ -53,12 +54,11 @@ const collaboratorNameInput = document.getElementById('collaborator-name-input')
 const clientNameInput = document.getElementById('client-name-input');
 const serviceChannelSelect = document.getElementById('service-channel-select');
 const initialDataConfirmButton = document.getElementById('initial-data-confirm-button');
-const initialDataCloseButton = document.getElementById('initial-data-close-button'); // NOVO: Botão de fechar do modal de dados iniciais
+const initialDataCloseButton = document.getElementById('initial-data-close-button');
 
-
-const chatAndInputArea = document.getElementById('chat-and-input-area'); // ID correto agora
-const initialScreen = document.getElementById('initial-screen'); // Novo elemento da tela inicial
-const startChatButton = document.getElementById('start-chat-button'); // Novo botão para iniciar chat
+const chatAndInputArea = document.getElementById('chat-and-input-area');
+const initialScreen = document.getElementById('initial-screen');
+const startChatButton = document.getElementById('start-chat-button');
 const appWrapper = document.getElementById('app-wrapper');
 const chatMessages = document.getElementById('chat-messages');
 const userInput = document.getElementById('user-input');
@@ -71,14 +71,16 @@ const tutorialButton = document.getElementById('tutorial-button');
 const tutorialModalOverlay = document.getElementById('tutorial-modal-overlay');
 const tutorialCloseButton = document.getElementById('tutorial-close-button');
 const tutorialOkButton = document.getElementById('tutorial-ok-button');
-const homeButton = document.getElementById('home-button'); // Novo: Botão de Início no cabeçalho
+const homeButton = document.getElementById('home-button');
+
+// NOVO: Botão de Créditos no cabeçalho
+const creditsButton = document.getElementById('credits-button');
 
 // Novo: Botão único de alternância de idioma
 const languageToggleButton = document.getElementById('language-toggle-button');
-const currentLanguageText = document.getElementById('current-language-text'); // Novo: Elemento para o texto do idioma
+const currentLanguageText = document.getElementById('current-language-text');
 
-
-// Elementos para o modal de confirmação de reiniciar conversa (ainda existem, mas não são usados pelo botão)
+// Elementos para o modal de confirmação de reiniciar conversa
 const confirmationModalOverlay = document.getElementById('confirmation-modal-overlay');
 const confirmRestartYesButton = document.getElementById('confirm-restart-yes');
 const confirmRestartNoButton = document.getElementById('confirm-restart-no');
@@ -91,8 +93,8 @@ const confirmLanguageNoButton = document.getElementById('confirm-language-no');
 // Elementos do histórico de conversas
 const conversationHistorySidebar = document.getElementById('conversation-history-sidebar');
 const historyList = document.getElementById('history-list');
-const mainSidebarToggleButton = document.getElementById('main-sidebar-toggle-button'); // Novo botão no header principal
-const contentArea = document.getElementById('content-area'); // Adicionado para controlar classe no content-area
+const mainSidebarToggleButton = document.getElementById('main-sidebar-toggle-button');
+const contentArea = document.getElementById('content-area');
 
 // Variável para armazenar o ID do timeout da digitação, permitindo cancelá-lo.
 let typingTimeoutId = null;
@@ -107,7 +109,6 @@ let collaboratorName = null;
 // Nova variável para armazenar o canal de atendimento
 let serviceChannel = null;
 
-
 // Variável para armazenar o idioma atual e o idioma pendente de confirmação
 let currentLanguage = 'pt-BR'; // Padrão
 const availableLanguages = ['pt-BR', 'en', 'es']; // Idiomas disponíveis
@@ -116,30 +117,31 @@ const availableLanguages = ['pt-BR', 'en', 'es']; // Idiomas disponíveis
 let currentConversationId = null;
 
 // Variável para controlar o estado da sidebar. Inicia como 'false' para vir fechada por padrão.
-let isSidebarVisible = false; // Alterado para 'false' para iniciar fechada
+let isSidebarVisible = false;
 
 // Objeto de traduções
 const translations = {
     'pt-BR': {
         appTitle: 'Almail Suporte IA - Cartões',
-        creditsModalTitle: 'Créditos', // Título do modal de créditos
-        creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Cartões do Mercado Pago.', // Subtitulo
+        creditsModalTitle: 'Créditos',
+        creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Cartões do Mercado Pago.',
         creditsModalDescription: `
             <ul class="list-none p-0 text-center">
                 <li class="mb-2"><strong>Desenvolvedores:</strong></li>
                 <li class="mb-1">Lucas Carneiro</li>
                 <li class="mb-1">Lucas Candido</li>
+                <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoio e Colaboração:</strong></li>
                 <li class="mb-1">Time de Cartões (Concentrix)</li>
             </ul>
-        `, // Descrição detalhada dos créditos
-        creditsModalButton: 'Entendi', // Texto do botão
-        // Novos textos para o modal de dados iniciais
+        `,
+        creditsModalButton: 'Entendi',
+        creditsButtonAria: 'Ver Créditos', // NOVO: Texto para o aria-label do botão de créditos
         initialDataModalTitle: 'Informações Iniciais',
         initialDataModalSubtitle: 'Por favor, preencha os dados para otimizar o atendimento.',
         collaboratorNameLabel: 'Seu Nome:',
         collaboratorNamePlaceholder: 'Ex: Ana Silva',
-        clientNameLabel: 'Nome do Cliente:', // Alterado para obrigatório
+        clientNameLabel: 'Nome do Cliente:',
         clientNamePlaceholder: 'Ex: João Souza',
         serviceChannelLabel: 'Canal de Atendimento:',
         channelChat: 'Chat',
@@ -160,25 +162,25 @@ const translations = {
         headerSubtitle: 'Suporte IA - Cartões',
         tutorialButtonAria: 'Abrir Tutorial',
         themeToggleButtonAria: 'Alternar Tema',
-        homeButtonAria: 'Voltar para o Início', // Adicionado para o novo botão de Início
+        homeButtonAria: 'Voltar para o Início',
         typingIndicator: 'Almail está digitando...',
         inputPlaceholder: 'Pergunte à Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
         footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.',
-        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
+        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTado} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Histórico de Conversas',
         userIdDisplay: 'ID do Usuário:',
-        homeButton: 'Início', // Novo texto para o botão "Início"
+        homeButton: 'Início',
         newChat: 'Nova Conversa',
-        deleteConfirm: 'Tem certeza que deseja excluir esta conversa?', // Adicionado para exclusão
-        deleteConfirmYes: 'Sim, Excluir', // Novo: Texto para o botão de confirmação de exclusão
-        deleteConfirmNo: 'Não, Manter', // Novo: Texto para o botão de cancelamento de exclusão
-        confirmYesDefault: 'Sim', // Novo: Texto padrão para o botão "Sim" em confirmações genéricas
-        confirmNoDefault: 'Não', // Novo: Texto padrão para o botão "Não" em confirmações genéricas
-        editTitle: 'Editar Título', // Novo: Texto para o tooltip do botão de editar
-        saveTitle: 'Salvar Título', // Novo: Texto para o tooltip do botão de salvar
-        cancelEdit: 'Cancelar Edição', // Novo: Texto para o tooltip do botão de cancelar
+        deleteConfirm: 'Tem certeza que deseja excluir esta conversa?',
+        deleteConfirmYes: 'Sim, Excluir',
+        deleteConfirmNo: 'Não, Manter',
+        confirmYesDefault: 'Sim',
+        confirmNoDefault: 'Não',
+        editTitle: 'Editar Título',
+        saveTitle: 'Salvar Título',
+        cancelEdit: 'Cancelar Edição',
         errorMessage: 'Ocorreu um erro. Por favor, tente novamente.',
         systemInstructions: `Você é a Almail, uma assistente virtual especializada em suporte para Cartões do Mercado Pago.
 Seu objetivo principal é **auxiliar o colaborador** a fornecer um atendimento de excelência aos clientes.
@@ -226,6 +228,10 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
                     <p class="text-base"><strong>Botão de Guia Rápido:</strong> No canto superior direito do cabeçalho, clique neste ícone <i data-feather="help-circle" class="inline-block"></i> a qualquer momento para acessar este guia e relembrar as funcionalidades da Almail.</p>
                 </li>
                 <li class="mb-3 flex items-center">
+                    <i data-feather="info" class="text-yellow-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Créditos:</strong> Ao lado do botão de Tema, clique neste ícone <i data-feather="info" class="inline-block"></i> para visualizar os créditos dos desenvolvedores e colaboradores da Almail.</p>
+                </li>
+                <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Alternar Tema:</strong> No canto superior direito do cabeçalho, ao lado do botão de idioma, use este botão <i data-feather="moon" class="inline-block"></i> (ou <i data-feather="sun" class="inline-block"></i>) para mudar entre o tema claro e o tema escuro, personalizando sua experiência visual.</p>
                 </li>
@@ -243,30 +249,30 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no time de Cartões do Mercado Pago.',
         initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados a cartões. Clique em "Nova Conversa" para começar a interagir com a IA.',
         startChatButton: 'Iniciar Nova Conversa',
-        // NOVO: Mensagens de validação para o modal de dados iniciais
         collaboratorNameRequired: 'Por favor, informe seu nome.',
         clientNameRequired: 'Por favor, informe o nome do cliente.',
     },
     'en': {
         appTitle: 'Almail AI Support - Cards',
-        creditsModalTitle: 'Credits', // Title for credits modal
-        creditsModalSubtitle: 'An intelligent support tool for the Mercado Pago Cards team.', // Subtitle
+        creditsModalTitle: 'Credits',
+        creditsModalSubtitle: 'An intelligent support tool for the Mercado Pago Cards team.',
         creditsModalDescription: `
             <ul class="list-none p-0 text-center">
                 <li class="mb-2"><strong>Developers:</strong></li>
                 <li class="mb-1">Lucas Carneiro</li>
                 <li class="mb-1">Lucas Candido</li>
+                <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Support and Collaboration:</strong></li>
                 <li class="mb-1">Cards Team (Concentrix)</li>
             </ul>
-        `, // Detailed credits description
-        creditsModalButton: 'Understood', // Button text
-        // New texts for initial data modal
+        `,
+        creditsModalButton: 'Understood',
+        creditsButtonAria: 'View Credits',
         initialDataModalTitle: 'Initial Information',
         initialDataModalSubtitle: 'Please fill in the details to optimize the service.',
         collaboratorNameLabel: 'Your Name:',
         collaboratorNamePlaceholder: 'Ex: Anna Smith',
-        clientNameLabel: 'Client Name:', // Changed to mandatory
+        clientNameLabel: 'Client Name:',
         clientNamePlaceholder: 'Ex: John Doe',
         serviceChannelLabel: 'Service Channel:',
         channelChat: 'Chat',
@@ -287,7 +293,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         headerSubtitle: 'AI Support - Cards',
         tutorialButtonAria: 'Open Tutorial',
         themeToggleButtonAria: 'Toggle Theme',
-        homeButtonAria: 'Back to Home', // Added for the new Home button
+        homeButtonAria: 'Back to Home',
         typingIndicator: 'Almail is typing...',
         inputPlaceholder: 'Ask Almail...',
         sendButtonAria: 'Send Message',
@@ -296,16 +302,16 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         welcomeMessage: "Hello {COLLABORATOR_NAME}! I'm Almail, your virtual assistant specialized in support for Mercado Pago Cards. I'm here to help you assist {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Conversation History',
         userIdDisplay: 'User ID:',
-        homeButton: 'Home', // New text for "Home" button
+        homeButton: 'Home',
         newChat: 'New Chat',
-        deleteConfirm: 'Are you sure you want to delete this conversation?', // Adicionado para exclusão
-        deleteConfirmYes: 'Yes, Delete', // Novo: Texto para o botão de confirmação de exclusão
-        deleteConfirmNo: 'No, Keep', // Novo: Texto para o botão de cancelamento de exclusão
-        confirmYesDefault: 'Yes', // Novo: Texto padrão para o botão "Sim" em confirmações genéricas
-        confirmNoDefault: 'No', // Novo: Texto padrão para o botão "Não" em confirmações genéricas
-        editTitle: 'Edit Title', // Novo: Texto para o tooltip do botão de editar
-        saveTitle: 'Save Title', // Novo: Texto para o tooltip do botão de salvar
-        cancelEdit: 'Cancel Edit', // Novo: Texto para o tooltip do botão de cancelar
+        deleteConfirm: 'Are you sure you want to delete this conversation?',
+        deleteConfirmYes: 'Yes, Delete',
+        deleteConfirmNo: 'No, Keep',
+        confirmYesDefault: 'Yes',
+        confirmNoDefault: 'No',
+        editTitle: 'Edit Title',
+        saveTitle: 'Save Title',
+        cancelEdit: 'Cancel Edit',
         errorMessage: 'An error occurred. Please try again.',
         systemInstructions: `You are Almail, a virtual assistant specialized in support for Mercado Pago Cards.
 Your main objective is to **assist the collaborator** in providing excellent customer service.
@@ -353,6 +359,10 @@ You should act as a **support agent for the collaborator**, providing accurate a
                     <p class="text-base"><strong>Quick Guide Button:</strong> In the upper right corner of the header, click this icon <i data-feather="help-circle" class="inline-block"></i> at any time to access this guide and review Almail's functionalities.</p>
                 </li>
                 <li class="mb-3 flex items-center">
+                    <i data-feather="info" class="text-yellow-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Credits Button:</strong> Next to the Theme button, click this icon <i data-feather="info" class="inline-block"></i> to view the credits of Almail's developers and collaborators.</p>
+                </li>
+                <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Toggle Theme:</strong> In the upper right corner of the header, next to the language button, use this button <i data-feather="moon" class="inline-block"></i> (or <i data-feather="sun" class="inline-block"></i>) to switch between light and dark themes, customizing your visual experience.</p>
                 </li>
@@ -370,7 +380,6 @@ You should act as a **support agent for the collaborator**, providing accurate a
         initialScreenSubtitle: 'Your intelligent assistant to optimize support for the Mercado Pago Cards team.',
         initialScreenDescription: 'Here you can get quick and accurate information on various card-related topics. Click "New Chat" to start interacting with the AI.',
         startChatButton: 'Start New Chat',
-        // NOVO: Mensagens de validação para o modal de dados iniciais
         collaboratorNameRequired: 'Please enter your name.',
         clientNameRequired: 'Please enter the client\'s name.',
     },
@@ -383,17 +392,18 @@ You should act as a **support agent for the collaborator**, providing accurate a
                 <li class="mb-2"><strong>Desarrolladores:</strong></li>
                 <li class="mb-1">Lucas Carneiro</li>
                 <li class="mb-1">Lucas Candido</li>
+                <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoyo y Colaboración:</strong></li>
                 <li class="mb-1">Equipo de Tarjetas (Concentrix)</li>
             </ul>
         `,
         creditsModalButton: 'Entendido',
-        // Nuevos textos para el modal de datos iniciales
+        creditsButtonAria: 'Ver Créditos',
         initialDataModalTitle: 'Información Inicial',
         initialDataModalSubtitle: 'Por favor, complete los datos para optimizar el servicio.',
         collaboratorNameLabel: 'Tu Nombre:',
         collaboratorNamePlaceholder: 'Ej: Ana Silva',
-        clientNameLabel: 'Nombre del Cliente:', // Changed to mandatory
+        clientNameLabel: 'Nombre del Cliente:',
         clientNamePlaceholder: 'Ej: Juan Pérez',
         serviceChannelLabel: 'Canal de Atención:',
         channelChat: 'Chat',
@@ -469,7 +479,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
             <ul class="list-none pl-0">
                 <li class="mb-3 flex items-center">
                     <i data-feather="home" class="text-green-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Botón de Inicio:</strong> Ubicado en la esquina superior izquierda del encabezado, haz clic en este icono <i data-feather="home" class="inline-block"></i> para regresar a la pantalla de inicio en cualquier momento y comenzar una nueva interacción.</p>
+                    <p class="text-base"><strong>Home Button:</strong> Ubicado en la esquina superior izquierda del encabezado, haz clic en este icono <i data-feather="home" class="inline-block"></i> para regresar a la pantalla de inicio en cualquier momento y comenzar una nueva interacción.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
@@ -478,6 +488,10 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
                 <li class="mb-3 flex items-center">
                     <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Botón de Guía Rápida:</strong> En la esquina superior derecha del encabezado, haz clic en este icono <i data-feather="help-circle" class="inline-block"></i> en cualquier momento para acceder a esta guía y recordar las funcionalidades de Almail.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="info" class="text-yellow-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botón de Créditos:</strong> Al lado del botón de Tema, haz clic en este icono <i data-feather="info" class="inline-block"></i> para ver los créditos de los desarrolladores y colaboradores de Almail.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
@@ -497,7 +511,6 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
         initialScreenSubtitle: 'Tu asistente inteligente para optimizar el soporte para el equipo de Tarjetas de Mercado Pago.',
         initialScreenDescription: 'Aquí puedes obtener información rápida y precisa sobre diversos temas relacionados con tarjetas. Haz clic en "Nueva Conversación" para comenzar a interactuar con la IA.',
         startChatButton: 'Iniciar Nueva Conversação',
-        // NOVO: Mensagens de validação para o modal de dados iniciais
         collaboratorNameRequired: 'Por favor, introduce tu nombre.',
         clientNameRequired: 'Por favor, introduce el nombre del cliente.',
     }
@@ -513,15 +526,13 @@ function setLanguage(lang) {
     if (!translations[lang]) {
         console.error("Erro: Idioma selecionado ('" + lang + "') não encontrado nas traduções. Revertendo para pt-BR.");
         lang = 'pt-BR'; // Fallback to default language
-        // Optionally, display a user-facing error message
     }
 
     currentLanguage = lang;
     document.documentElement.setAttribute('lang', lang);
-    // REMOVIDO: localStorage.setItem('preferredLanguage', lang);
 
     // Atualiza o texto do botão de idioma
-    currentLanguageText.textContent = lang.substring(0, 2).toUpperCase(); // Ex: PT, EN, ES
+    currentLanguageText.textContent = lang.substring(0, 2).toUpperCase();
 
     // Atualiza o título da página
     document.title = translations[lang].appTitle;
@@ -529,23 +540,22 @@ function setLanguage(lang) {
     // Atualiza elementos com data-i18n
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) { // Adicionado verificação para translations[lang]
+        if (translations[lang] && translations[lang][key]) {
             if (element.tagName === 'TEXTAREA' && element.hasAttribute('placeholder')) {
                 element.setAttribute('placeholder', translations[lang][key]);
             } else if (element.hasAttribute('aria-label')) {
                 element.setAttribute('aria-label', translations[lang][key]);
-            } else if (element.classList.contains('credits-list')) { // Adicionado para a lista de créditos
-                element.innerHTML = translations[lang][key]; // Usa innerHTML para conteúdo HTML
-            }
-            else {
+            } else if (element.classList.contains('credits-list')) {
+                element.innerHTML = translations[lang][key];
+            } else {
                 element.textContent = translations[lang][key];
             }
         }
     });
 
     // Atualiza o conteúdo do tutorial
-    if (translations[lang] && translations[lang].tutorialText) { // Adicionado verificação
-        document.getElementById('tutorial-content').innerHTML = translations[lang].tutorialText; // Use o ID direto
+    if (translations[lang] && translations[lang].tutorialText) {
+        document.getElementById('tutorial-content').innerHTML = translations[lang].tutorialText;
     }
 
     // Atualiza os placeholders e labels do novo modal de dados iniciais
@@ -565,10 +575,9 @@ function setLanguage(lang) {
         serviceChannelSelect.querySelector('option[value="c2c"]').textContent = translations[lang].channelC2C;
     }
 
-
     // Se estiver na tela inicial, atualiza o texto da tela inicial
     if (initialScreen.classList.contains('show') || !chatAndInputArea.classList.contains('show')) {
-        if (translations[lang]) { // Adicionado verificação
+        if (translations[lang]) {
             document.querySelector('#initial-screen h2').textContent = translations[lang].initialScreenTitle;
             document.querySelector('#initial-screen p:nth-of-type(1)').textContent = translations[lang].initialScreenSubtitle;
             document.querySelector('#initial-screen p:nth-of-type(2)').textContent = translations[lang].initialScreenDescription;
@@ -577,12 +586,11 @@ function setLanguage(lang) {
     }
 
     // Always call loadConversationHistory to refresh the sidebar after language change
-    // This will update the "New Chat" button text and delete button tooltips.
-    if (isAuthReady) { // Only if Firebase is ready
+    if (isAuthReady) {
         loadConversationHistory();
     }
 
-    feather.replace(); // Renderiza novamente os ícones Feather
+    feather.replace();
 
     // Sempre volta para a tela inicial após a troca de idioma
     showInitialScreen();
@@ -641,7 +649,8 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
 
     if (sender === 'user') {
         messageBubble.classList.add('user-message');
-    } else {
+    }
+    else {
         messageBubble.classList.add('ai-message');
         if (addFeedbackButtons) {
             const feedbackContainer = document.createElement('div');
@@ -672,18 +681,19 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
 // Simula o efeito de digitação para a mensagem da IA
 function typeMessage(text, addFeedbackButtons = false) {
     loadingIndicator.style.display = 'flex';
-    loadingIndicator.classList.add('show'); // Adiciona a classe 'show'
+    loadingIndicator.classList.add('show');
     userInput.disabled = true;
     sendButton.disabled = true;
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
-    historyList.classList.add('disabled'); // Desabilita o histórico de conversas
+    historyList.classList.add('disabled');
 
-    // Desabilita os botões de controle (exceto mainSidebarToggleButton, themeToggleButton, tutorialButton)
-    languageToggleButton.disabled = true; // Desabilita o botão de idioma
-    languageToggleButton.classList.add('disabled'); // Adiciona a classe disabled
+    languageToggleButton.disabled = true;
+    languageToggleButton.classList.add('disabled');
     homeButton.disabled = true;
     homeButton.classList.add('disabled');
+    // creditsButton.disabled = true; // Desabilita o botão de créditos - REMOVIDO
+    // creditsButton.classList.add('disabled'); // Adiciona a classe disabled - REMOVIDO
 
 
     const messageBubble = document.createElement('div');
@@ -699,19 +709,20 @@ function typeMessage(text, addFeedbackButtons = false) {
         if (!isConversationActive) {
             clearTimeout(typingTimeoutId);
             typingTimeoutId = null;
-            loadingIndicator.classList.remove('show'); // Remove a classe 'show'
+            loadingIndicator.classList.remove('show');
             loadingIndicator.style.display = 'none';
             userInput.disabled = false;
             sendButton.disabled = false;
             userInput.classList.remove('disabled');
             sendButton.classList.remove('disabled');
-            historyList.classList.remove('disabled'); // Habilita o histórico de conversas
+            historyList.classList.remove('disabled');
 
-            // Habilita os botões de controle
-            languageToggleButton.disabled = false; // Habilita o botão de idioma
-            languageToggleButton.classList.remove('disabled'); // Remove a classe disabled
+            languageToggleButton.disabled = false;
+            languageToggleButton.classList.remove('disabled');
             homeButton.disabled = false;
             homeButton.classList.remove('disabled');
+            // creditsButton.disabled = false; // Habilita o botão de créditos - REMOVIDO
+            // creditsButton.classList.remove('disabled'); // Remove a classe disabled - REMOVIDO
             return;
         }
 
@@ -722,21 +733,22 @@ function typeMessage(text, addFeedbackButtons = false) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
             typingTimeoutId = setTimeout(typeCharacter, typingSpeed);
         } else {
-            loadingIndicator.classList.remove('show'); // Remove a classe 'show'
+            loadingIndicator.classList.remove('show');
             loadingIndicator.style.display = 'none';
             userInput.disabled = false;
             sendButton.disabled = false;
             userInput.classList.remove('disabled');
             sendButton.classList.remove('disabled');
-            historyList.classList.remove('disabled'); // Habilita o histórico de conversas
+            historyList.classList.remove('disabled');
 
-            // Habilita os botões de controle
-            languageToggleButton.disabled = false; // Habilita o botão de idioma
-            languageToggleButton.classList.remove('disabled'); // Remove a classe disabled
+            languageToggleButton.disabled = false;
+            languageToggleButton.classList.remove('disabled');
             homeButton.disabled = false;
             homeButton.classList.remove('disabled');
+            // creditsButton.disabled = false; // Habilita o botão de créditos - REMOVIDO
+            // creditsButton.classList.remove('disabled'); // Remove a classe disabled - REMOVIDO
 
-            if (chatAndInputArea.classList.contains('show')) { // Use o ID correto
+            if (chatAndInputArea.classList.contains('show')) {
                  userInput.focus();
             }
             if (addFeedbackButtons) {
@@ -797,7 +809,7 @@ async function handleFeedback(messageBubble, feedbackType, originalAiText) {
  * @param {string} title O título da conversa.
  */
 async function saveConversation(title) {
-    if (!db || !userId || !isAuthReady || chatHistory.length <= 1) { // Não salva se não houver mensagens além da inicial da IA
+    if (!db || !userId || !isAuthReady || chatHistory.length <= 1) {
         console.warn("Firebase ou userId não prontos para salvar conversa, ou histórico muito curto.");
         return;
     }
@@ -806,15 +818,14 @@ async function saveConversation(title) {
         const conversationsCol = collection(db, `artifacts/${appId}/users/${userId}/conversations`);
         await addDoc(conversationsCol, {
             title: title,
-            messages: JSON.stringify(chatHistory), // Armazena o histórico como JSON string
+            messages: JSON.stringify(chatHistory),
             timestamp: Date.now(),
-            // Salva as novas informações
             collaboratorName: collaboratorName || "Não Informado",
             clientName: currentClientName || "Não Informado",
             serviceChannel: serviceChannel || "Não Informado"
         });
         console.log("Conversa salva com sucesso!");
-        loadConversationHistory(); // Recarrega o histórico na sidebar
+        loadConversationHistory();
     } catch (error) {
         console.error("Erro ao salvar conversa:", error);
     }
@@ -825,7 +836,6 @@ async function saveConversation(title) {
  * @param {string} conversationId O ID do documento da conversa.
  */
 async function loadConversation(conversationId) {
-    // Adiciona a verificação para impedir a troca de conversa enquanto a IA estiver digitando
     if (!isConversationActive) {
         console.log("IA está digitando. Não é possível trocar de conversa agora.");
         return;
@@ -836,10 +846,9 @@ async function loadConversation(conversationId) {
         return;
     }
 
-    // Esconde a tela inicial e mostra a área de chat
-    showChatArea(); // Usa a função para garantir que os inputs sejam habilitados
+    showChatArea();
 
-    isConversationActive = false; // Pausa a digitação atual, se houver
+    isConversationActive = false;
     if (typingTimeoutId) {
         clearTimeout(typingTimeoutId);
         typingTimeoutId = null;
@@ -847,8 +856,8 @@ async function loadConversation(conversationId) {
 
     chatMessages.innerHTML = '';
     currentClientName = null;
-    collaboratorName = null; // Limpa o nome do colaborador
-    serviceChannel = null; // Limpa o canal de atendimento
+    collaboratorName = null;
+    serviceChannel = null;
 
     userInput.value = '';
     userInput.style.height = 'auto';
@@ -868,35 +877,30 @@ async function loadConversation(conversationId) {
 
         if (docSnap.exists()) {
             const data = docSnap.data();
-            chatHistory = JSON.parse(data.messages); // Carrega o histórico de volta do JSON
-            currentConversationId = conversationId; // Define a conversa atual
-            collaboratorName = data.collaboratorName || null; // Carrega o nome do colaborador
-            currentClientName = data.clientName || null; // Carrega o nome do cliente
-            serviceChannel = data.serviceChannel || null; // Carrega o canal de atendimento
+            chatHistory = JSON.parse(data.messages);
+            currentConversationId = conversationId;
+            collaboratorName = data.collaboratorName || null;
+            currentClientName = data.clientName || null;
+            serviceChannel = data.serviceChannel || null;
 
-
-            // Renderiza as mensagens na UI
             chatHistory.forEach((msg, index) => {
-                // A última mensagem do assistente deve ter botões de feedback
                 const addFeedback = (msg.role === 'assistant' && index === chatHistory.length - 1);
                 appendMessageToUI(msg.role, msg.parts[0].text, addFeedback);
             });
 
-            // Atualiza o item ativo na sidebar
             document.querySelectorAll('.history-item').forEach(item => {
                 item.classList.remove('active');
             });
             document.getElementById(`history-item-${conversationId}`).classList.add('active');
-            homeButton.classList.remove('active'); // Desativa o botão de Início
+            homeButton.classList.remove('active');
 
         } else {
             console.log("Nenhuma conversa encontrada com o ID:", conversationId);
-            // Se a conversa não for encontrada, inicia uma nova
             startNewConversation();
         }
     } catch (error) {
         console.error("Erro ao carregar conversa:", error);
-        startNewConversation(); // Em caso de erro, inicia uma nova conversa
+        startNewConversation();
     } finally {
         userInput.disabled = false;
         sendButton.disabled = false;
@@ -911,15 +915,12 @@ async function loadConversation(conversationId) {
  * Inicia uma nova conversa, salvando a anterior se houver.
  */
 async function startNewConversation() {
-    // Salva a conversa anterior se houver um histórico e não for uma conversa recém-carregada
-    if (chatHistory.length > 1 && currentConversationId !== null) { // Garante que há mais de uma mensagem além da de boas-vindas
-        // Gera um título para a conversa anterior com base na primeira mensagem do usuário
+    if (chatHistory.length > 1 && currentConversationId !== null) {
         const title = await generateConversationTitle(initialUserMessage || chatHistory[1]?.parts[0]?.text || "Conversa sem Título");
         await saveConversation(title);
     }
 
-    // Esconde a tela inicial e mostra a área de chat
-    showChatArea(); // Usa a função para garantir que os inputs sejam habilitados
+    showChatArea();
 
     isConversationActive = false;
     if (typingTimeoutId) {
@@ -929,16 +930,13 @@ async function startNewConversation() {
 
     chatMessages.innerHTML = '';
     currentClientName = null;
-    collaboratorName = null; // Zera o nome do colaborador
-    serviceChannel = null; // Zera o canal de atendimento
-    currentConversationId = null; // Zera o ID da conversa atual
-    initialUserMessage = null; // Zera a primeira mensagem do usuário
+    collaboratorName = null;
+    serviceChannel = null;
+    currentConversationId = null;
+    initialUserMessage = null;
 
-    // Exibe o modal de dados iniciais antes de iniciar a conversa de fato
     showInitialDataModal();
 
-    // O restante da lógica de iniciar a conversa será movida para o callback do modal de dados iniciais
-    // para que a mensagem de boas-vindas da IA seja enviada *após* a coleta dos dados.
     userInput.value = '';
     userInput.style.height = 'auto';
     errorMessage.classList.add('hidden');
@@ -953,25 +951,17 @@ async function startNewConversation() {
 
     isConversationActive = true;
 
-    // Atualiza o item ativo na sidebar para "Início"
     document.querySelectorAll('.history-item').forEach(item => {
         item.classList.remove('active');
     });
-    homeButton.classList.add('active'); // Ativa o botão de Início
+    homeButton.classList.add('active');
 }
-
-
-// Reinicia a conversa (agora chama startNewConversation) - FUNÇÃO REMOVIDA, POIS O BOTÃO FOI REMOVIDO
-// function restartConversation() {
-//     showConfirmationModal(); // Mantém o modal de confirmação
-// }
 
 /**
  * Aplica o tema (claro/escuro) ao documento.
  * @param {string} theme 'light' ou 'dark'.
- * @param {boolean} updateLocalStorage Se true, atualiza a preferência no localStorage.
  */
-function applyTheme(theme, updateLocalStorage = false) {
+function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     if (theme === 'dark') {
         themeIcon.innerHTML = '<i data-feather="moon"></i>';
@@ -979,17 +969,13 @@ function applyTheme(theme, updateLocalStorage = false) {
         themeIcon.innerHTML = '<i data-feather="sun"></i>';
     }
     feather.replace();
-
-    // REMOVIDO: if (updateLocalStorage) {
-    // REMOVIDO:     localStorage.setItem('userPreferredTheme', theme);
-    // REMOVIDO: }
 }
 
 // Alterna entre tema claro e escuro
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    applyTheme(newTheme, true); // Atualiza o tema e salva no localStorage
+    applyTheme(newTheme);
 }
 
 // Mostra o modal de tutorial
@@ -1004,7 +990,7 @@ function hideTutorialModal() {
     tutorialModalOverlay.classList.remove('show');
 }
 
-// Mostra o modal de confirmação de reiniciar conversa (ainda existe, mas não é mais acionado pelo botão)
+// Mostra o modal de confirmação de reiniciar conversa
 function showConfirmationModal() {
     confirmationModalOverlay.classList.add('show');
 }
@@ -1016,14 +1002,13 @@ function hideConfirmationModal() {
 
 // NOVO: Função para mostrar o modal de dados iniciais
 function showInitialDataModal() {
-    // Garante que os campos estejam vazios e o select na opção padrão
     collaboratorNameInput.value = '';
     clientNameInput.value = '';
-    serviceChannelSelect.value = 'chat'; // Define o valor padrão
-    setLanguage(currentLanguage); // Atualiza os textos do modal com o idioma atual
+    serviceChannelSelect.value = 'chat';
+    setLanguage(currentLanguage);
     initialDataModalOverlay.classList.add('show');
-    collaboratorNameInput.focus(); // Foca no primeiro campo
-    checkInitialDataInputs(); // NOVO: Verifica o estado inicial dos inputs e habilita/desabilita o botão
+    collaboratorNameInput.focus();
+    checkInitialDataInputs();
 }
 
 // NOVO: Função para esconder o modal de dados iniciais
@@ -1045,6 +1030,16 @@ function checkInitialDataInputs() {
     }
 }
 
+// NOVO: Função para mostrar o modal de créditos
+function showCreditsModal() {
+    creditsModalOverlay.classList.add('show');
+}
+
+// NOVO: Função para esconder o modal de créditos
+function hideCreditsModal() {
+    creditsModalOverlay.classList.remove('show');
+}
+
 
 /**
  * Gera um título para a conversa usando a API Gemini.
@@ -1061,8 +1056,8 @@ async function generateConversationTitle(promptText) {
         const payload = {
             contents: [{ role: "user", parts: [{ text: titleGenerationPrompt }] }],
             generationConfig: {
-                temperature: 0.3, // Baixa temperatura para respostas mais diretas
-                maxOutputTokens: 20 // Limita o tamanho da resposta
+                temperature: 0.3,
+                maxOutputTokens: 20
             }
         };
 
@@ -1083,7 +1078,6 @@ async function generateConversationTitle(promptText) {
             result.candidates[0].content && result.candidates[0].content.parts &&
             result.candidates[0].content.parts.length > 0) {
             let title = result.candidates[0].content.parts[0].text.trim();
-            // Remove aspas ou outros caracteres indesejados que o modelo possa adicionar
             title = title.replace(/^["']|["']$/g, '');
             return title;
         }
@@ -1100,7 +1094,6 @@ async function sendMessage(isRegeneration = false) {
     let prompt = userInput.value.trim();
     if (prompt === '' && !isRegeneration) return;
 
-    // Defensive check: ensure the current language exists in translations
     if (!translations[currentLanguage]) {
         console.error("Erro: Idioma atual ('" + currentLanguage + "') não encontrado nas traduções. Não é possível enviar mensagem.");
         errorMessage.textContent = `Erro de idioma: O idioma selecionado não é suportado.`;
@@ -1113,7 +1106,6 @@ async function sendMessage(isRegeneration = false) {
         return;
     }
 
-    // Verifica se o Firebase e o userId estão prontos antes de continuar
     if (!db || !userId || !isAuthReady) {
         console.error("Firebase não inicializado ou usuário não autenticado. Não é possível enviar mensagem.");
         errorMessage.textContent = `${translations[currentLanguage].errorMessage}: Firebase não está pronto.`;
@@ -1123,17 +1115,13 @@ async function sendMessage(isRegeneration = false) {
             errorMessage.classList.add('hidden');
             errorMessage.classList.remove('show');
         }, 7000);
-        return; // Sai da função se o Firebase não estiver pronto
+        return;
     }
 
-
-    // Se for a primeira mensagem do usuário em uma nova conversa, armazena-a
     if (!isRegeneration && chatHistory.length === 1 && chatHistory[0].role === "assistant" && chatHistory[0].parts[0].text.startsWith(translations[currentLanguage].welcomeMessage.split('{')[0])) {
         initialUserMessage = prompt;
     }
 
-    // A lógica de detecção de nome de cliente na primeira mensagem foi removida daqui,
-    // pois agora o nome do cliente é coletado no modal inicial.
     if (!isRegeneration) {
         appendMessageToUI('user', prompt);
         chatHistory.push({ role: "user", parts: [{ text: prompt }] });
@@ -1149,16 +1137,14 @@ async function sendMessage(isRegeneration = false) {
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
     loadingIndicator.style.display = 'flex';
-    loadingIndicator.classList.add('show'); // Adiciona a classe 'show'
+    loadingIndicator.classList.add('show');
 
     try {
         const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-        // Prepara as instruções do sistema com as informações coletadas
         let systemInstructions = translations[currentLanguage].systemInstructions;
         systemInstructions = systemInstructions.replace('{COLLABORATOR_NAME}', collaboratorName || "Não Informado");
-        // currentClientName agora é sempre preenchido, então não precisa de fallback aqui
         systemInstructions = systemInstructions.replace('{CLIENT_NAME}', currentClientName);
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL}', serviceChannel || "Não Informado");
 
@@ -1244,12 +1230,10 @@ async function sendMessage(isRegeneration = false) {
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL_INSTRUCTIONS}', channelSpecificInstructions);
 
         const contentsToSend = [
-            // Inclui as instruções de sistema no idioma atual, com a diretriz de resposta no idioma da aplicação
             { role: "user", parts: [{ text: systemInstructions }] },
             ...chatHistory
         ];
 
-        // DEBUGGING: Log system instructions being sent
         console.log("Sending system instructions for language:", currentLanguage);
         console.log("System Instructions being sent:", systemInstructions);
 
@@ -1289,18 +1273,10 @@ async function sendMessage(isRegeneration = false) {
             result.candidates[0].content.parts.length > 0) {
             let aiResponseText = result.candidates[0].content.parts[0].text;
 
-            // A substituição do nome do cliente agora é feita nas instruções do sistema
-            // Não é mais necessário aqui, a IA já deve ter adaptado.
-            // if (currentClientName) {
-            //     aiResponseText = aiResponseText.replace(/\b(cliente|o usuário|o cliente|customer|the user|the customer|client|para el|para la|el cliente|la cliente)\b/gi, currentClientName);
-            //     aiResponseText = aiResponseText.replace(/\[Nome do Cliente\]/gi, currentClientName);
-            // }
-
             typeMessage(aiResponseText, true);
             chatHistory.push({ role: "assistant", parts: [{ text: aiResponseText }] });
 
-            // Se for uma nova conversa, salva o primeiro estado
-            if (currentConversationId === null && chatHistory.length > 2) { // Pelo menos 1 user + 1 AI + welcome
+            if (currentConversationId === null && chatHistory.length > 2) {
                 const title = await generateConversationTitle(initialUserMessage || prompt);
                 const conversationsCol = collection(db, `artifacts/${appId}/users/${userId}/conversations`);
                 const newDocRef = await addDoc(conversationsCol, {
@@ -1312,17 +1288,12 @@ async function sendMessage(isRegeneration = false) {
                     serviceChannel: serviceChannel || "Não Informado"
                 });
                 currentConversationId = newDocRef.id;
-                // Não ativamos o item recém-criado automaticamente.
-                loadConversationHistory(); // Atualiza a sidebar para mostrar o novo item
+                loadConversationHistory();
             } else if (currentConversationId !== null) {
-                // Atualiza a conversa existente no Firestore
                 const docRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, currentConversationId);
                 await setDoc(docRef, {
                     messages: JSON.stringify(chatHistory),
-                    // REMOVIDO: timestamp: Date.now() - Não atualiza o timestamp para manter a ordem fixa
                 }, { merge: true });
-                // Não é necessário recarregar o histórico aqui, pois a ordem não mudou
-                // loadConversationHistory(); // Comentado para evitar reordenamento
             }
 
         } else {
@@ -1336,7 +1307,7 @@ async function sendMessage(isRegeneration = false) {
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('show');
         if (loadingIndicator.style.display === 'flex') {
-            loadingIndicator.classList.remove('show'); // Remove a classe 'show' em caso de erro
+            loadingIndicator.classList.remove('show');
             loadingIndicator.style.display = 'none';
         }
         setTimeout(() => {
@@ -1344,7 +1315,7 @@ async function sendMessage(isRegeneration = false) {
             errorMessage.classList.remove('show');
         }, 7000);
     } finally {
-        loadingIndicator.classList.remove('show'); // Remove a classe 'show' no final
+        loadingIndicator.classList.remove('show');
         loadingIndicator.style.display = 'none';
     }
 }
@@ -1354,21 +1325,18 @@ async function sendMessage(isRegeneration = false) {
  * @param {string} conversationId O ID do documento da conversa a ser excluída.
  */
 async function deleteConversation(conversationId) {
-    // Substituído window.confirm por um modal customizado
     showCustomConfirm(
         translations[currentLanguage].deleteConfirm,
         async () => {
             try {
                 await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, conversationId));
                 console.log(`Conversa ${conversationId} excluída.`);
-                // Se a conversa excluída for a atual, inicia uma nova conversa
                 if (currentConversationId === conversationId) {
-                    // Agora, ao invés de iniciar uma nova conversa diretamente, volta para a tela inicial
                     showInitialScreen();
-                    currentConversationId = null; // Garante que não há conversa ativa
-                    chatHistory = []; // Limpa o histórico do chat
+                    currentConversationId = null;
+                    chatHistory = [];
                 }
-                loadConversationHistory(); // Recarrega o histórico na sidebar
+                loadConversationHistory();
             } catch (error) {
                 console.error("Erro ao excluir conversa:", error);
                 errorMessage.textContent = `${translations[currentLanguage].errorMessage}: ${error.message}`;
@@ -1380,8 +1348,8 @@ async function deleteConversation(conversationId) {
                 }, 7000);
             }
         },
-        translations[currentLanguage].deleteConfirmYes, // Texto para o botão "Sim"
-        translations[currentLanguage].deleteConfirmNo // Texto para o botão "Não"
+        translations[currentLanguage].deleteConfirmYes,
+        translations[currentLanguage].deleteConfirmNo
     );
 }
 
@@ -1402,7 +1370,6 @@ function showCustomConfirm(message, onConfirm, yesButtonText, noButtonText) {
     customConfirmYes.textContent = yesButtonText || translations[currentLanguage].confirmYesDefault;
     customConfirmNo.textContent = noButtonText || translations[currentLanguage].confirmNoDefault;
 
-    // Limpa listeners anteriores para evitar múltiplos disparos
     customConfirmYes.onclick = null;
     customConfirmNo.onclick = null;
 
@@ -1431,7 +1398,6 @@ async function updateConversationTitleInFirestore(conversationId, newTitle) {
         const docRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, conversationId);
         await setDoc(docRef, { title: newTitle }, { merge: true });
         console.log(`Título da conversa ${conversationId} atualizado para: ${newTitle}`);
-        // Não recarrega loadConversationHistory aqui para evitar reordenamento
     } catch (error) {
         console.error("Erro ao atualizar título da conversa no Firestore:", error);
         errorMessage.textContent = `${translations[currentLanguage].errorMessage}: ${error.message}`;
@@ -1444,7 +1410,6 @@ async function updateConversationTitleInFirestore(conversationId, newTitle) {
     }
 }
 
-
 /**
  * Carrega o histórico de conversas do Firestore e renderiza na sidebar.
  */
@@ -1455,75 +1420,62 @@ async function loadConversationHistory() {
     }
 
     try {
-        // Altera a ordem para ascendente (mais antiga primeiro)
-        const q = query(collection(db, `artifacts/${appId}/users/${userId}/conversations`), orderBy("timestamp", "asc"), limit(10)); // Limita a 10 conversas
+        const q = query(collection(db, `artifacts/${appId}/users/${userId}/conversations`), orderBy("timestamp", "asc"), limit(10));
         const querySnapshot = await getDocs(q);
 
-        historyList.innerHTML = ''; // Limpa a lista atual
+        historyList.innerHTML = '';
 
-        // Adiciona as conversas do Firestore
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             const li = document.createElement('li');
             li.classList.add('history-item');
             li.id = `history-item-${doc.id}`;
 
-            // Contêiner para o título e botões de ação
             const titleAndActions = document.createElement('div');
             titleAndActions.classList.add('title-and-actions');
             li.appendChild(titleAndActions);
 
-            // Cria um span para o título da conversa
             const titleSpan = document.createElement('span');
             titleSpan.textContent = data.title;
-            titleSpan.classList.add('conversation-title'); // Adiciona uma classe para estilização
-            titleSpan.contentEditable = false; // Não editável por padrão
-            titleSpan.spellcheck = false; // Desativa correção ortográfica
+            titleSpan.classList.add('conversation-title');
+            titleSpan.contentEditable = false;
+            titleSpan.spellcheck = false;
             titleAndActions.appendChild(titleSpan);
 
-            // Contêiner para os botões de ação (editar e excluir)
             const actionButtons = document.createElement('div');
             actionButtons.classList.add('action-buttons');
-            actionButtons.style.display = 'none'; // Esconde os botões por padrão
+            actionButtons.style.display = 'none';
             titleAndActions.appendChild(actionButtons);
 
-            // Adiciona o botão de editar
             const editButton = document.createElement('button');
             editButton.classList.add('edit-conversation-button');
-            editButton.innerHTML = '<i data-feather="edit-2"></i>'; // Ícone de lápis
-            editButton.title = translations[currentLanguage].editTitle; // Tooltip
+            editButton.innerHTML = '<i data-feather="edit-2"></i>';
+            editButton.title = translations[currentLanguage].editTitle;
             actionButtons.appendChild(editButton);
 
-            // Adiciona o botão de excluir
             const deleteButton = document.createElement('button');
             deleteButton.classList.add('delete-conversation-button');
-            deleteButton.innerHTML = '<i data-feather="x"></i>'; // Ícone de "X"
-            deleteButton.title = translations[currentLanguage].deleteConfirm; // Adiciona tooltip
+            deleteButton.innerHTML = '<i data-feather="x"></i>';
+            deleteButton.title = translations[currentLanguage].deleteConfirm;
             actionButtons.appendChild(deleteButton);
 
             historyList.appendChild(li);
 
-            // Mostra os botões de ação ao passar o mouse sobre o item da lista
             li.addEventListener('mouseenter', () => {
                 actionButtons.style.display = 'flex';
             });
 
-            // Esconde os botões de ação ao tirar o mouse do item da lista
             li.addEventListener('mouseleave', () => {
-                // Só esconde se não estiver no modo de edição
                 if (titleSpan.contentEditable !== 'true') {
                     actionButtons.style.display = 'none';
                 }
             });
 
-            // Marca a conversa atual como ativa SOMENTE se for a conversa atualmente carregada
             if (currentConversationId === doc.id) {
                 li.classList.add('active');
             }
 
-            // Event Listeners para os botões e título
             li.addEventListener('click', () => {
-                // Se estiver no modo de edição, não carrega a conversa
                 if (titleSpan.contentEditable === 'true') {
                     return;
                 }
@@ -1531,26 +1483,24 @@ async function loadConversationHistory() {
             });
 
             deleteButton.addEventListener('click', (event) => {
-                event.stopPropagation(); // Impede que o clique se propague para o item da lista
+                event.stopPropagation();
                 deleteConversation(doc.id);
             });
 
             editButton.addEventListener('click', (event) => {
-                event.stopPropagation(); // Impede que o clique se propague para o item da lista
-                toggleEditMode(doc.id, titleSpan, editButton, deleteButton, actionButtons); // Passa actionButtons
+                event.stopPropagation();
+                toggleEditMode(doc.id, titleSpan, editButton, deleteButton, actionButtons);
             });
         });
 
-        // Gerencia o estado ativo do botão "Início" e dos itens do histórico
         if (currentConversationId === null) {
-            homeButton.classList.add('active'); // Ativa o botão de Início se não houver conversa ativa
+            homeButton.classList.add('active');
         } else {
-            homeButton.classList.remove('active'); // Desativa o botão de Início se uma conversa estiver ativa
+            homeButton.classList.remove('active');
         }
 
-        // REMOVIDO: Atualiza o texto do botão de idioma (não relacionado ao userIdDisplay)
         currentLanguageText.textContent = currentLanguage.substring(0, 2).toUpperCase();
-        feather.replace(); // Garante que os ícones Feather sejam renderizados
+        feather.replace();
     } catch (error) {
         console.error("Erro ao carregar histórico de conversas:", error);
     }
@@ -1567,11 +1517,9 @@ async function loadConversationHistory() {
 function toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer) {
     const isEditing = titleElement.contentEditable === 'true';
 
-    // Se já estiver editando, salva e sai do modo de edição
     if (isEditing) {
         const newTitle = titleElement.textContent.trim();
         if (newTitle === "") {
-            // Se o título estiver vazio, reverte para o título anterior (se houver) ou um padrão
             titleElement.textContent = titleElement.dataset.originalTitle || "Conversa sem Título";
         } else {
             updateConversationTitleInFirestore(conversationId, newTitle);
@@ -1580,19 +1528,18 @@ function toggleEditMode(conversationId, titleElement, editButton, deleteButton, 
         titleElement.classList.remove('editing');
         editButton.innerHTML = '<i data-feather="edit-2"></i>';
         editButton.title = translations[currentLanguage].editTitle;
-        deleteButton.style.display = 'flex'; // Mostra o botão de excluir
-        actionButtonsContainer.style.display = 'flex'; // Garante que os botões permaneçam visíveis após a edição
+        deleteButton.style.display = 'flex';
+        actionButtonsContainer.style.display = 'flex';
         feather.replace();
-    } else { // Entra no modo de edição
+    } else {
         titleElement.contentEditable = true;
         titleElement.classList.add('editing');
-        titleElement.dataset.originalTitle = titleElement.textContent; // Armazena o título original
-        editButton.innerHTML = '<i data-feather="check"></i>'; // Ícone de salvar
-        editButton.title = translations[currentLanguage].saveTitle; // Tooltip
-        deleteButton.style.display = 'none'; // Esconde o botão de excluir durante a edição
-        actionButtonsContainer.style.display = 'flex'; // Mantém os botões visíveis durante a edição
+        titleElement.dataset.originalTitle = titleElement.textContent;
+        editButton.innerHTML = '<i data-feather="check"></i>';
+        editButton.title = translations[currentLanguage].saveTitle;
+        deleteButton.style.display = 'none';
+        actionButtonsContainer.style.display = 'flex';
         titleElement.focus();
-        // Seleciona todo o texto para facilitar a edição
         const range = document.createRange();
         range.selectNodeContents(titleElement);
         const selection = window.getSelection();
@@ -1600,16 +1547,15 @@ function toggleEditMode(conversationId, titleElement, editButton, deleteButton, 
         selection.addRange(range);
         feather.replace();
 
-        // Adiciona listener para Enter e Escape
         const handleKeyDown = (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Impede nova linha
-                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer); // Salva
+                e.preventDefault();
+                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer);
                 titleElement.removeEventListener('keydown', handleKeyDown);
             } else if (e.key === 'Escape') {
-                e.preventDefault(); // Impede comportamento padrão
-                titleElement.textContent = titleElement.dataset.originalTitle; // Reverte
-                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer); // Sai do modo de edição
+                e.preventDefault();
+                titleElement.textContent = titleElement.dataset.originalTitle;
+                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer);
                 titleElement.removeEventListener('keydown', handleKeyDown);
             }
         };
@@ -1622,19 +1568,17 @@ function toggleEditMode(conversationId, titleElement, editButton, deleteButton, 
 function showInitialScreen() {
     initialScreen.classList.remove('hidden');
     chatAndInputArea.classList.add('hidden');
-    // Certifica-se de que nenhum item do histórico está ativo
     document.querySelectorAll('.history-item').forEach(item => {
         item.classList.remove('active');
     });
-    currentConversationId = null; // Zera o ID da conversa atual
-    initialUserMessage = null; // Zera a primeira mensagem do usuário
-    chatHistory = []; // Limpa o histórico do chat
-    userInput.disabled = true; // Desabilita input na tela inicial
+    currentConversationId = null;
+    initialUserMessage = null;
+    chatHistory = [];
+    userInput.disabled = true;
     sendButton.disabled = true;
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
 
-    // Marca o botão "Início" como ativo no cabeçalho
     homeButton.classList.add('active');
 }
 
@@ -1642,23 +1586,27 @@ function showInitialScreen() {
 function showChatArea() {
     initialScreen.classList.add('hidden');
     chatAndInputArea.classList.remove('hidden');
-    userInput.disabled = false; // Habilita input no chat
+    userInput.disabled = false;
     sendButton.disabled = false;
     userInput.classList.remove('disabled');
     sendButton.classList.remove('disabled');
     userInput.focus();
-    // Desativa o botão "Início" quando o chat está ativo
     homeButton.classList.remove('active');
 }
 
 // Listeners de Eventos
 
-// Modal de boas-vindas
-modalStartButton.addEventListener('click', () => {
-    notificationModalOverlay.classList.remove('show');
-    // Agora o botão de créditos leva para a tela inicial
-    showInitialScreen();
+// Modal de créditos
+creditsOkButton.addEventListener('click', () => {
+    hideCreditsModal();
 });
+creditsCloseButton.addEventListener('click', () => {
+    hideCreditsModal();
+});
+
+// NOVO: Listener para o botão de créditos no cabeçalho
+creditsButton.addEventListener('click', showCreditsModal);
+
 
 // NOVO: Listeners para os inputs do modal de dados iniciais para habilitar/desabilitar o botão
 collaboratorNameInput.addEventListener('input', checkInitialDataInputs);
@@ -1666,47 +1614,41 @@ clientNameInput.addEventListener('input', checkInitialDataInputs);
 
 // NOVO: Listener para o botão de confirmação do modal de dados iniciais
 initialDataConfirmButton.addEventListener('click', () => {
-    // Captura os dados
     collaboratorName = collaboratorNameInput.value.trim();
-    currentClientName = clientNameInput.value.trim(); // Captura o nome do cliente, mesmo que vazio
+    currentClientName = clientNameInput.value.trim();
     serviceChannel = serviceChannelSelect.value;
 
-    // Validação para o nome do colaborador
     if (!collaboratorName) {
-        collaboratorNameInput.classList.add('input-error'); // Adiciona classe de erro
-        errorMessage.textContent = translations[currentLanguage].collaboratorNameRequired; // Mensagem de erro específica
+        collaboratorNameInput.classList.add('input-error');
+        errorMessage.textContent = translations[currentLanguage].collaboratorNameRequired;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('show');
         setTimeout(() => {
             errorMessage.classList.add('hidden');
             errorMessage.classList.remove('show');
-            collaboratorNameInput.classList.remove('input-error'); // Remove a classe de erro
+            collaboratorNameInput.classList.remove('input-error');
         }, 5000);
-        return; // Impede o prosseguimento
+        return;
     }
 
-    // Validação para o nome do cliente (agora obrigatório)
     if (!currentClientName) {
-        clientNameInput.classList.add('input-error'); // Adiciona classe de erro
-        errorMessage.textContent = translations[currentLanguage].clientNameRequired; // Mensagem de erro específica
+        clientNameInput.classList.add('input-error');
+        errorMessage.textContent = translations[currentLanguage].clientNameRequired;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('show');
         setTimeout(() => {
             errorMessage.classList.add('hidden');
             errorMessage.classList.remove('show');
-            clientNameInput.classList.remove('input-error'); // Remove a classe de erro
+            clientNameInput.classList.remove('input-error');
         }, 5000);
-        return; // Impede o prosseguimento
+        return;
     }
 
+    hideInitialDataModal();
+    showChatArea();
 
-    hideInitialDataModal(); // Esconde o modal
-    showChatArea(); // Mostra a área de chat
-
-    // Adapta a mensagem de boas-vindas com base nos dados coletados
     let baseWelcomeMessage = translations[currentLanguage].welcomeMessage;
 
-    // Adaptação para o nome do cliente (sempre terá um valor agora)
     let clientNameAdapted = "";
     if (currentClientName) {
         if (currentLanguage === 'pt-BR') {
@@ -1726,8 +1668,6 @@ initialDataConfirmButton.addEventListener('click', () => {
         }
     }
 
-
-    // Adaptação para o canal de atendimento e a frase final de ajuda
     let serviceChannelDisplay = "";
     let finalHelpPhrase = "";
 
@@ -1789,11 +1729,10 @@ initialDataConfirmButton.addEventListener('click', () => {
 
     let fullWelcomeMessage = baseWelcomeMessage
         .replace('{COLLABORATOR_NAME}', collaboratorName)
-        .replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted) // Use g flag for global replacement
+        .replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted)
         .replace('{SERVICE_CHANNEL_ADAPTED}', serviceChannelDisplay) + " " + finalHelpPhrase.replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted);
 
 
-    // Inicia um novo histórico com a mensagem de boas-vindas personalizada
     chatHistory = [
         { role: "assistant", parts: [{ text: fullWelcomeMessage }] }
     ];
@@ -1803,24 +1742,23 @@ initialDataConfirmButton.addEventListener('click', () => {
 
 // NOVO: Listener para o botão de fechar do modal de dados iniciais
 initialDataCloseButton.addEventListener('click', () => {
-    hideInitialDataModal(); // Esconde o modal
-    showInitialScreen(); // Volta para a tela inicial
+    hideInitialDataModal();
+    showInitialScreen();
 });
 
 
 // Botão "Iniciar Nova Conversa" da tela inicial
 startChatButton.addEventListener('click', () => {
-    // Ao clicar em "Iniciar Nova Conversa", sempre exibe o modal de dados iniciais
     startNewConversation();
 });
 
 // Botão de enviar mensagem
 sendButton.addEventListener('click', () => sendMessage(false));
 
-// Botões do modal de confirmação de reiniciar (ainda existem, mas não são usados pelo botão)
+// Botões do modal de confirmação de reiniciar
 confirmRestartYesButton.addEventListener('click', () => {
     hideConfirmationModal();
-    startNewConversation(); // Chama a nova função para iniciar conversa
+    startNewConversation();
 });
 confirmRestartNoButton.addEventListener('click', hideConfirmationModal);
 
@@ -1837,27 +1775,8 @@ languageToggleButton.addEventListener('click', () => {
     const currentIndex = availableLanguages.indexOf(currentLanguage);
     const nextIndex = (currentIndex + 1) % availableLanguages.length;
     const nextLanguage = availableLanguages[nextIndex];
-    setLanguage(nextLanguage); // Chama setLanguage diretamente sem confirmação
+    setLanguage(nextLanguage);
 });
-
-
-// REMOVIDOS: Botões do modal de confirmação de troca de idioma
-// confirmLanguageYesButton.addEventListener('click', () => {
-//     hideLanguageConfirmationModal();
-//     if (pendingLanguage) {
-//         setLanguage(pendingLanguage, true); // Confirma a troca de idioma, pulando a confirmação
-//         pendingLanguage = null; // Limpa o idioma pendente
-//         // Sempre volta para a tela inicial após a troca de idioma
-//         showInitialScreen();
-//     }
-// });
-
-// confirmLanguageNoButton.addEventListener('click', () => {
-//     hideLanguageConfirmationModal();
-//     // Atualiza o texto do botão para o idioma atual, caso o usuário cancele
-//     currentLanguageText.textContent = currentLanguage.substring(0, 2).toUpperCase();
-//     pendingLanguage = null; // Limpa o idioma pendente
-// });
 
 // Enviar mensagem com Enter (sem Shift)
 userInput.addEventListener('keydown', (event) => {
@@ -1873,14 +1792,13 @@ userInput.addEventListener('input', () => {
     userInput.style.height = userInput.scrollHeight + 'px';
 });
 
-// Toggle da sidebar (agora usando o novo botão no header principal)
+// Toggle da sidebar
 mainSidebarToggleButton.addEventListener('click', () => {
-    isSidebarVisible = !isSidebarVisible; // Inverte o estado
-    conversationHistorySidebar.classList.toggle('hidden', !isSidebarVisible); // Adiciona/remove a classe 'hidden'
+    isSidebarVisible = !isSidebarVisible;
+    conversationHistorySidebar.classList.toggle('hidden', !isSidebarVisible);
 
-    // Altere o ícone do botão para indicar a ação de abrir/fechar
     mainSidebarToggleButton.innerHTML = isSidebarVisible ? '<i data-feather="chevron-left"></i>' : '<i data-feather="chevron-right"></i>';
-    feather.replace(); // Atualiza os ícones
+    feather.replace();
 });
 
 // Novo: Listener para o botão de Início no cabeçalho
@@ -1890,32 +1808,21 @@ homeButton.addEventListener('click', showInitialScreen);
 window.addEventListener('load', async () => {
     userInput.style.height = 'auto';
     userInput.style.height = userInput.scrollHeight + 'px';
-    notificationModalOverlay.classList.add('show');
+    // O modal de créditos inicial foi removido. A aplicação agora começa na tela inicial.
+    // notificationModalOverlay.classList.add('show');
 
     const storedLanguage = localStorage.getItem('preferredLanguage') || 'pt-BR';
-    setLanguage(storedLanguage); // Carrega o idioma sem o segundo parâmetro (skipConfirmation)
+    setLanguage(storedLanguage);
 
-    // Lógica para aplicar o tema com base na preferência do sistema
-    // REMOVIDO: const userPreferredTheme = localStorage.getItem('userPreferredTheme');
-    // REMOVIDO: if (userPreferredTheme) {
-    // REMOVIDO:     // Se o usuário já escolheu um tema, use-o
-    // REMOVIDO:     applyTheme(userPreferredTheme, false);
-    // REMOVIDO: } else
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // Se o sistema preferir dark mode, aplique dark
-        applyTheme('dark', false);
+        applyTheme('dark');
     } else {
-        // Caso contrário, aplique light mode
-        applyTheme('light', false);
+        applyTheme('light');
     }
 
-    // Adiciona um listener para mudanças na preferência do sistema
     if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            // Se o usuário não tiver uma preferência manual salva, atualize o tema automaticamente
-            // REMOVIDO: if (!localStorage.getItem('userPreferredTheme')) {
-                applyTheme(event.matches ? 'dark' : 'light', false);
-            // REMOVIDO: }
+                applyTheme(event.matches ? 'dark' : 'light');
         });
     }
 
@@ -1923,29 +1830,24 @@ window.addEventListener('load', async () => {
 
     loadingIndicator.style.display = 'none';
 
-    // Desabilita o input e o botão de enviar por padrão até o Firebase estar pronto
     userInput.disabled = true;
     sendButton.disabled = true;
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
 
-    // Define o estado inicial da sidebar como oculta e atualiza o ícone do botão
-    isSidebarVisible = false; // Garante que a variável de controle está em sync
-    conversationHistorySidebar.classList.add('hidden'); // Garante que a classe 'hidden' está aplicada
-    mainSidebarToggleButton.innerHTML = '<i data-feather="chevron-right"></i>'; // Ícone para "abrir"
+    isSidebarVisible = false;
+    conversationHistorySidebar.classList.add('hidden');
+    mainSidebarToggleButton.innerHTML = '<i data-feather="chevron-right"></i>';
     feather.replace();
 
 
-    // Inicializa Firebase e autentica
     try {
-        // Verifica se firebaseConfig.projectId está definido (agora com fallback)
         if (!firebaseConfig.projectId || firebaseConfig.projectId === "YOUR_PROJECT_ID_PLACEHOLDER") {
             const errorMsg = "Erro de configuração do Firebase: 'projectId' não fornecido ou é um placeholder. O histórico de conversas não estará disponível. Por favor, verifique a configuração do ambiente.";
             console.error(errorMsg);
             errorMessage.textContent = errorMsg;
             errorMessage.classList.remove('hidden');
             errorMessage.classList.add('show');
-            // Não retorna, permite que o app continue, mas sem Firebase
         }
 
         app = initializeApp(firebaseConfig);
@@ -1957,16 +1859,14 @@ window.addEventListener('load', async () => {
                 userId = user.uid;
                 isAuthReady = true;
                 console.log("Usuário autenticado:", userId);
-                // Carrega o histórico apenas se o Firebase estiver configurado corretamente
                 if (firebaseConfig.projectId && firebaseConfig.projectId !== "YOUR_PROJECT_ID_PLACEHOLDER") {
                     await loadConversationHistory();
                 }
-                // Habilita o input e o botão de enviar após a autenticação
                 userInput.disabled = false;
                 sendButton.disabled = false;
                 userInput.classList.remove('disabled');
                 sendButton.classList.remove('disabled');
-                userInput.focus(); // Foca no input após estar pronto
+                userInput.focus();
 
             } else {
                 console.log("Nenhum usuário logado. Tentando autenticação anônima...");
@@ -1978,7 +1878,6 @@ window.addEventListener('load', async () => {
                     }
                 } catch (anonError) {
                     console.error("Erro na autenticação anônima:", anonError);
-                    // Em caso de erro de autenticação, o input e o botão permanecem desabilitados
                 }
             }
         });
@@ -1987,6 +1886,5 @@ window.addEventListener('load', async () => {
         errorMessage.textContent = `${translations[currentLanguage].errorMessage}: ${firebaseInitError.message}`;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('show');
-        // Em caso de erro de inicialização, o input e o botão permanecem desabilitados
     }
 });

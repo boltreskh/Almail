@@ -266,7 +266,7 @@ html[data-theme='dark'] .app-wrapper {
 .tutorial-modal-overlay,
 .confirmation-modal-overlay,
 #custom-confirm-overlay,
-#initial-data-modal-overlay { /* Adicionado o novo modal aqui */
+#initial-data-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -285,7 +285,7 @@ html[data-theme='dark'] .notification-modal-overlay,
 html[data-theme='dark'] .tutorial-modal-overlay,
 html[data-theme='dark'] .confirmation-modal-overlay,
 html[data-theme='dark'] #custom-confirm-overlay,
-html[data-theme='dark'] #initial-data-modal-overlay { /* Adicionado o novo modal aqui */
+html[data-theme='dark'] #initial-data-modal-overlay {
     background-color: var(--dm-modal-overlay);
 }
 
@@ -293,7 +293,7 @@ html[data-theme='dark'] #initial-data-modal-overlay { /* Adicionado o novo modal
 .tutorial-modal-overlay.show,
 .confirmation-modal-overlay.show,
 #custom-confirm-overlay.show,
-#initial-data-modal-overlay.show { /* Adicionado o novo modal aqui */
+#initial-data-modal-overlay.show {
     opacity: 1;
     visibility: visible;
 }
@@ -303,21 +303,19 @@ html[data-theme='dark'] #initial-data-modal-overlay { /* Adicionado o novo modal
 .confirmation-modal-content,
 #custom-confirm-content {
     background-color: var(--lm-modal-bg);
-    color: var(--lm-modal-text-color); /* Usando nova variável de cor para texto */
+    color: var(--lm-modal-text-color);
     border-radius: 16px;
-    /* Ajuste de padding para dar espaço ao botão "X" no canto superior direito */
     padding: 32px 40px;
-    padding-top: 48px; /* Aumenta o padding superior para o botão "X" */
-    padding-right: 48px; /* Aumenta o padding direito para o botão "X" */
+    padding-top: 48px;
+    padding-right: 48px;
     max-width: 550px;
     text-align: center;
-    box-shadow: 0 15px 30px var(--lm-modal-shadow); /* Usando nova variável de sombra */
+    box-shadow: 0 15px 30px var(--lm-modal-shadow);
     transform: scale(0.95);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    position: relative; /* Essencial para o posicionamento absoluto do botão de fechar */
+    position: relative;
 }
-/* O novo modal de nome também usa .notification-modal-content para o seu conteúdo */
 #initial-data-modal-overlay .notification-modal-content {
     /* Não precisa de estilos específicos aqui, pois já herda de .notification-modal-content */
 }
@@ -326,45 +324,44 @@ html[data-theme='dark'] .notification-modal-content,
 html[data-theme='dark'] .tutorial-modal-content,
 html[data-theme='dark'] .confirmation-modal-content,
 html[data-theme='dark'] #custom-confirm-content,
-html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content { /* Adicionado o novo modal aqui */
+html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content {
     background-color: var(--dm-modal-bg);
-    color: var(--dm-modal-text-color); /* Usando nova variável de cor para texto */
-    box-shadow: 0 15px 30px var(--dm-modal-shadow); /* Usando nova variável de sombra */
+    color: var(--dm-modal-text-color);
+    box-shadow: 0 15px 30px var(--dm-modal-shadow);
 }
 
 .notification-modal-overlay.show .notification-modal-content,
 .tutorial-modal-overlay.show .tutorial-modal-content,
 .confirmation-modal-overlay.show .confirmation-modal-content,
 #custom-confirm-overlay.show #custom-confirm-content,
-#initial-data-modal-overlay.show .notification-modal-content { /* Adicionado o novo modal aqui */
+#initial-data-modal-overlay.show .notification-modal-content {
     transform: scale(1);
     opacity: 1;
 }
 
 .modal-icon-container {
-    margin-bottom: 28px; /* Aumentado o espaçamento abaixo do ícone */
+    margin-bottom: 28px;
 }
 .modal-icon-container svg {
-    width: 64px; /* Aumentado o tamanho do ícone */
-    height: 64px; /* Aumentado o tamanho do ícone */
-    filter: drop-shadow(0px 6px 12px var(--lm-logo-shadow-color)); /* Sombra mais pronunciada para o ícone */
+    width: 64px;
+    height: 64px;
+    filter: drop-shadow(0px 6px 12px var(--lm-logo-shadow-color));
 }
 html[data-theme='dark'] .modal-icon-container svg {
-     filter: drop-shadow(0px 6px 12px var(--dm-logo-shadow-color)); /* Sombra mais pronunciada para o ícone */
+     filter: drop-shadow(0px 6px 12px var(--dm-logo-shadow-color));
 }
 
 
 /* Close Button for Modals - Posicionado no canto superior direito */
 .close-button {
     position: absolute;
-    top: 16px; /* Ajustado para 16px */
-    right: 16px; /* Ajustado para 16px */
+    top: 16px;
+    right: 16px;
     background: transparent;
     border: none;
-    /* Removido font-size: 1.5rem; para usar o tamanho do ícone */
     cursor: pointer;
     color: var(--lm-text-tertiary);
-    transition: color 0.2s ease, background-color 0.2s ease; /* Adicionado background-color à transição */
+    transition: color 0.2s ease, background-color 0.2s ease;
     padding: 8px;
     border-radius: 50%;
     display: flex;
@@ -378,12 +375,12 @@ html[data-theme='dark'] .close-button {
 
 .close-button:hover {
     color: var(--lm-text-primary);
-    background-color: rgba(0,0,0,0.05); /* Adicionado background-color no hover */
+    background-color: rgba(0,0,0,0.05);
 }
 
 html[data-theme='dark'] .close-button:hover {
     color: var(--dm-text-primary);
-    background-color: rgba(255,255,255,0.08); /* Adicionado background-color no hover para dark mode */
+    background-color: rgba(255,255,255,0.08);
 }
 
 /* Garante que o ícone dentro do botão "X" tenha o tamanho correto */
@@ -421,9 +418,9 @@ html[data-theme='dark'] .input-label {
     background-color: var(--lm-input-bg);
     color: var(--lm-input-text);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    -webkit-appearance: none; /* Remove estilo padrão do select em WebKit */
-    -moz-appearance: none;    /* Remove estilo padrão do select em Firefox */
-    appearance: none;         /* Remove estilo padrão do select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 html[data-theme='dark'] .modal-input,
 html[data-theme='dark'] .modal-select {
@@ -458,7 +455,7 @@ html[data-theme='dark'] .modal-select:focus {
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 1.5em;
-    padding-right: 2.5rem; /* Espaço para o ícone */
+    padding-right: 2.5rem;
 }
 html[data-theme='dark'] .modal-select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238B949E'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
@@ -469,10 +466,10 @@ html[data-theme='dark'] .modal-select {
 .start-button {
     background: var(--lm-button-bg);
     color: var(--lm-button-text);
-    padding: 14px 36px; /* Aumentado o padding para um botão mais proeminente */
+    padding: 14px 36px;
     border-radius: 10px;
-    font-size: 1.05rem; /* Levemente maior */
-    font-weight: 600; /* Mais negrito */
+    font-size: 1.05rem;
+    font-weight: 600;
     cursor: pointer;
     border: none;
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -481,7 +478,7 @@ html[data-theme='dark'] .modal-select {
 html[data-theme='dark'] .start-button {
     background: var(--dm-button-bg);
     color: var(--dm-button-text);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Sombra mais escura para o dark mode */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .start-button:hover:not(:disabled) {
@@ -492,7 +489,7 @@ html[data-theme='dark'] .start-button {
 html[data-theme='dark'] .start-button:hover:not(:disabled) {
     background-color: var(--dm-button-hover-bg);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3); /* Sombra mais intensa no hover para dark mode */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
 /* Tutorial Modal Específico */
@@ -527,7 +524,7 @@ html[data-theme='dark'] .tutorial-modal-content .close-button:hover {
 #tutorial-content {
     max-height: 50vh;
     overflow-y: auto;
-    padding-right: 10px; /* Espaço para scrollbar */
+    padding-right: 10px;
     color: var(--lm-text-secondary);
     line-height: 1.7;
 }
@@ -537,12 +534,12 @@ html[data-theme='dark'] #tutorial-content {
 #tutorial-content h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--lm-accent-primary); /* Usando a cor de destaque para títulos de tutorial */
+    color: var(--lm-accent-primary);
     margin-top: 20px;
     margin-bottom: 8px;
 }
 html[data-theme='dark'] #tutorial-content h3 {
-    color: var(--dm-accent-primary); /* Usando a cor de destaque para títulos de tutorial */
+    color: var(--dm-accent-primary);
 }
 #tutorial-content ul {
     list-style-position: inside;
@@ -562,7 +559,7 @@ html[data-theme='dark'] #tutorial-content h3 {
     border-bottom: 1px solid var(--lm-border-color);
     color: var(--lm-text-primary);
     transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-    min-height: var(--header-height); /* Usa a variável de altura do cabeçalho */
+    min-height: var(--header-height);
     flex-shrink: 0;
 }
 html[data-theme='dark'] .chat-header {
@@ -662,10 +659,10 @@ html[data-theme='dark'] .control-button:hover:not(:disabled) {
 
 /* Estilos para o novo botão único de alternância de idioma */
 .language-toggle-button {
-    width: auto; /* Largura automática para se ajustar ao conteúdo */
-    min-width: 60px; /* Largura mínima para o ícone e texto */
-    height: 44px; /* Altura fixa */
-    font-size: 0.9rem; /* Tamanho da fonte para as abreviações */
+    width: auto;
+    min-width: 60px;
+    height: 44px;
+    font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
     border-radius: 10px;
@@ -677,8 +674,8 @@ html[data-theme='dark'] .control-button:hover:not(:disabled) {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px; /* Espaçamento entre o ícone e o texto */
-    padding: 0 12px; /* Padding horizontal para o botão */
+    gap: 6px;
+    padding: 0 12px;
 }
 html[data-theme='dark'] .language-toggle-button {
     background-color: var(--dm-control-button-bg);
@@ -702,22 +699,22 @@ html[data-theme='dark'] .language-toggle-button:hover:not(:disabled) {
     background-color: var(--lm-lang-button-active-bg);
     color: var(--lm-lang-button-active-text);
     border-color: var(--lm-lang-button-active-bg);
-    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2); /* Sombra com base no novo accent-primary */
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2);
 }
 html[data-theme='dark'] .language-toggle-button.active {
     background-color: var(--dm-lang-button-active-bg);
     color: var(--dm-lang-button-active-text);
     border-color: var(--dm-lang-button-active-bg);
-    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2); /* Sombra com base no novo dm-accent-primary */
+    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2);
 }
 
 .language-toggle-button i {
-    width: 20px; /* Tamanho do ícone de globo */
+    width: 20px;
     height: 20px;
 }
 
 .language-toggle-button span {
-    line-height: 1; /* Garante que o texto não adicione altura extra */
+    line-height: 1;
 }
 
 
@@ -875,16 +872,16 @@ html[data-theme='dark'] .feedback-button.disliked {
 
 /* Estilo genérico para elementos desabilitados */
 [disabled], .disabled {
-    opacity: 0.5; /* Reduz a opacidade */
-    cursor: not-allowed !important; /* Muda o cursor para "não permitido" */
-    pointer-events: none; /* Impede eventos de clique */
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
 }
 
 
 /* Loading Indicator */
 .loading-indicator {
-    opacity: 0; /* Começa invisível */
-    transition: opacity 0.3s ease; /* Transição para o fade in/out */
+    opacity: 0;
+    transition: opacity 0.3s ease;
     align-self: flex-start;
     margin-left: 24px;
     margin-bottom: 16px;
@@ -997,11 +994,11 @@ html[data-theme='dark'] .chat-input::placeholder {
 }
 .chat-input:focus {
     border-color: var(--lm-input-focus-border);
-    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2); /* Sombra com base no novo accent-primary */
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2);
 }
 html[data-theme='dark'] .chat-input:focus {
     border-color: var(--dm-input-focus-border);
-    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2); /* Sombra com base no novo dm-accent-primary */
+    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2);
 }
 
 /* NOVO: Estilo para input com erro */
@@ -1078,7 +1075,7 @@ html[data-theme='dark'] .app-footer {
 
 /* Sidebar de Histórico de Conversas */
 .conversation-history-sidebar {
-    width: 300px; /* Largura padrão da sidebar */
+    width: 300px;
     background-color: var(--lm-sidebar-bg);
     border-left: 1px solid var(--lm-sidebar-border);
     display: flex;
@@ -1089,7 +1086,7 @@ html[data-theme='dark'] .app-footer {
 }
 html[data-theme='dark'] .conversation-history-sidebar {
     background-color: var(--dm-sidebar-bg);
-    border-left: 1px solid var(--dm-border-color); /* Usando var(--dm-border-color) para consistência */
+    border-left: 1px solid var(--dm-border-color);
 }
 
 .conversation-history-sidebar.hidden {
@@ -1114,7 +1111,7 @@ html[data-theme='dark'] .conversation-history-sidebar {
 }
 html[data-theme='dark'] .sidebar-header {
     background: var(--dm-sidebar-header-bg);
-    border-bottom: 1px solid var(--dm-border-color); /* Usando var(--dm-border-color) para consistência */
+    border-bottom: 1px solid var(--dm-border-color);
     color: var(--dm-text-primary);
 }
 
@@ -1307,7 +1304,7 @@ html[data-theme='dark'] .delete-conversation-button:hover:not(:disabled) {
 }
 html[data-theme='dark'] .sidebar-footer {
     background: var(--dm-sidebar-footer-bg);
-    border-top: 1px solid var(--dm-border-color); /* Usando var(--dm-border-color) para consistência */
+    border-top: 1px solid var(--dm-border-color);
     color: var(--dm-text-tertiary);
 }
 
@@ -1415,9 +1412,9 @@ html[data-theme='dark'] .input-label {
     background-color: var(--lm-input-bg);
     color: var(--lm-input-text);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    -webkit-appearance: none; /* Remove estilo padrão do select em WebKit */
-    -moz-appearance: none;    /* Remove estilo padrão do select em Firefox */
-    appearance: none;         /* Remove estilo padrão do select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 html[data-theme='dark'] .modal-input,
 html[data-theme='dark'] .modal-select {
@@ -1452,7 +1449,7 @@ html[data-theme='dark'] .modal-select:focus {
     background-repeat: no-repeat;
     background-position: right 1rem center;
     background-size: 1.5em;
-    padding-right: 2.5rem; /* Espaço para o ícone */
+    padding-right: 2.5rem;
 }
 html[data-theme='dark'] .modal-select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238B949E'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
@@ -1558,17 +1555,17 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
 
     /* Override header height for mobile */
     :root {
-        --header-height: 70px; /* Altura do cabeçalho para mobile */
+        --header-height: 70px;
     }
     html[data-theme='dark'] {
-        --header-height: 70px; /* Altura do cabeçalho para mobile */
+        --header-height: 70px;
     }
 
     /* Sidebar responsiva - sempre à direita e sobrepondo */
     .conversation-history-sidebar {
         position: fixed;
         right: 0;
-        top: var(--header-height); /* Posiciona abaixo do cabeçalho */
+        top: var(--header-height);
         bottom: 0;
         width: 280px;
         max-width: 80vw;
@@ -1579,7 +1576,7 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         z-index: 100;
         background-color: var(--lm-sidebar-bg);
         box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-        height: calc(100vh - var(--header-height)); /* Ocupa a altura restante da viewport */
+        height: calc(100vh - var(--header-height));
     }
     html[data-theme='dark'] .conversation-history-sidebar {
         border-left: 1px solid var(--dm-border-color);
@@ -1600,15 +1597,15 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     }
     .sidebar-header h3 {
         font-size: 1rem;
-        white-space: nowrap; /* Garante que o texto não quebre linha */
-        overflow: hidden;    /* Esconde o texto que transborda */
-        text-overflow: ellipsis; /* Adiciona "..." ao texto que transborda */
-        flex-grow: 1; /* Permite que o flex item ocupe o espaço disponível */
-        min-width: 0; /* Permite que o flex item encolha abaixo do seu conteúdo intrínseco */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+        min-width: 0;
     }
 
     .history-list {
-        padding: 15px 0; /* Aumentado o padding superior para evitar corte */
+        padding: 15px 0;
     }
     .history-item {
         padding: 8px 16px;
@@ -1631,8 +1628,8 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     /* Ajustes para o cabeçalho em mobile */
     .chat-header {
         padding: 12px 16px;
-        min-height: var(--header-height); /* Usa a variável de altura do cabeçalho para mobile */
-        z-index: 101; /* Garante que o cabeçalho esteja acima da sidebar */
+        min-height: var(--header-height);
+        z-index: 101;
     }
     .almail-logo-container svg {
         width: 36px;
@@ -1645,7 +1642,7 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         width: 40px;
         height: 40px;
     }
-    .control-button i, .control-button-span i { /* Corrigido o seletor aqui */
+    .control-button i, .control-button-span i {
         width: 20px;
         height: 20px;
     }
@@ -1670,21 +1667,21 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     }
     /* Aprimoramento para o botão de alternância do histórico em mobile */
     #toggle-history-sidebar {
-        background-color: var(--lm-accent-primary); /* Fundo com a cor de destaque principal */
-        color: var(--lm-button-text); /* Texto branco para contraste */
-        border-color: var(--lm-accent-primary); /* Borda com a mesma cor de destaque */
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra sutil para destacá-lo */
+        background-color: var(--lm-accent-primary);
+        color: var(--lm-button-text);
+        border-color: var(--lm-accent-primary);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     html[data-theme='dark'] #toggle-history-sidebar {
         background-color: var(--dm-accent-primary);
         color: var(--dm-button-text);
         border-color: var(--dm-accent-primary);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.4); /* Sombra mais intensa no dark mode */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.4);
     }
     #toggle-history-sidebar:hover:not(:disabled) {
-        background-color: var(--lm-accent-secondary); /* Cor de hover mais escura */
+        background-color: var(--lm-accent-secondary);
         border-color: var(--lm-accent-secondary);
-        transform: translateY(-1px); /* Efeito de elevação sutil */
+        transform: translateY(-1px);
     }
     html[data-theme='dark'] #toggle-history-sidebar:hover:not(:disabled) {
         background-color: var(--dm-accent-secondary);
@@ -1709,9 +1706,73 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     .tutorial-modal-content,
     .confirmation-modal-content,
     #initial-data-modal-overlay .notification-modal-content {
-        padding: 1.5rem; /* Padding original para mobile */
-        padding-top: 2.5rem; /* Aumenta o padding superior para o botão "X" */
-        padding-right: 2.5rem; /* Aumenta o padding direito para o botão "X" */
+        padding: 1.5rem;
+        padding-top: 2.5rem;
+        padding-right: 2.5rem;
         width: 95%;
     }
+}
+
+/* Estilos específicos para a seção de créditos */
+.credits-list {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0 20px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--lm-text-secondary);
+}
+
+html[data-theme='dark'] .credits-list {
+    color: var(--dm-text-secondary);
+}
+
+.credits-list strong {
+    font-weight: 700;
+    color: var(--lm-accent-primary);
+    display: block; /* Garante que o título da seção fique em sua própria linha */
+    margin-top: 15px; /* Espaçamento acima do título da seção */
+    margin-bottom: 8px; /* Espaçamento abaixo do título da seção */
+    font-size: 1.2rem;
+}
+
+html[data-theme='dark'] .credits-list strong {
+    color: var(--dm-accent-primary);
+}
+
+.credits-list ul {
+    list-style: none; /* Remove marcadores de lista padrão */
+    padding: 0;
+    margin: 0;
+}
+
+.credits-list li {
+    margin-bottom: 5px; /* Espaçamento entre os itens da lista */
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.credits-list li:hover {
+    color: var(--lm-accent-primary); /* Cor de destaque no hover */
+    transform: translateX(5px); /* Efeito sutil de movimento */
+}
+
+html[data-theme='dark'] .credits-list li:hover {
+    color: var(--dm-accent-primary);
+}
+
+/* Ajustes finos para o modal de créditos */
+#credits-modal-overlay .notification-modal-content {
+    padding: 40px;
+    padding-top: 50px;
+    max-width: 600px; /* Aumenta um pouco a largura para melhor visualização */
+}
+
+#credits-modal-overlay h2 {
+    font-size: 2.5rem; /* Título maior */
+    margin-bottom: 15px;
+}
+
+#credits-modal-overlay p.text-lg {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
 }

@@ -10,8 +10,11 @@
     <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body class="antialiased">
-    <div class="notification-modal-overlay" id="notification-modal-overlay">
+    <div class="notification-modal-overlay" id="credits-modal-overlay">
         <div class="notification-modal-content">
+            <button class="close-button" id="credits-close-button" aria-label="Fechar Créditos">
+                <i data-feather="x"></i>
+            </button>
             <div class="modal-icon-container">
                 <svg class="almail-logo-large" width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="50" class="logo-circle-fill"/>
@@ -21,7 +24,7 @@
                         <circle cx="50" cy="70" r="8"/>
                         <line x1="30" y1="30" x2="70" y2="30" stroke-width="4" stroke-linecap="round"/>
                         <line x1="30" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
-                        <line x1="70" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="70" y1="30" x2="50" y2='70' stroke-width='4' stroke-linecap='round'/>
                     </g>
                 </svg>
             </div>
@@ -31,7 +34,7 @@
             </p>
             <div class="credits-list" data-i18n="creditsModalDescription">
                 </div>
-            <button id="modal-start-button" class="start-button" data-i18n="creditsModalButton">Entendi</button>
+            <button id="credits-ok-button" class="start-button" data-i18n="creditsModalButton">Entendi</button>
         </div>
     </div>
 
@@ -150,6 +153,9 @@
                     </button>
                     <button id="tutorial-button" class="control-button" aria-label="Abrir Tutorial" data-i18n="tutorialButtonAria">
                         <i data-feather="help-circle"></i>
+                    </button>
+                    <button id="credits-button" class="control-button" aria-label="Ver Créditos" data-i18n="creditsButtonAria">
+                        <i data-feather="info"></i>
                     </button>
                     <button id="theme-toggle" class="control-button" aria-label="Alternar Tema" data-i18n="themeToggleButtonAria">
                         <span id="theme-icon"><i data-feather="moon"></i></span>
