@@ -46,6 +46,16 @@ let isAuthReady = false; // Flag para indicar que a autenticação foi concluíd
 // Elementos do DOM
 const notificationModalOverlay = document.getElementById('notification-modal-overlay');
 const modalStartButton = document.getElementById('modal-start-button');
+
+// Novos elementos para o modal de dados iniciais
+const initialDataModalOverlay = document.getElementById('initial-data-modal-overlay');
+const collaboratorNameInput = document.getElementById('collaborator-name-input');
+const clientNameInput = document.getElementById('client-name-input');
+const serviceChannelSelect = document.getElementById('service-channel-select');
+const initialDataConfirmButton = document.getElementById('initial-data-confirm-button');
+const initialDataCloseButton = document.getElementById('initial-data-close-button'); // NOVO: Botão de fechar do modal de dados iniciais
+
+
 const chatAndInputArea = document.getElementById('chat-and-input-area'); // ID correto agora
 const initialScreen = document.getElementById('initial-screen'); // Novo elemento da tela inicial
 const startChatButton = document.getElementById('start-chat-button'); // Novo botão para iniciar chat
@@ -92,6 +102,11 @@ let isConversationActive = true;
 
 // Variável para armazenar o nome do cliente atual
 let currentClientName = null;
+// Nova variável para armazenar o nome do colaborador
+let collaboratorName = null;
+// Nova variável para armazenar o canal de atendimento
+let serviceChannel = null;
+
 
 // Variável para armazenar o idioma atual e o idioma pendente de confirmação
 let currentLanguage = 'pt-BR'; // Padrão
@@ -119,6 +134,19 @@ const translations = {
             </ul>
         `, // Descrição detalhada dos créditos
         creditsModalButton: 'Entendi', // Texto do botão
+        // Novos textos para o modal de dados iniciais
+        initialDataModalTitle: 'Informações Iniciais',
+        initialDataModalSubtitle: 'Por favor, preencha os dados para otimizar o atendimento.',
+        collaboratorNameLabel: 'Seu Nome:',
+        collaboratorNamePlaceholder: 'Ex: Ana Silva',
+        clientNameLabel: 'Nome do Cliente:', // Alterado para obrigatório
+        clientNamePlaceholder: 'Ex: João Souza',
+        serviceChannelLabel: 'Canal de Atendimento:',
+        channelChat: 'Chat',
+        channelEmail: 'Email',
+        channelC2C: 'C2C (Voz)',
+        initialDataConfirmButton: 'Confirmar',
+
         tutorialModalTitle: 'Guia Rápido: Almail Suporte IA',
         tutorialModalButton: 'Entendido!',
         restartConfirmTitle: 'Reiniciar Conversa?',
@@ -138,7 +166,7 @@ const translations = {
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
         footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.',
-        welcomeMessage: "Olá! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender seus clientes. Para otimizar nosso atendimento, por favor, me informe o *nome do cliente* que você está atendendo. Se não for para um cliente específico, podemos seguir normalmente. Estou aqui para ajudar!",
+        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Histórico de Conversas',
         userIdDisplay: 'ID do Usuário:',
         homeButton: 'Início', // Novo texto para o botão "Início"
@@ -158,18 +186,21 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
 
 **É CRÍTICO que você responda SEMPRE e SOMENTE em Português (Brasil).**
 
-**Pense e aja como um modelo de linguagem avançado:**
-* **Fluidez e Naturalidade:** Suas respostas devem ser conversacionais, claras e diretas, evitando jargões desnecessários. Pense em como você explicaria algo a um colega de trabalho.
-* **Compreensão Contextual:** Analise o histórico da conversa para entender a intenção por trás da pergunta do colaborador, mesmo que não seja explicitamente formulada.
-* **Raciocínio Lógico:** Processe as informações de forma lógica para fornecer a solução mais relevante e eficiente.
-* **Adaptação:** Ajuste o nível de detalhe e a complexidade da resposta com base na pergunta do colaborador, sem sobrecarregar com informações irrelevantes.
+**Informações do Atendimento Atual:**
+* **Nome do Colaborador:** {COLLABORATOR_NAME}
+* **Nome do Cliente Final:** {CLIENT_NAME} (Se o cliente não tiver um nome específico, este campo será "Não Informado")
+* **Canal de Atendimento:** {SERVICE_CHANNEL} (Pode ser "Chat", "Email" ou "C2C (Voz)")
+
+**Adaptação da Resposta com base no Canal de Atendimento:**
+
+{SERVICE_CHANNEL_INSTRUCTIONS}
 
 **Diretrizes operacionais:**
 1.  **Foco e Escopo:** Seu conhecimento é exclusivo sobre Cartões Mercado Pago e serviços relacionados (emissão, bloqueio, transações, limites, faturas, etc.). **Não responda a perguntas fora deste escopo.** Se a pergunta não for clara ou estiver fora do escopo, peça ao colaborador para reformular ou esclarecer.
 2.  **Linguagem:** Formal, profissional, clara, concisa e direta. **Nunca use emojis.** Utilize uma linguagem que seja útil para o colaborador, como se estivesse fornecendo um "roteiro" ou "base de conhecimento".
 3.  **Personalização e Identificação:**
-    * **Sempre se dirija ao colaborador.** Use termos como "você", "colaborador", "sua dúvida".
-    * **Nunca confunda o colaborador com o cliente.** Se o nome do cliente for fornecido pelo colaborador (ex: "O cliente [Nome do Cliente] perguntou..."), use-o para personalizar a *resposta que o colaborador dará ao cliente*. Ex: "Para o cliente [Nome do Cliente], você pode informar que...".
+    * **Sempre se dirija ao colaborador pelo nome, se disponível.** Ex: "Olá, {COLLABORATOR_NAME}! Para a sua dúvida..."
+    * **Nunca confunda o colaborador com o cliente.** Se o nome do cliente for fornecido, use-o para personalizar a *resposta que o colaborador dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, você pode informar que...".
     * Se o nome do cliente não for fornecido, use termos neutros como "o cliente" ou "o usuário" ao se referir a ele, mas sempre no contexto de como o *colaborador* deve interagir.
 4.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Pago. Evite divagações.
 5.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, números completos de cartão, CVV, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
@@ -210,7 +241,10 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         initialScreenTitle: 'Bem-vindo(a) à Almail Suporte IA!',
         initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no time de Cartões do Mercado Pago.',
         initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados a cartões. Clique em "Nova Conversa" para começar a interagir com a IA.',
-        startChatButton: 'Iniciar Nova Conversa'
+        startChatButton: 'Iniciar Nova Conversa',
+        // NOVO: Mensagens de validação para o modal de dados iniciais
+        collaboratorNameRequired: 'Por favor, informe seu nome.',
+        clientNameRequired: 'Por favor, informe o nome do cliente.',
     },
     'en': {
         appTitle: 'Almail AI Support - Cards',
@@ -226,6 +260,19 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
             </ul>
         `, // Detailed credits description
         creditsModalButton: 'Understood', // Button text
+        // New texts for initial data modal
+        initialDataModalTitle: 'Initial Information',
+        initialDataModalSubtitle: 'Please fill in the details to optimize the service.',
+        collaboratorNameLabel: 'Your Name:',
+        collaboratorNamePlaceholder: 'Ex: Anna Smith',
+        clientNameLabel: 'Client Name:', // Changed to mandatory
+        clientNamePlaceholder: 'Ex: John Doe',
+        serviceChannelLabel: 'Service Channel:',
+        channelChat: 'Chat',
+        channelEmail: 'Email',
+        channelC2C: 'C2C (Voice)',
+        initialDataConfirmButton: 'Confirm',
+
         tutorialModalTitle: 'Quick Guide: Almail AI Support',
         tutorialModalButton: 'Got it!',
         restartConfirmTitle: 'Restart Conversation?',
@@ -245,7 +292,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         sendButtonAria: 'Send Message',
         footerCopyright: '© 2025 Almail AI Support. All rights reserved.',
         footerDisclaimer: 'This AI uses public data and does not store Mercado Pago information.',
-        welcomeMessage: "Hello! I'm Almail, your virtual assistant specialized in support for Mercado Pago Cards. I'm here to help you serve your customers. To optimize our service, please inform me the *customer's name* you are assisting. If it's not for a specific customer, we can proceed normally. I'm here to help!",
+        welcomeMessage: "Hello {COLLABORATOR_NAME}! I'm Almail, your virtual assistant specialized in support for Mercado Pago Cards. I'm here to help you assist {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Conversation History',
         userIdDisplay: 'User ID:',
         homeButton: 'Home', // New text for "Home" button
@@ -265,21 +312,24 @@ You should act as a **support agent for the collaborator**, providing accurate a
 
 **It is CRITICAL that you respond ALWAYS and ONLY in English.**
 
-**Think and act as an advanced language model:**
-* **Fluency and Naturalness:** Your responses should be conversational, clear, and direct, avoiding unnecessary jargon. Think about how you would explain something to a colleague.
-* **Contextual Understanding:** Analyze the conversation history to understand the intent behind the collaborator's question, even if not explicitly formulated.
-* **Logical Reasoning:** Process information logically to provide the most relevant and efficient solution.
-* **Adaptation:** Adjust the level of detail and the complexity of the response based on the collaborator's question, without overwhelming them with irrelevant information.
+**Current Service Information:**
+* **Collaborator Name:** {COLLABORATOR_NAME}
+* **End Client Name:** {CLIENT_NAME} (If the client does not have a specific name, this field will be "Not Informed")
+* **Service Channel:** {SERVICE_CHANNEL} (Can be "Chat", "Email", or "C2C (Voice)")
+
+**Adapting the Response based on the Service Channel:**
+
+{SERVICE_CHANNEL_INSTRUCTIONS}
 
 **Operational guidelines:**
 1.  **Focus and Scope:** Your knowledge is exclusive to Mercado Pago Cards and related services (issuance, blocking, transactions, limits, invoices, etc.). **Do not answer questions outside this scope.** If the question is unclear or out of scope, ask the collaborator to rephrase or clarify.
 2.  **Language:** Formal, professional, clear, concise, and direct. **Never use emojis.** Use language that is helpful to the collaborator, as if providing a "script" or "knowledge base."
 3.  **Personalization and Identification:**
-    * **Always address the collaborator.** Use terms like "you", "colaborador", "your question".
-    * **Never confuse the collaborator with the customer.** If the customer's name is provided by the collaborator (e.g., "The customer [Customer Name] asked..."), use it to personalize the *response the collaborator will give to the customer*. Ex: "For customer [Customer Name], you can inform that...".
+    * **Always address the collaborator by name, if available.** Ex: "Hello, {COLLABORATOR_NAME}! Regarding your question..."
+    * **Never confuse the collaborator with the customer.** If the customer's name is provided, use it to personalize the *response the collaborator will give to the customer*. Ex: "For customer {CLIENT_NAME}, you can inform that...".
     * If the customer's name is not provided, use neutral terms like "the customer" or "the user" when referring to them, but always in the context of how the *colaborador* should interact.
 4.  **Objetivity and Clarity:** Respond only to what was asked, providing accurate information based on Mercado Pago policies and procedures. Evite divagações.
-5.  **Security and Sensitive Data:** **NEVER request or process sensitive customer information** (passwords, full card numbers, CVV, full bank details, etc.). If such information is mentioned by the collaborator, instruct them to handle it securely and offline, without the AI processing or storing it.
+5.  **Security and Sensitive Data:** **NEVER request or process sensitive customer information** (passwords, full card numbers, CVV, full bank details, etc.). If such information is mentioned by the collaborator, instruct them to handle it securely and offline, without the AI processing or storing.
 6.  **Resolution and Deepening:** Your goal is to help the collaborator solve the customer's problem. If the initial response is not sufficient, rephrase or deepen the explanation, always thinking about how the collaborator can use this information.
 7.  **Response Structure:** Use Markdown to organize information (bold, italics, lists, code blocks if necessary) to facilitate reading and use by the collaborator. Consider using titles and subtitles for more complex responses.
 8.  **Context and Continuity:** Base your responses on the conversation history to maintain coherence and and relevance. If the collaborator asks a follow-up question, use the previous context to provide a more complete answer.
@@ -317,7 +367,10 @@ You should act as a **support agent for the collaborator**, providing accurate a
         initialScreenTitle: 'Welcome to Almail AI Support!',
         initialScreenSubtitle: 'Your intelligent assistant to optimize support for the Mercado Pago Cards team.',
         initialScreenDescription: 'Here you can get quick and accurate information on various card-related topics. Click "New Chat" to start interacting with the AI.',
-        startChatButton: 'Start New Chat'
+        startChatButton: 'Start New Chat',
+        // NOVO: Mensagens de validação para o modal de dados iniciais
+        collaboratorNameRequired: 'Please enter your name.',
+        clientNameRequired: 'Please enter the client\'s name.',
     },
     'es': {
         appTitle: 'Almail Soporte IA - Tarjetas',
@@ -333,6 +386,19 @@ You should act as a **support agent for the collaborator**, providing accurate a
             </ul>
         `,
         creditsModalButton: 'Entendido',
+        // Nuevos textos para el modal de datos iniciales
+        initialDataModalTitle: 'Información Inicial',
+        initialDataModalSubtitle: 'Por favor, complete los datos para optimizar el servicio.',
+        collaboratorNameLabel: 'Tu Nombre:',
+        collaboratorNamePlaceholder: 'Ej: Ana Silva',
+        clientNameLabel: 'Nombre del Cliente:', // Changed to mandatory
+        clientNamePlaceholder: 'Ej: Juan Pérez',
+        serviceChannelLabel: 'Canal de Atención:',
+        channelChat: 'Chat',
+        channelEmail: 'Correo Electrónico',
+        channelC2C: 'C2C (Voz)',
+        initialDataConfirmButton: 'Confirmar',
+
         tutorialModalTitle: 'Guía Rápida: Almail Soporte IA',
         tutorialModalButton: '¡Entendido!',
         restartConfirmTitle: '¿Reiniciar Conversación?',
@@ -352,7 +418,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Soporte IA. Todos los derechos reservados.',
         footerDisclaimer: 'Esta IA utiliza datos públicos y no almacena información de Mercado Pago.',
-        welcomeMessage: "¡Hola! Soy Almail, tu asistente virtual especializada en soporte para Tarjetas de Mercado Pago. Estoy aquí para ayudarte a atender a tus clientes. Para optimizar nuestro servicio, por favor, infórmame el *nombre del cliente* al que estás atendiendo. Si no es para un cliente específico, podemos continuar normalmente. ¡Estoy aquí para ayudar!",
+        welcomeMessage: "¡Hola {COLLABORATOR_NAME}! Soy Almail, tu asistente virtual especializada en soporte para Tarjetas de Mercado Pago. Estoy aquí para ayudarte a atender a {CLIENT_NAME_ADAPTED} vía {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Historial de Conversaciones',
         userIdDisplay: 'ID de Usuario:',
         homeButton: 'Inicio',
@@ -368,23 +434,26 @@ You should act as a **support agent for the collaborator**, providing accurate a
         errorMessage: 'Ocurrió un error. Por favor, inténtalo de nuevo.',
         systemInstructions: `Eres Almail, una asistente virtual especializada en soporte para Tarjetas de Mercado Pago.
 Tu objetivo principal es **ayudar al colaborador** a proporcionar un excelente servicio al cliente.
-Debes actuar como un **agente de soporte para el colaborador**, proporcionando información precisa y estructurada para que él, a su vez, pueda ayudar al cliente.
+Debes actuar como un **agente de soporte para el colaborador**, proporcionando información precisa y estructurada para que él, a su vez, possa ajudar o cliente.
 
 **Es CRÍTICO que respondas SEMPRE e SOMENTE em Español.**
 
-**Piensa y actúa como um modelo de lenguaje avanzado:**
-* **Fluidez y Naturalidad:** Tus respuestas deben ser conversacionales, claras y directas, evitando jerga innecesaria. Piensa en cómo le explicarías algo a un compañero de trabajo.
-* **Comprehensión Contextual:** Analiza el historial de la conversación para entender la intención detrás de la pregunta del colaborador, incluso si no está formulada explícitamente.
-* **Raciocínio Lógico:** Procesa la información de forma lógica para proporcionar la solución más relevante y eficiente.
-* **Adaptación:** Ajusta el nivel de detalle y la complejidad de la respuesta según la pregunta del colaborador, sin abrumar con información irrelevante.
+**Información del Servicio Actual:**
+* **Nombre del Colaborador:** {COLLABORATOR_NAME}
+* **Nombre del Cliente Final:** {CLIENT_NAME} (Si el cliente no tiene un nombre específico, este campo será "No Informado")
+* **Canal de Atención:** {SERVICE_CHANNEL} (Puede ser "Chat", "Correo Electrónico" o "C2C (Voz)")
+
+**Adaptación de la Respuesta según el Canal de Atención:**
+
+{SERVICE_CHANNEL_INSTRUCTIONS}
 
 **Directrices operacionales:**
 1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre Tarjetas Mercado Pago y servicios relacionados (emissão, bloqueo, transacciones, límites, facturas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
 2.  **Linguagem:** Formal, profesional, clara, concisa y directa. **Nunca uses emojis.** Utiliza un lenguaje que sea útil para el colaborador, como si estuvieras proporcionado um "guion" o uma "base de conocimiento".
 3.  **Personalização e Identificação:**
-    * **Dirígete siempre al colaborador.** Usa términos como "tú", "colaborador", "tu pregunta".
-    * **Nunca confundas al colaborador com o cliente.** Si o nome do cliente é fornecido pelo colaborador (ex: "El cliente [Nome do Cliente] preguntó..."), úsalo para personalizar a *resposta que o colaborador le dará ao cliente*. Ex: "Para o cliente [Nome do Cliente], puedes informar que...".
-    * Si el nome do cliente não se proporciona, usa termos neutros como "el cliente" o "el usuario" ao referirte a ele, pero siempre en el contexto de cómo o *colaborador* deve interagir.
+    * **Dirígete siempre al colaborador por su nombre, si está disponible.** Ej: "¡Hola, {COLLABORATOR_NAME}! Respecto a tu pregunta..."
+    * **Nunca confundas al colaborador com o cliente.** Si o nome do cliente é fornecido pelo colaborador, úsalo para personalizar a *resposta que o colaborador le dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, puedes informar que...".
+    * Si el nome do cliente não se proporciona, usa termos neutros como "el cliente" o "el usuario" ao referirte a ele, pero siempre en el contexto de como o *colaborador* deve interagir.
 4.  **Objetividade e Clareza:** Responde solo a lo que se preguntó, proporcionando información precisa e baseada en las políticas y procedimentos de Mercado Pago. Evita divagações.
 5.  **Segurança e Dados Sensíveis:** **NUNCA solicites ni proceses informação sensível do cliente** (contraseñas, números completos de tarjeta, CVV, detalles bancarios completos, etc.). Si el colaborador menciona dicha informação, instrúyelo a manejarla de forma segura y fora de linha, sin que la IA la procese o armazene.
 6.  **Resolução e Profundização:** Tu objetivo es ajudar al colaborador a resolver o problema do cliente. Si la resposta inicial não é suficiente, reformula ou profundiza a explicação, sempre pensando em como o colaborador pode usar esta informação.
@@ -424,7 +493,10 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
         initialScreenTitle: '¡Bienvenido(a) a Almail Soporte IA!',
         initialScreenSubtitle: 'Tu asistente inteligente para optimizar el soporte para el equipo de Tarjetas de Mercado Pago.',
         initialScreenDescription: 'Aquí puedes obtener información rápida y precisa sobre diversos temas relacionados con tarjetas. Haz clic en "Nueva Conversación" para comenzar a interactuar con la IA.',
-        startChatButton: 'Iniciar Nueva Conversação'
+        startChatButton: 'Iniciar Nueva Conversação',
+        // NOVO: Mensagens de validação para o modal de dados iniciais
+        collaboratorNameRequired: 'Por favor, introduce tu nombre.',
+        clientNameRequired: 'Por favor, introduce el nombre del cliente.',
     }
 };
 
@@ -433,7 +505,7 @@ let chatHistory = [];
 let initialUserMessage = null; // Armazena a primeira mensagem do usuário para gerar o título
 
 // Função para aplicar as traduções
-function setLanguage(lang) { // Removido o parâmetro skipConfirmation
+function setLanguage(lang) {
     // Defensive check: ensure the language exists in translations
     if (!translations[lang]) {
         console.error("Erro: Idioma selecionado ('" + lang + "') não encontrado nas traduções. Revertendo para pt-BR.");
@@ -471,6 +543,23 @@ function setLanguage(lang) { // Removido o parâmetro skipConfirmation
     // Atualiza o conteúdo do tutorial
     if (translations[lang] && translations[lang].tutorialText) { // Adicionado verificação
         document.getElementById('tutorial-content').innerHTML = translations[lang].tutorialText; // Use o ID direto
+    }
+
+    // Atualiza os placeholders e labels do novo modal de dados iniciais
+    if (initialDataModalOverlay.classList.contains('show')) {
+        document.querySelector('#initial-data-modal-overlay h2').textContent = translations[lang].initialDataModalTitle;
+        document.querySelector('#initial-data-modal-overlay p').textContent = translations[lang].initialDataModalSubtitle;
+        document.querySelector('label[for="collaborator-name-input"]').textContent = translations[lang].collaboratorNameLabel;
+        collaboratorNameInput.placeholder = translations[lang].collaboratorNamePlaceholder;
+        document.querySelector('label[for="client-name-input"]').textContent = translations[lang].clientNameLabel;
+        clientNameInput.placeholder = translations[lang].clientNamePlaceholder;
+        document.querySelector('label[for="service-channel-select"]').textContent = translations[lang].serviceChannelLabel;
+        initialDataConfirmButton.textContent = translations[lang].initialDataConfirmButton;
+
+        // Atualiza as opções do select
+        serviceChannelSelect.querySelector('option[value="chat"]').textContent = translations[lang].channelChat;
+        serviceChannelSelect.querySelector('option[value="email"]').textContent = translations[lang].channelEmail;
+        serviceChannelSelect.querySelector('option[value="c2c"]').textContent = translations[lang].channelC2C;
     }
 
 
@@ -715,7 +804,11 @@ async function saveConversation(title) {
         await addDoc(conversationsCol, {
             title: title,
             messages: JSON.stringify(chatHistory), // Armazena o histórico como JSON string
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            // Salva as novas informações
+            collaboratorName: collaboratorName || "Não Informado",
+            clientName: currentClientName || "Não Informado",
+            serviceChannel: serviceChannel || "Não Informado"
         });
         console.log("Conversa salva com sucesso!");
         loadConversationHistory(); // Recarrega o histórico na sidebar
@@ -751,6 +844,9 @@ async function loadConversation(conversationId) {
 
     chatMessages.innerHTML = '';
     currentClientName = null;
+    collaboratorName = null; // Limpa o nome do colaborador
+    serviceChannel = null; // Limpa o canal de atendimento
+
     userInput.value = '';
     userInput.style.height = 'auto';
     errorMessage.classList.add('hidden');
@@ -771,6 +867,10 @@ async function loadConversation(conversationId) {
             const data = docSnap.data();
             chatHistory = JSON.parse(data.messages); // Carrega o histórico de volta do JSON
             currentConversationId = conversationId; // Define a conversa atual
+            collaboratorName = data.collaboratorName || null; // Carrega o nome do colaborador
+            currentClientName = data.clientName || null; // Carrega o nome do cliente
+            serviceChannel = data.serviceChannel || null; // Carrega o canal de atendimento
+
 
             // Renderiza as mensagens na UI
             chatHistory.forEach((msg, index) => {
@@ -826,26 +926,27 @@ async function startNewConversation() {
 
     chatMessages.innerHTML = '';
     currentClientName = null;
+    collaboratorName = null; // Zera o nome do colaborador
+    serviceChannel = null; // Zera o canal de atendimento
     currentConversationId = null; // Zera o ID da conversa atual
     initialUserMessage = null; // Zera a primeira mensagem do usuário
 
-    // Inicia um novo histórico com a mensagem de boas-vindas
-    chatHistory = [
-        { role: "assistant", parts: [{ text: translations[currentLanguage].welcomeMessage }] }
-    ];
-    appendMessageToUI('ai', translations[currentLanguage].welcomeMessage, false);
+    // Exibe o modal de dados iniciais antes de iniciar a conversa de fato
+    showInitialDataModal();
+
+    // O restante da lógica de iniciar a conversa será movida para o callback do modal de dados iniciais
+    // para que a mensagem de boas-vindas da IA seja enviada *após* a coleta dos dados.
     userInput.value = '';
     userInput.style.height = 'auto';
-    userInput.focus();
     errorMessage.classList.add('hidden');
     errorMessage.classList.remove('show');
     loadingIndicator.classList.remove('show');
     loadingIndicator.style.display = 'none';
 
-    userInput.disabled = false;
-    sendButton.disabled = false;
-    userInput.classList.remove('disabled');
-    sendButton.classList.remove('disabled');
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled');
+    sendButton.classList.add('disabled');
 
     isConversationActive = true;
 
@@ -910,8 +1011,37 @@ function hideConfirmationModal() {
     confirmationModalOverlay.classList.remove('show');
 }
 
-// REMOVIDA: Função showLanguageConfirmationModal()
-// REMOVIDA: Função hideLanguageConfirmationModal()
+// NOVO: Função para mostrar o modal de dados iniciais
+function showInitialDataModal() {
+    // Garante que os campos estejam vazios e o select na opção padrão
+    collaboratorNameInput.value = '';
+    clientNameInput.value = '';
+    serviceChannelSelect.value = 'chat'; // Define o valor padrão
+    setLanguage(currentLanguage); // Atualiza os textos do modal com o idioma atual
+    initialDataModalOverlay.classList.add('show');
+    collaboratorNameInput.focus(); // Foca no primeiro campo
+    checkInitialDataInputs(); // NOVO: Verifica o estado inicial dos inputs e habilita/desabilita o botão
+}
+
+// NOVO: Função para esconder o modal de dados iniciais
+function hideInitialDataModal() {
+    initialDataModalOverlay.classList.remove('show');
+}
+
+// NOVO: Função para verificar os inputs do modal de dados iniciais e habilitar/desabilitar o botão
+function checkInitialDataInputs() {
+    const collaboratorNameFilled = collaboratorNameInput.value.trim() !== '';
+    const clientNameFilled = clientNameInput.value.trim() !== '';
+
+    if (collaboratorNameFilled && clientNameFilled) {
+        initialDataConfirmButton.disabled = false;
+        initialDataConfirmButton.classList.remove('disabled');
+    } else {
+        initialDataConfirmButton.disabled = true;
+        initialDataConfirmButton.classList.add('disabled');
+    }
+}
+
 
 /**
  * Gera um título para a conversa usando a API Gemini.
@@ -995,25 +1125,13 @@ async function sendMessage(isRegeneration = false) {
 
 
     // Se for a primeira mensagem do usuário em uma nova conversa, armazena-a
-    if (!isRegeneration && chatHistory.length === 1 && chatHistory[0].role === "assistant" && chatHistory[0].parts[0].text === translations[currentLanguage].welcomeMessage) {
+    if (!isRegeneration && chatHistory.length === 1 && chatHistory[0].role === "assistant" && chatHistory[0].parts[0].text.startsWith(translations[currentLanguage].welcomeMessage.split('{')[0])) {
         initialUserMessage = prompt;
     }
 
-    if (!currentClientName && !isRegeneration) {
-        const clientNameMatch = prompt.match(/(?:cliente|para|para o|o cliente|nome do cliente|customer|for|for the|the customer|client|para el|para la|el cliente|la cliente)\s+([a-zA-ZÀ-ÿ\s]+)/i);
-        if (clientNameMatch && clientNameMatch[1]) {
-            currentClientName = clientNameMatch[1].trim();
-            chatHistory.push({
-                role: "user",
-                parts: [{ text: `O nome do cliente que você está ajudando é ${currentClientName}. Por favor, use este nome ao se referir ao cliente em suas respostas, mas sempre se dirija a mim (o colaborador).` }]
-            });
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            appendMessageToUI('user', prompt);
-        } else {
-            appendMessageToUI('user', prompt);
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-        }
-    } else if (!isRegeneration) {
+    // A lógica de detecção de nome de cliente na primeira mensagem foi removida daqui,
+    // pois agora o nome do cliente é coletado no modal inicial.
+    if (!isRegeneration) {
         appendMessageToUI('user', prompt);
         chatHistory.push({ role: "user", parts: [{ text: prompt }] });
     }
@@ -1034,15 +1152,101 @@ async function sendMessage(isRegeneration = false) {
         const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
+        // Prepara as instruções do sistema com as informações coletadas
+        let systemInstructions = translations[currentLanguage].systemInstructions;
+        systemInstructions = systemInstructions.replace('{COLLABORATOR_NAME}', collaboratorName || "Não Informado");
+        // currentClientName agora é sempre preenchido, então não precisa de fallback aqui
+        systemInstructions = systemInstructions.replace('{CLIENT_NAME}', currentClientName);
+        systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL}', serviceChannel || "Não Informado");
+
+        let channelSpecificInstructions = '';
+        if (serviceChannel === 'email') {
+            channelSpecificInstructions = `
+* **Canal de Email:** As respostas devem ser mais diretas, com menos exploração para levar o cliente a uma solução mais rápida. Use soluções com empatia, conexão emocional, parafraseando para demonstrar escuta ativa e focando na necessidade do cliente.
+    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Pago."
+    * Após este parágrafo, siga com a tratativa do caso com a solução.
+`;
+        } else if (serviceChannel === 'chat') {
+            channelSpecificInstructions = `
+* **Canal de Chat:** A solução deverá ter 4 etapas: BOAS-VINDAS MELI, EXPLORAÇÃO MELI, ORIENTAÇÃO E ACONSELHAMENTO MELI, ENCERRAMENTO MELI.
+    * **1. BOAS-VINDAS MELI:**
+        * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Pago.
+        * Personalizar o contato: Se dirigir ao usuário pelo nome com proximidade.
+        * Colocar-se à disposição com contexto: Expressar disposição para a resolução de inconvenientes.
+        * Mencionar de forma resumida as informações do motivo do contato de maneira proativa.
+        * Demonstrar conhecimento e proximidade.
+        * Manter a conexão durante toda a saudação: Ajustar o tom e a velocidade da conversa conforme o perfil inicial identificado do usuário (idade e emocionalidade).
+        * Assegurar a ausência de silêncio.
+        * Demonstrar interesse pelo usuário com expressões empáticas (escuta ativa).
+    * **2. EXPLORAÇÃO MELI:**
+        * Escuta ativamente, demonstrando interesse para manter a proximidade: Faça o atendente ouvir sem interromper ou julgar, evitando permanecer em silêncio durante as explicações do usuário.
+        * Valide o usuário, fazendo-o sentir-se compreendido.
+        * Investigue para assegurar a compreensão do caso completo: realize perguntas e/ou confirmações precisas para garantir o entendimento completo do caso, contexto, preocupações e expectativas do usuário nesse contato. Gere confiança ao mencionar informações relevantes do caso de forma proativa (dados do sistema), evitando que o usuário sinta que sua situação não é conhecida. Faça o usuário sentir-se compreendido ao realizar perguntas que obtenham informações diferentes das disponíveis no sistema.
+        * Mantenha a liderança da conversa com empatia: lidere a conversa, definindo o estilo e gerando uma comunicação fluida. Foque nos aspectos relevantes do caso, mas permita que o usuário participe e expresse suas emoções.
+        * Revise a situação do usuário, experiência e vivências (exploração junto ao usuário) para preparar o início do guia e aconselhamento: utilize diversas ferramentas para obter uma visão completa da situação do usuário, com ênfase em encerrar a exploração e iniciar o aconselhamento.
+        * Mantenha a conexão durante toda a exploração: ajuste os tons e a velocidade da conversa conforme o perfil inicial identificado do usuário (idade e emocionalidade). Assegure a ausência de silêncios. Demonstre interesse pelo usuário com expressões empáticas (escuta ativa).
+    * **3. ORIENTAÇÃO E ACONSELHAMENTO MELI:**
+        * Se estabeleça como consultor, guiando a conversa de maneira empática: lidere as explicações passo a passo. Gere uma conversa fluida, focando nos aspectos relevantes do caso, mas permitindo que o usuário se sinta parte e expresse suas emoções.
+        * Inclua o usuário na busca/apresentação das alternativas de solução e personaliza as explicações: gerencie a solução em conjunto com o usuário, buscando e apresentando as melhores alternativas que se adaptem ao caso, à situação e ao contexto (personalização). Assegure que as recomendações sejam relevantes e eficazes.
+        * Na explicação, seja conciso e claro (fale de forma direta): Ofereça explicações claras e diretas, utilizando uma linguagem simples, adaptada ao nível de conhecimento do usuário. Apresente as informações do processo e seus passos de forma ordenada e assertiva. Não solicite informações desnecessárias nem faça o usuário perder tempo com etapas que não agreguem valor.
+        * Realize verificações de compreensão, atento a sinais que o usuário forneça (silêncios, perguntas adicionais): Preste atenção a sinais como silêncios, perguntas ou qualquer expressão que indique dúvidas, esclarecendo-as quando necessário. Confirme se o usuário está compreendendo as explicações, oferecendo-se proativamente para revisar ou ampliar as informações.
+        * Momento, duração, explicação de uso e acompanhamento durante a espera: Caso necessário, utilize os silêncios de forma mínima. Se usar, não ultrapasse 5 minutos e explique previamente ao usuário o motivo. Analise com o usuário o que aparece na tela, explicando políticas e processos e evitando silêncios na conversa. Exemplo: "Irei verificar o que aconteceu que o seu cartão não chegou no sistema, já retorno com mais informações, mas estou disponível, pode me chamar a qualquer momento."
+    * **4. ENCERRAMENTO MELI:**
+        * Realize verificações finais de compreensão: Preocupe-se em garantir que o usuário fique tranquilo e satisfeito com o atendimento. Busque que o usuário inicie o encerramento do contato, sem forçar um fechamento antecipado, evitando perder o usuário no processo.
+        * Expresse e mostre proatividade e disposição para resolver outras questões adicionais: ofereça soluções adicionais e demonstre disposição em ajudar proativamente, antecipando-se a possíveis perguntas ou preocupações que não tenham sido abordadas durante a interação.
+        * Agradeça e se despeça amavelmente: cumprimente o usuário pelo nome com clareza e intenção (bom dia/boa tarde/boa noite). Encontre oportunidades para agregar valor em outras respostas, compartilhando boas práticas e ações preventivas possíveis.
+        * Mantenha a conexão durante todo o encerramento: ajuste o tom e a velocidade da conversa conforme o perfil inicial detectado (idade e emocionalidade). Garanta a ausência de silêncios. Demonstre interesse com expressões empáticas (mostrando escuta ativa).
+`;
+        } else if (serviceChannel === 'c2c') {
+            channelSpecificInstructions = `
+* **Canal C2C (Voz):** As respostas seguirão as mesmas 4 etapas do canal de Chat, mas com algumas adaptações para o atendimento por voz.
+    * **Aviso Importante para o Atendente:** No início da interação, atente-se ao tom de voz do usuário para se adequar a esse tom de voz e possa se conectar melhor ao perfil emocional do usuário.
+    * As soluções devem ser mais diretas para agilizar o atendimento.
+    * **1. BOAS-VINDAS MELI:** (Mesmas subetapas do Chat)
+        * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Pago.
+        * Personalizar o contato: Se dirigir ao usuário pelo nome com proximidade.
+        * Colocar-se à disposição com contexto: Expressar disposição para a resolução de inconvenientes.
+        * Mencionar de forma resumida as informações do motivo do contato de maneira proativa.
+        * Demonstrar conhecimento e proximidade.
+        * Manter a conexão durante toda a saudação: Ajustar o tom e a velocidade da conversa conforme o perfil inicial identificado do usuário (idade e emocionalidade).
+        * Assegurar a ausência de silêncio.
+        * Demonstrar interesse pelo usuário com expressões empáticas (escuta ativa).
+    * **2. EXPLORAÇÃO MELI:** (Mesmas subetapas do Chat)
+        * Escuta ativamente, demonstrando interesse para manter a proximidade: Faça o atendente ouvir sem interromper ou julgar, evitando permanecer em silêncio durante as explicações do usuário.
+        * Valide o usuário, fazendo-o sentir-se compreendido.
+        * Investigue para assegurar a compreensão do caso completo: realize perguntas e/ou confirmações precisas para garantir o entendimento completo do caso, contexto, preocupações e expectativas do usuário nesse contato. Gere confiança ao mencionar informações relevantes do caso de forma proativa (dados do sistema), evitando que o usuário sinta que sua situação não é conhecida. Faça o usuário sentir-se compreendido ao realizar perguntas que obtenham informações diferentes das disponíveis no sistema.
+        * Mantenha a liderança da conversa com empatia: lidere a conversa, definindo o estilo e gerando uma comunicação fluida. Foque nos aspectos relevantes do caso, mas permita que o usuário participe e expresse suas emoções.
+        * Revise a situação do usuário, experiência e vivências (exploração junto ao usuário) para preparar o início do guia e aconselhamento: utilize diversas ferramentas para obter uma visão completa da situação do usuário, com ênfase em encerrar a exploração e iniciar o aconselhamento.
+        * Mantenha a conexão durante toda a exploração: ajuste os tons e a velocidade da conversa conforme o perfil inicial identificado do usuário (idade e emocionalidade). Assegure a ausência de silêncios. Demonstre interesse pelo usuário com expressões empáticas (escuta ativa).
+    * **3. ORIENTAÇÃO E ACONSELHAMENTO MELI:** (Mesmas subetapas do Chat)
+        * Se estabeleça como consultor, guiando a conversa de maneira empática: lidere as explicações passo a passo. Gere uma conversa fluida, focando nos aspectos relevantes do caso, mas permitindo que o usuário se sinta parte e expresse suas emoções.
+        * Inclua o usuário na busca/apresentação das alternativas de solução e personaliza as explicações: gerencie a solução em conjunto com o usuário, buscando e apresentando as melhores alternativas que se adaptem ao caso, à situação e ao contexto (personalização). Assegure que as recomendações sejam relevantes e eficazes.
+        * Na explicação, seja conciso e claro (fale de forma direta): Ofereça explicações claras e diretas, utilizando uma linguagem simples, adaptada ao nível de conhecimento do usuário. Apresente as informações do processo e seus passos de forma ordenada e assertiva. Não solicite informações desnecessárias nem faça o usuário perder tempo com etapas que não agreguem valor.
+        * Realize verificações de compreensão, atento a sinais que o usuário forneça (silêncios, perguntas adicionais): Preste atenção a sinais como silêncios, perguntas ou qualquer expressão que indique dúvidas, esclarecendo-as quando necessário. Confirme se o usuário está compreendendo as explicações, oferecendo-se proativamente para revisar ou ampliar as informações.
+        * Momento, duração, explicação de uso e acompanhamento durante a espera: Caso necessário, utilize os silêncios de forma mínima. Se usar, não ultrapasse 5 minutos e explique previamente ao usuário o motivo. Analise com o usuário o que aparece na tela, explicando políticas e processos e evitando silêncios na conversa. Exemplo: "Irei verificar o que aconteceu que o seu cartão não chegou no sistema, já retorno com mais informações, mas estou disponível, pode me chamar a qualquer momento."
+    * **4. ENCERRAMENTO MELI:** (Mesmas subetapas do Chat)
+        * Realize verificações finais de compreensão: Preocupe-se em garantir que o usuário fique tranquilo e satisfeito com o atendimento. Busque que o usuário inicie o encerramento do contato, sem forçar um fechamento antecipado, evitando perder o usuário no processo.
+        * Expresse e mostre proatividade e disposição para resolver outras questões adicionais: ofereça soluções adicionais e demonstre disposição em ajudar proativamente, antecipando-se a possíveis perguntas ou preocupações que não tenham sido abordadas durante a interação.
+        * Agradeça e se despeça amavelmente: cumprimente o usuário pelo nome com clareza e intenção (bom dia/boa tarde/boa noite). Encontre oportunidades para agregar valor em outras respostas, compartilhando boas práticas e ações preventivas possíveis.
+        * Mantenha a conexão durante todo o encerramento: ajuste o tom e a velocidade da conversa conforme o perfil inicial detectado (idade e emocionalidade). Garanta a ausência de silêncios. Demonstre interesse com expressões empáticas (mostrando escuta ativa).
+`;
+        } else {
+            channelSpecificInstructions = `
+* **Canal de Atendimento Desconhecido:** Forneça respostas padrão, claras e objetivas.
+`;
+        }
+
+        systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL_INSTRUCTIONS}', channelSpecificInstructions);
+
         const contentsToSend = [
             // Inclui as instruções de sistema no idioma atual, com a diretriz de resposta no idioma da aplicação
-            { role: "user", parts: [{ text: translations[currentLanguage].systemInstructions }] },
+            { role: "user", parts: [{ text: systemInstructions }] },
             ...chatHistory
         ];
 
         // DEBUGGING: Log system instructions being sent
         console.log("Sending system instructions for language:", currentLanguage);
-        console.log("System Instructions being sent:", translations[currentLanguage].systemInstructions);
+        console.log("System Instructions being sent:", systemInstructions);
 
 
         const payload = {
@@ -1080,10 +1284,12 @@ async function sendMessage(isRegeneration = false) {
             result.candidates[0].content.parts.length > 0) {
             let aiResponseText = result.candidates[0].content.parts[0].text;
 
-            if (currentClientName) {
-                aiResponseText = aiResponseText.replace(/\b(cliente|o usuário|o cliente|customer|the user|the customer|client|para el|para la|el cliente|la cliente)\b/gi, currentClientName);
-                aiResponseText = aiResponseText.replace(/\[Nome do Cliente\]/gi, currentClientName);
-            }
+            // A substituição do nome do cliente agora é feita nas instruções do sistema
+            // Não é mais necessário aqui, a IA já deve ter adaptado.
+            // if (currentClientName) {
+            //     aiResponseText = aiResponseText.replace(/\b(cliente|o usuário|o cliente|customer|the user|the customer|client|para el|para la|el cliente|la cliente)\b/gi, currentClientName);
+            //     aiResponseText = aiResponseText.replace(/\[Nome do Cliente\]/gi, currentClientName);
+            // }
 
             typeMessage(aiResponseText, true);
             chatHistory.push({ role: "assistant", parts: [{ text: aiResponseText }] });
@@ -1095,7 +1301,10 @@ async function sendMessage(isRegeneration = false) {
                 const newDocRef = await addDoc(conversationsCol, {
                     title: title,
                     messages: JSON.stringify(chatHistory),
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    collaboratorName: collaboratorName || "Não Informado",
+                    clientName: currentClientName || "Não Informado",
+                    serviceChannel: serviceChannel || "Não Informado"
                 });
                 currentConversationId = newDocRef.id;
                 // Não ativamos o item recém-criado automaticamente.
@@ -1442,13 +1651,162 @@ function showChatArea() {
 // Modal de boas-vindas
 modalStartButton.addEventListener('click', () => {
     notificationModalOverlay.classList.remove('show');
-    showInitialScreen(); // Agora mostra a tela inicial após o modal de boas-vindas
+    // Agora o botão de créditos leva para a tela inicial
+    showInitialScreen();
 });
+
+// NOVO: Listeners para os inputs do modal de dados iniciais para habilitar/desabilitar o botão
+collaboratorNameInput.addEventListener('input', checkInitialDataInputs);
+clientNameInput.addEventListener('input', checkInitialDataInputs);
+
+// NOVO: Listener para o botão de confirmação do modal de dados iniciais
+initialDataConfirmButton.addEventListener('click', () => {
+    // Captura os dados
+    collaboratorName = collaboratorNameInput.value.trim();
+    currentClientName = clientNameInput.value.trim(); // Captura o nome do cliente, mesmo que vazio
+    serviceChannel = serviceChannelSelect.value;
+
+    // Validação para o nome do colaborador
+    if (!collaboratorName) {
+        collaboratorNameInput.classList.add('input-error'); // Adiciona classe de erro
+        errorMessage.textContent = translations[currentLanguage].collaboratorNameRequired; // Mensagem de erro específica
+        errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('show');
+        setTimeout(() => {
+            errorMessage.classList.add('hidden');
+            errorMessage.classList.remove('show');
+            collaboratorNameInput.classList.remove('input-error'); // Remove a classe de erro
+        }, 5000);
+        return; // Impede o prosseguimento
+    }
+
+    // Validação para o nome do cliente (agora obrigatório)
+    if (!currentClientName) {
+        clientNameInput.classList.add('input-error'); // Adiciona classe de erro
+        errorMessage.textContent = translations[currentLanguage].clientNameRequired; // Mensagem de erro específica
+        errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('show');
+        setTimeout(() => {
+            errorMessage.classList.add('hidden');
+            errorMessage.classList.remove('show');
+            clientNameInput.classList.remove('input-error'); // Remove a classe de erro
+        }, 5000);
+        return; // Impede o prosseguimento
+    }
+
+
+    hideInitialDataModal(); // Esconde o modal
+    showChatArea(); // Mostra a área de chat
+
+    // Adapta a mensagem de boas-vindas com base nos dados coletados
+    let baseWelcomeMessage = translations[currentLanguage].welcomeMessage;
+
+    // Adaptação para o nome do cliente (sempre terá um valor agora)
+    let clientNameAdapted = "";
+    if (currentClientName) {
+        if (currentLanguage === 'pt-BR') {
+            clientNameAdapted = `o(a) cliente *${currentClientName}*`;
+        } else if (currentLanguage === 'en') {
+            clientNameAdapted = `the customer *${currentClientName}*`;
+        } else if (currentLanguage === 'es') {
+            clientNameAdapted = `el/la cliente *${currentClientName}*`;
+        }
+    } else {
+        if (currentLanguage === 'pt-BR') {
+            clientNameAdapted = `o(a) cliente`;
+        } else if (currentLanguage === 'en') {
+            clientNameAdapted = `the customer`;
+        } else if (currentLanguage === 'es') {
+            clientNameAdapted = `el/la cliente`;
+        }
+    }
+
+
+    // Adaptação para o canal de atendimento e a frase final de ajuda
+    let serviceChannelDisplay = "";
+    let finalHelpPhrase = "";
+
+    if (currentLanguage === 'pt-BR') {
+        switch (serviceChannel) {
+            case 'chat':
+                serviceChannelDisplay = 'chat';
+                finalHelpPhrase = "Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                break;
+            case 'email':
+                serviceChannelDisplay = 'e-mail';
+                finalHelpPhrase = "Estou aqui para te fornecer informações detalhadas e estruturadas para auxiliar nas suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                break;
+            case 'c2c':
+                serviceChannelDisplay = 'C2C (voz)';
+                finalHelpPhrase = "Estou aqui para te dar um roteiro claro e objetivo para auxiliar nas suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                break;
+            default:
+                serviceChannelDisplay = 'um canal de atendimento';
+                finalHelpPhrase = "Estou aqui para te ajudar com suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+        }
+    } else if (currentLanguage === 'en') {
+        switch (serviceChannel) {
+            case 'chat':
+                serviceChannelDisplay = 'chat';
+                finalHelpPhrase = "I'm here to help you quickly with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                break;
+            case 'email':
+                serviceChannelDisplay = 'email';
+                finalHelpPhrase = "I'm here to provide you with detailed and structured information to help with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                break;
+            case 'c2c':
+                serviceChannelDisplay = 'C2C (voice)';
+                finalHelpPhrase = "I'm here to give you a clear and objective script to help with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                break;
+            default:
+                serviceChannelDisplay = 'a service channel';
+                finalHelpPhrase = "I'm here to help you with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+        }
+    } else if (currentLanguage === 'es') {
+        switch (serviceChannel) {
+            case 'chat':
+                serviceChannelDisplay = 'chat';
+                finalHelpPhrase = "Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                break;
+            case 'email':
+                serviceChannelDisplay = 'correo electrónico';
+                finalHelpPhrase = "Estoy aquí para proporcionarte información detallada y estructurada para ayudarte con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                break;
+            case 'c2c':
+                serviceChannelDisplay = 'C2C (voz)';
+                finalHelpPhrase = "Estoy aquí para darte un guion claro y objetivo para ayudarte con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                break;
+            default:
+                serviceChannelDisplay = 'un canal de atención';
+                finalHelpPhrase = "Estoy aquí para ayudarte con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+        }
+    }
+
+    let fullWelcomeMessage = baseWelcomeMessage
+        .replace('{COLLABORATOR_NAME}', collaboratorName)
+        .replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted) // Use g flag for global replacement
+        .replace('{SERVICE_CHANNEL_ADAPTED}', serviceChannelDisplay) + " " + finalHelpPhrase.replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted);
+
+
+    // Inicia um novo histórico com a mensagem de boas-vindas personalizada
+    chatHistory = [
+        { role: "assistant", parts: [{ text: fullWelcomeMessage }] }
+    ];
+    appendMessageToUI('ai', fullWelcomeMessage, false);
+    userInput.focus();
+});
+
+// NOVO: Listener para o botão de fechar do modal de dados iniciais
+initialDataCloseButton.addEventListener('click', () => {
+    hideInitialDataModal(); // Esconde o modal
+    showInitialScreen(); // Volta para a tela inicial
+});
+
 
 // Botão "Iniciar Nova Conversa" da tela inicial
 startChatButton.addEventListener('click', () => {
-    showChatArea(); // Mostra a área de chat
-    startNewConversation(); // Inicia uma nova conversa
+    // Ao clicar em "Iniciar Nova Conversa", sempre exibe o modal de dados iniciais
+    startNewConversation();
 });
 
 // Botão de enviar mensagem

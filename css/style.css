@@ -58,13 +58,13 @@
     --lm-logo-shadow-color: rgba(0, 0, 0, 0.15); /* Sombra da logo para tema claro */
 
     /* Cores para feedback */
-    --lm-feedback-button-bg: #E2E8F0;
-    --lm-feedback-button-text: #718096;
-    --lm-feedback-button-hover-bg: #CBD5E0;
-    --lm-feedback-liked-bg: #4CAF50; /* Verde para gostei */
-    --lm-feedback-liked-text: #FFFFFF;
-    --lm-feedback-disliked-bg: #F44336; /* Vermelho para não gostei */
-    --lm-feedback-disliked-text: #FFFFFF;
+    --lm-feedback-button-bg: #E2E8F0; /* Fundo neutro para botões de feedback */
+    --lm-feedback-button-text: #718096; /* Cor de texto neutra */
+    --lm-feedback-button-hover-bg: #CBD5E0; /* Fundo no hover */
+    --lm-feedback-liked-bg: #2C3E50; /* Cor da logo para "curtido" */
+    --lm-feedback-liked-text: #FFFFFF; /* Texto branco para "curtido" */
+    --lm-feedback-disliked-bg: #E74C3C; /* Vermelho mais suave para "não curtido" */
+    --lm-feedback-disliked-text: #FFFFFF; /* Texto branco para "não curtido" */
 
     /* Cores para o histórico de conversas (Light Mode) */
     --lm-sidebar-bg: #F9F9F9; /* Fundo da sidebar igual ao body */
@@ -89,6 +89,9 @@
     /* Cores para o estado de erro do input */
     --lm-input-error-border: #EF4444; /* Vermelho */
     --lm-input-error-shadow: rgba(239, 68, 68, 0.2); /* Sombra vermelha */
+
+    /* Altura do cabeçalho padrão para desktop */
+    --header-height: 80px;
 }
 
 html[data-theme='dark'] {
@@ -148,13 +151,13 @@ html[data-theme='dark'] {
     --dm-logo-shadow-color: rgba(0, 0, 0, 0.4); /* Sombra da logo para tema escuro */
 
     /* Cores para feedback */
-    --dm-feedback-button-bg: #30363D;
-    --dm-feedback-button-text: #8B949E;
-    --dm-feedback-button-hover-bg: #444C56;
-    --dm-feedback-liked-bg: #28A745; /* Verde para gostei */
-    --dm-feedback-liked-text: #FFFFFF;
-    --dm-feedback-disliked-bg: #CB2431; /* Vermelho para não gostei */
-    --dm-feedback-disliked-text: #FFFFFF;
+    --dm-feedback-button-bg: #30363D; /* Fundo neutro para botões de feedback */
+    --dm-feedback-button-text: #8B949E; /* Cor de texto neutra */
+    --dm-feedback-button-hover-bg: #444C56; /* Fundo no hover */
+    --dm-feedback-liked-bg: #8E9AA7; /* Cor da logo para "curtido" */
+    --dm-feedback-liked-text: #121212; /* Texto escuro para "curtido" */
+    --dm-feedback-disliked-bg: #CB2431; /* Vermelho para "não curtido" */
+    --dm-feedback-disliked-text: #FFFFFF; /* Texto branco para "não curtido" */
 
     /* Cores para o histórico de conversas (Dark Mode) */
     --dm-sidebar-bg: #1A1A1A; /* Fundo da sidebar */
@@ -179,6 +182,9 @@ html[data-theme='dark'] {
     /* Cores para o estado de erro do input */
     --dm-input-error-border: #EF4444; /* Vermelho */
     --dm-input-error-shadow: rgba(239, 68, 68, 0.2); /* Sombra vermelha */
+
+    /* Altura do cabeçalho padrão para desktop */
+    --header-height: 80px;
 }
 
 /* Define as variáveis CSS com base no tema */
@@ -260,7 +266,7 @@ html[data-theme='dark'] .app-wrapper {
 .tutorial-modal-overlay,
 .confirmation-modal-overlay,
 #custom-confirm-overlay,
-#name-input-modal-overlay {
+#initial-data-modal-overlay { /* Adicionado o novo modal aqui */
     position: fixed;
     top: 0;
     left: 0;
@@ -279,7 +285,7 @@ html[data-theme='dark'] .notification-modal-overlay,
 html[data-theme='dark'] .tutorial-modal-overlay,
 html[data-theme='dark'] .confirmation-modal-overlay,
 html[data-theme='dark'] #custom-confirm-overlay,
-html[data-theme='dark'] #name-input-modal-overlay {
+html[data-theme='dark'] #initial-data-modal-overlay { /* Adicionado o novo modal aqui */
     background-color: var(--dm-modal-overlay);
 }
 
@@ -287,7 +293,7 @@ html[data-theme='dark'] #name-input-modal-overlay {
 .tutorial-modal-overlay.show,
 .confirmation-modal-overlay.show,
 #custom-confirm-overlay.show,
-#name-input-modal-overlay.show {
+#initial-data-modal-overlay.show { /* Adicionado o novo modal aqui */
     opacity: 1;
     visibility: visible;
 }
@@ -299,17 +305,20 @@ html[data-theme='dark'] #name-input-modal-overlay {
     background-color: var(--lm-modal-bg);
     color: var(--lm-modal-text-color); /* Usando nova variável de cor para texto */
     border-radius: 16px;
-    padding: 32px 40px; /* Aumentado um pouco para mais espaço */
+    /* Ajuste de padding para dar espaço ao botão "X" no canto superior direito */
+    padding: 32px 40px;
+    padding-top: 48px; /* Aumenta o padding superior para o botão "X" */
+    padding-right: 48px; /* Aumenta o padding direito para o botão "X" */
     max-width: 550px;
     text-align: center;
     box-shadow: 0 15px 30px var(--lm-modal-shadow); /* Usando nova variável de sombra */
     transform: scale(0.95);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
+    position: relative; /* Essencial para o posicionamento absoluto do botão de fechar */
 }
 /* O novo modal de nome também usa .notification-modal-content para o seu conteúdo */
-#name-input-modal-overlay .notification-modal-content {
+#initial-data-modal-overlay .notification-modal-content {
     /* Não precisa de estilos específicos aqui, pois já herda de .notification-modal-content */
 }
 
@@ -317,7 +326,7 @@ html[data-theme='dark'] .notification-modal-content,
 html[data-theme='dark'] .tutorial-modal-content,
 html[data-theme='dark'] .confirmation-modal-content,
 html[data-theme='dark'] #custom-confirm-content,
-html[data-theme='dark'] #name-input-modal-overlay .notification-modal-content {
+html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content { /* Adicionado o novo modal aqui */
     background-color: var(--dm-modal-bg);
     color: var(--dm-modal-text-color); /* Usando nova variável de cor para texto */
     box-shadow: 0 15px 30px var(--dm-modal-shadow); /* Usando nova variável de sombra */
@@ -327,7 +336,7 @@ html[data-theme='dark'] #name-input-modal-overlay .notification-modal-content {
 .tutorial-modal-overlay.show .tutorial-modal-content,
 .confirmation-modal-overlay.show .confirmation-modal-content,
 #custom-confirm-overlay.show #custom-confirm-content,
-#name-input-modal-overlay.show .notification-modal-content {
+#initial-data-modal-overlay.show .notification-modal-content { /* Adicionado o novo modal aqui */
     transform: scale(1);
     opacity: 1;
 }
@@ -344,82 +353,115 @@ html[data-theme='dark'] .modal-icon-container svg {
      filter: drop-shadow(0px 6px 12px var(--dm-logo-shadow-color)); /* Sombra mais pronunciada para o ícone */
 }
 
-/* Novas regras de preenchimento para a logo SVG */
-.almail-logo .logo-circle-fill,
-.almail-logo-large .logo-circle-fill {
-    fill: var(--almail-logo-circle-light);
-}
-.almail-logo .logo-symbol-fill,
-.almail-logo-large .logo-symbol-fill {
-    fill: var(--almail-logo-symbol-light);
-    stroke: var(--almail-logo-symbol-light);
-}
 
-html[data-theme='dark'] .almail-logo .logo-circle-fill,
-html[data-theme='dark'] .almail-logo-large .logo-circle-fill {
-    fill: var(--almail-logo-circle-dark);
-}
-html[data-theme='dark'] .almail-logo .logo-symbol-fill,
-html[data-theme='dark'] .almail-logo-large .logo-symbol-fill {
-    fill: var(--almail-logo-symbol-dark);
-    stroke: var(--almail-logo-symbol-dark);
-}
-
-
-.notification-modal-content h2 {
-    font-size: 1.85rem; /* Levemente maior para destaque */
-    font-weight: 700; /* Mais negrito */
-    margin-bottom: 16px; /* Mais espaçamento */
-    color: var(--lm-modal-title-color); /* Usando nova variável de cor para título */
-}
-html[data-theme='dark'] .notification-modal-content h2 {
-    color: var(--dm-modal-title-color);
-}
-
-.notification-modal-content p {
-    font-size: 1.05rem; /* Levemente maior para legibilidade */
-    color: var(--lm-modal-text-color); /* Usando nova variável de cor para texto */
-    line-height: 1.7; /* Melhor espaçamento entre linhas */
-    margin-bottom: 12px; /* Mais espaçamento */
-}
-html[data-theme='dark'] .notification-modal-content p {
-    color: var(--dm-modal-text-color);
-}
-
-/* Estilos para a nova lista de créditos (mantidos, apesar de o modal ter sido removido) */
-.credits-list {
-    margin-top: 20px;
-    margin-bottom: 24px;
-    font-size: 0.9rem;
-    color: var(--lm-text-secondary);
-    line-height: 1.5;
-}
-html[data-theme='dark'] .credits-list {
-    color: var(--dm-text-secondary);
-}
-
-.credits-list strong {
-    color: var(--lm-accent-primary);
-    font-weight: 600;
-    display: block;
-    margin-bottom: 5px;
-}
-html[data-theme='dark'] .credits-list strong {
-    color: var(--dm-accent-primary);
-}
-
-.credits-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.credits-list li {
-    margin-bottom: 4px;
+/* Close Button for Modals - Posicionado no canto superior direito */
+.close-button {
+    position: absolute;
+    top: 16px; /* Ajustado para 16px */
+    right: 16px; /* Ajustado para 16px */
+    background: transparent;
+    border: none;
+    /* Removido font-size: 1.5rem; para usar o tamanho do ícone */
+    cursor: pointer;
     color: var(--lm-text-tertiary);
+    transition: color 0.2s ease, background-color 0.2s ease; /* Adicionado background-color à transição */
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-html[data-theme='dark'] .credits-list li {
+
+html[data-theme='dark'] .close-button {
     color: var(--dm-text-tertiary);
+}
+
+.close-button:hover {
+    color: var(--lm-text-primary);
+    background-color: rgba(0,0,0,0.05); /* Adicionado background-color no hover */
+}
+
+html[data-theme='dark'] .close-button:hover {
+    color: var(--dm-text-primary);
+    background-color: rgba(255,255,255,0.08); /* Adicionado background-color no hover para dark mode */
+}
+
+/* Garante que o ícone dentro do botão "X" tenha o tamanho correto */
+.close-button i {
+    width: 24px;
+    height: 24px;
+}
+
+
+/* Specific Modal Styles (e.g., Initial Data Modal) */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+    width: 100%;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--lm-text-primary);
+}
+html[data-theme='dark'] .input-label {
+    color: var(--dm-text-primary);
+}
+
+.modal-input,
+.modal-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--lm-input-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: var(--lm-input-bg);
+    color: var(--lm-input-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none; /* Remove estilo padrão do select em WebKit */
+    -moz-appearance: none;    /* Remove estilo padrão do select em Firefox */
+    appearance: none;         /* Remove estilo padrão do select */
+}
+html[data-theme='dark'] .modal-input,
+html[data-theme='dark'] .modal-select {
+    border-color: var(--dm-input-border);
+    background-color: var(--dm-input-bg);
+    color: var(--dm-input-text);
+}
+
+.modal-input::placeholder {
+    color: var(--lm-text-tertiary);
+    opacity: 0.7;
+}
+html[data-theme='dark'] .modal-input::placeholder {
+    color: var(--dm-text-tertiary);
+}
+
+.modal-input:focus,
+.modal-select:focus {
+    outline: none;
+    border-color: var(--lm-accent-primary);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2);
+}
+html[data-theme='dark'] .modal-input:focus,
+html[data-theme='dark'] .modal-select:focus {
+    border-color: var(--dm-accent-primary);
+    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2);
+}
+
+/* Estilo para o ícone do select */
+.modal-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23718096'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em;
+    padding-right: 2.5rem; /* Espaço para o ícone */
+}
+html[data-theme='dark'] .modal-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238B949E'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 
@@ -449,6 +491,7 @@ html[data-theme='dark'] .start-button {
 }
 html[data-theme='dark'] .start-button:hover:not(:disabled) {
     background-color: var(--dm-button-hover-bg);
+    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.3); /* Sombra mais intensa no hover para dark mode */
 }
 
@@ -494,12 +537,12 @@ html[data-theme='dark'] #tutorial-content {
 #tutorial-content h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--lm-accent-primary);
+    color: var(--lm-accent-primary); /* Usando a cor de destaque para títulos de tutorial */
     margin-top: 20px;
     margin-bottom: 8px;
 }
 html[data-theme='dark'] #tutorial-content h3 {
-    color: var(--dm-accent-primary);
+    color: var(--dm-accent-primary); /* Usando a cor de destaque para títulos de tutorial */
 }
 #tutorial-content ul {
     list-style-position: inside;
@@ -519,7 +562,7 @@ html[data-theme='dark'] #tutorial-content h3 {
     border-bottom: 1px solid var(--lm-border-color);
     color: var(--lm-text-primary);
     transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-    min-height: 80px;
+    min-height: var(--header-height); /* Usa a variável de altura do cabeçalho */
     flex-shrink: 0;
 }
 html[data-theme='dark'] .chat-header {
@@ -826,8 +869,8 @@ html[data-theme='dark'] .feedback-button.liked {
     color: var(--lm-feedback-disliked-text);
 }
 html[data-theme='dark'] .feedback-button.disliked {
-    background-color: var(--dm-feedback-disliked-bg);
     color: var(--dm-feedback-disliked-text);
+    background-color: var(--dm-feedback-disliked-bg);
 }
 
 /* Estilo genérico para elementos desabilitados */
@@ -1046,7 +1089,7 @@ html[data-theme='dark'] .app-footer {
 }
 html[data-theme='dark'] .conversation-history-sidebar {
     background-color: var(--dm-sidebar-bg);
-    border-left: 1px solid var(--dm-sidebar-border);
+    border-left: 1px solid var(--dm-border-color); /* Usando var(--dm-border-color) para consistência */
 }
 
 .conversation-history-sidebar.hidden {
@@ -1071,7 +1114,7 @@ html[data-theme='dark'] .conversation-history-sidebar {
 }
 html[data-theme='dark'] .sidebar-header {
     background: var(--dm-sidebar-header-bg);
-    border-bottom: 1px solid var(--dm-sidebar-border);
+    border-bottom: 1px solid var(--dm-border-color); /* Usando var(--dm-border-color) para consistência */
     color: var(--dm-text-primary);
 }
 
@@ -1256,8 +1299,6 @@ html[data-theme='dark'] .delete-conversation-button:hover:not(:disabled) {
 
 .sidebar-footer {
     padding: 10px 20px;
-    background: var(--lm-sidebar-footer-bg);
-    border-top: 1px solid var(--lm-sidebar-border);
     font-size: 0.75rem;
     color: var(--lm-text-tertiary);
     text-align: center;
@@ -1266,7 +1307,7 @@ html[data-theme='dark'] .delete-conversation-button:hover:not(:disabled) {
 }
 html[data-theme='dark'] .sidebar-footer {
     background: var(--dm-sidebar-footer-bg);
-    border-top: 1px solid var(--dm-sidebar-border);
+    border-top: 1px solid var(--dm-border-color); /* Usando var(--dm-border-color) para consistência */
     color: var(--dm-text-tertiary);
 }
 
@@ -1346,6 +1387,146 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
     margin-top: 2rem;
 }
 
+/* Novo: Estilos para os inputs e selects dentro dos modais */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+    width: 100%;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--lm-text-primary);
+}
+html[data-theme='dark'] .input-label {
+    color: var(--dm-text-primary);
+}
+
+.modal-input,
+.modal-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--lm-input-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: var(--lm-input-bg);
+    color: var(--lm-input-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none; /* Remove estilo padrão do select em WebKit */
+    -moz-appearance: none;    /* Remove estilo padrão do select em Firefox */
+    appearance: none;         /* Remove estilo padrão do select */
+}
+html[data-theme='dark'] .modal-input,
+html[data-theme='dark'] .modal-select {
+    border-color: var(--dm-input-border);
+    background-color: var(--dm-input-bg);
+    color: var(--dm-input-text);
+}
+
+.modal-input::placeholder {
+    color: var(--lm-text-tertiary);
+    opacity: 0.7;
+}
+html[data-theme='dark'] .modal-input::placeholder {
+    color: var(--dm-text-tertiary);
+}
+
+.modal-input:focus,
+.modal-select:focus {
+    outline: none;
+    border-color: var(--lm-accent-primary);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2);
+}
+html[data-theme='dark'] .modal-input:focus,
+html[data-theme='dark'] .modal-select:focus {
+    border-color: var(--dm-accent-primary);
+    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2);
+}
+
+/* Estilo para o ícone do select */
+.modal-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23718096'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.5em;
+    padding-right: 2.5rem; /* Espaço para o ícone */
+}
+html[data-theme='dark'] .modal-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238B949E'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Novos estilos para os botões de confirmação e cancelamento */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.confirm-button,
+.cancel-button {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.confirm-button {
+    background: var(--lm-button-bg);
+    color: var(--lm-button-text);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+html[data-theme='dark'] .confirm-button {
+    background: var(--dm-button-bg);
+    color: var(--dm-button-text);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.confirm-button:hover:not(:disabled) {
+    background-color: var(--lm-button-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+html[data-theme='dark'] .confirm-button:hover:not(:disabled) {
+    background-color: var(--dm-button-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.cancel-button {
+    background-color: var(--lm-control-button-bg);
+    color: var(--lm-control-button-text);
+    border: 1px solid var(--lm-border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+html[data-theme='dark'] .cancel-button {
+    background-color: var(--dm-control-button-bg);
+    color: var(--dm-control-button-text);
+    border-color: var(--dm-border-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cancel-button:hover:not(:disabled) {
+    background-color: var(--lm-control-button-hover-bg);
+    border-color: var(--lm-accent-primary);
+    color: var(--lm-accent-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
+    background-color: var(--dm-control-button-hover-bg);
+    border-color: var(--dm-accent-primary);
+    color: var(--dm-accent-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -1375,11 +1556,19 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
         overflow: hidden;
     }
 
+    /* Override header height for mobile */
+    :root {
+        --header-height: 70px; /* Altura do cabeçalho para mobile */
+    }
+    html[data-theme='dark'] {
+        --header-height: 70px; /* Altura do cabeçalho para mobile */
+    }
+
     /* Sidebar responsiva - sempre à direita e sobrepondo */
     .conversation-history-sidebar {
         position: fixed;
         right: 0;
-        top: 0;
+        top: var(--header-height); /* Posiciona abaixo do cabeçalho */
         bottom: 0;
         width: 280px;
         max-width: 80vw;
@@ -1390,9 +1579,10 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
         z-index: 100;
         background-color: var(--lm-sidebar-bg);
         box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+        height: calc(100vh - var(--header-height)); /* Ocupa a altura restante da viewport */
     }
     html[data-theme='dark'] .conversation-history-sidebar {
-        border-left: 1px solid var(--dm-sidebar-border);
+        border-left: 1px solid var(--dm-border-color);
         background-color: var(--dm-sidebar-bg);
         box-shadow: -5px 0 15px rgba(0,0,0,0.5);
     }
@@ -1413,7 +1603,7 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
         white-space: nowrap; /* Garante que o texto não quebre linha */
         overflow: hidden;    /* Esconde o texto que transborda */
         text-overflow: ellipsis; /* Adiciona "..." ao texto que transborda */
-        flex-grow: 1; /* Permite que o título ocupe o espaço disponível */
+        flex-grow: 1; /* Permite que o flex item ocupe o espaço disponível */
         min-width: 0; /* Permite que o flex item encolha abaixo do seu conteúdo intrínseco */
     }
 
@@ -1441,7 +1631,7 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
     /* Ajustes para o cabeçalho em mobile */
     .chat-header {
         padding: 12px 16px;
-        min-height: 70px;
+        min-height: var(--header-height); /* Usa a variável de altura do cabeçalho para mobile */
         z-index: 101; /* Garante que o cabeçalho esteja acima da sidebar */
     }
     .almail-logo-container svg {
@@ -1512,5 +1702,16 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
     .language-toggle-button i {
         width: 16px;
         height: 16px;
+    }
+
+    /* Modais em mobile */
+    .notification-modal-content,
+    .tutorial-modal-content,
+    .confirmation-modal-content,
+    #initial-data-modal-overlay .notification-modal-content {
+        padding: 1.5rem; /* Padding original para mobile */
+        padding-top: 2.5rem; /* Aumenta o padding superior para o botão "X" */
+        padding-right: 2.5rem; /* Aumenta o padding direito para o botão "X" */
+        width: 95%;
     }
 }

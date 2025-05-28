@@ -35,6 +35,40 @@
         </div>
     </div>
 
+    <div class="notification-modal-overlay" id="initial-data-modal-overlay">
+        <div class="notification-modal-content">
+            <button class="close-button" id="initial-data-close-button" aria-label="Fechar Informações Iniciais">
+                <i data-feather="x"></i>
+            </button>
+            <div class="modal-icon-container">
+                <i data-feather="user" class="text-blue-500" style="width: 60px; height: 60px;"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-4" data-i18n="initialDataModalTitle">Informações Iniciais</h2>
+            <p class="text-lg mb-6" data-i18n="initialDataModalSubtitle">Por favor, preencha os dados para otimizar o atendimento.</p>
+
+            <div class="input-group">
+                <label for="collaborator-name-input" class="input-label" data-i18n="collaboratorNameLabel">Seu Nome:</label>
+                <input type="text" id="collaborator-name-input" class="modal-input" placeholder="Ex: Ana Silva" data-i18n="collaboratorNamePlaceholder">
+            </div>
+
+            <div class="input-group">
+                <label for="client-name-input" class="input-label" data-i18n="clientNameLabel">Nome do Cliente (Opcional):</label>
+                <input type="text" id="client-name-input" class="modal-input" placeholder="Ex: João Souza" data-i18n="clientNamePlaceholder">
+            </div>
+
+            <div class="input-group">
+                <label for="service-channel-select" class="input-label" data-i18n="serviceChannelLabel">Canal de Atendimento:</label>
+                <select id="service-channel-select" class="modal-select">
+                    <option value="chat" data-i18n="channelChat">Chat</option>
+                    <option value="email" data-i18n="channelEmail">Email</option>
+                    <option value="c2c" data-i18n="channelC2C">C2C (Voz)</option>
+                </select>
+            </div>
+
+            <button id="initial-data-confirm-button" class="start-button mt-8" data-i18n="initialDataConfirmButton">Confirmar</button>
+        </div>
+    </div>
+
     <div class="tutorial-modal-overlay" id="tutorial-modal-overlay">
         <div class="tutorial-modal-content">
             <button class="close-button" id="tutorial-close-button" aria-label="Fechar Tutorial">
@@ -100,7 +134,7 @@
                             <circle cx="50" cy="70" r="8"/>
                             <line x1="30" y1="30" x2="70" y2="30" stroke-width="4" stroke-linecap="round"/>
                             <line x1="30" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
-                            <line x1="70" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
+                            <line x1="70" y1="30" x2="50" y2='70' stroke-width='4' stroke-linecap='round'/>
                         </g>
                     </svg>
                     <h1 class="text-2xl font-semibold">Almail</h1>
