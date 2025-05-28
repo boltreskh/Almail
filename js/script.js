@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, getDoc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// Variáveis globais do Firebase (fornecidas pelo ambiente Canvas)
+// Variáveis globais do Firebase
 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
 // Inicializa firebaseConfig de forma mais robusta
@@ -81,7 +81,6 @@ const confirmLanguageNoButton = document.getElementById('confirm-language-no');
 // Elementos do histórico de conversas
 const conversationHistorySidebar = document.getElementById('conversation-history-sidebar');
 const historyList = document.getElementById('history-list');
-const userIdText = document.getElementById('user-id-text');
 const mainSidebarToggleButton = document.getElementById('main-sidebar-toggle-button'); // Novo botão no header principal
 const contentArea = document.getElementById('content-area'); // Adicionado para controlar classe no content-area
 
@@ -96,14 +95,13 @@ let currentClientName = null;
 
 // Variável para armazenar o idioma atual e o idioma pendente de confirmação
 let currentLanguage = 'pt-BR'; // Padrão
-// let pendingLanguage = null; // Armazena o idioma selecionado antes da confirmação - REMOVIDO
 const availableLanguages = ['pt-BR', 'en', 'es']; // Idiomas disponíveis
 
 // Variável para armazenar o ID da conversa atual no Firestore
 let currentConversationId = null;
 
-// Variável para controlar o estado da sidebar
-let isSidebarVisible = true; // Inicialmente visível em desktop. Em mobile, será controlada.
+// Variável para controlar o estado da sidebar. Inicia como 'false' para vir fechada por padrão.
+let isSidebarVisible = false; // Alterado para 'false' para iniciar fechada
 
 // Objeto de traduções
 const translations = {
@@ -188,16 +186,16 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
                     <p class="text-base"><strong>Botão de Início:</strong> Localizado no canto superior esquerdo do cabeçalho, clique neste ícone <i data-feather="home" class="inline-block"></i> para retornar à tela inicial a qualquer momento e iniciar uma nova interação.</p>
                 </li>
                 <li class="mb-3 flex items-center">
+                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Alternar Idioma:</strong> Ao lado do botão de Guia Rápido, use este botão (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre os idiomas disponíveis (Português, Inglês, Espanhol). A troca de idioma reiniciará a conversa atual.</p>
+                </li>
+                <li class="mb-3 flex items-center">
                     <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Botão de Guia Rápido:</strong> No canto superior direito do cabeçalho, clique neste ícone <i data-feather="help-circle" class="inline-block"></i> a qualquer momento para acessar este guia e relembrar as funcionalidades da Almail.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Alternar Tema:</strong> No canto superior direito do cabeçalho, ao lado do botão de idioma, use este botão <i data-feather="moon" class="inline-block"></i> (ou <i data-feather="sun" class="inline-block"></i>) para mudar entre o tema claro e o tema escuro, personalizando sua experiência visual.</p>
-                </li>
-                <li class="mb-3 flex items-center">
-                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Alternar Idioma:</strong> Ao lado do botão de Guia Rápido, use este botão (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre os idiomas disponíveis (Português, Inglês, Espanhol). A troca de idioma reiniciará a conversa atual.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
@@ -295,16 +293,16 @@ You should act as a **support agent for the collaborator**, providing accurate a
                     <p class="text-base"><strong>Home Button:</strong> Located in the upper left corner of the header, click this icon <i data-feather="home" class="inline-block"></i> to return to the home screen at any time and start a new interaction.</p>
                 </li>
                 <li class="mb-3 flex items-center">
+                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Toggle Language:</strong> Next to the Quick Guide button, use this button (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) to switch between available languages (Portuguese, English, Spanish). Changing the language will restart the current conversation.</p>
+                </li>
+                <li class="mb-3 flex items-center">
                     <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Quick Guide Button:</strong> In the upper right corner of the header, click this icon <i data-feather="help-circle" class="inline-block"></i> at any time to access this guide and review Almail's functionalities.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Toggle Theme:</strong> In the upper right corner of the header, next to the language button, use this button <i data-feather="moon" class="inline-block"></i> (or <i data-feather="sun" class="inline-block"></i>) to switch between light and dark themes, customizing your visual experience.</p>
-                </li>
-                <li class="mb-3 flex items-center">
-                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Toggle Language:</strong> Next to the Quick Guide button, use this button (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) to switch between available languages (Portuguese, English, Spanish). Changing the language will restart the current conversation.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
@@ -382,7 +380,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 
 **Directrices operacionales:**
 1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre Tarjetas Mercado Pago y servicios relacionados (emissão, bloqueo, transacciones, límites, facturas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
-2.  **Linguagem:** Formal, profesional, clara, concisa y directa. **Nunca uses emojis.** Utiliza un lenguaje que sea útil para el colaborador, como si estuvieras proporcionando um "guion" o uma "base de conocimiento".
+2.  **Linguagem:** Formal, profesional, clara, concisa y directa. **Nunca uses emojis.** Utiliza un lenguaje que sea útil para el colaborador, como si estuvieras proporcionado um "guion" o uma "base de conocimiento".
 3.  **Personalização e Identificação:**
     * **Dirígete siempre al colaborador.** Usa términos como "tú", "colaborador", "tu pregunta".
     * **Nunca confundas al colaborador com o cliente.** Si o nome do cliente é fornecido pelo colaborador (ex: "El cliente [Nome do Cliente] preguntó..."), úsalo para personalizar a *resposta que o colaborador le dará ao cliente*. Ex: "Para o cliente [Nome do Cliente], puedes informar que...".
@@ -391,7 +389,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 5.  **Segurança e Dados Sensíveis:** **NUNCA solicites ni proceses informação sensível do cliente** (contraseñas, números completos de tarjeta, CVV, detalles bancarios completos, etc.). Si el colaborador menciona dicha informação, instrúyelo a manejarla de forma segura y fora de linha, sin que la IA la procese o armazene.
 6.  **Resolução e Profundização:** Tu objetivo es ajudar al colaborador a resolver o problema do cliente. Si la resposta inicial não é suficiente, reformula ou profundiza a explicação, sempre pensando em como o colaborador pode usar esta informação.
 7.  **Estructura de la Resposta:** Utiliza Markdown para organizar la informação (negrita, cursiva, listas, blocos de código se é necessário) para facilitar a leitura e o uso por parte do colaborador. Considera usar títulos e subtítulos para respostas mais complexas.
-8.  **Contexto e Continuidade:** Basa tus respuestas en el historial de la conversación para mantener la coerência y la relevancia. Si el colaborador hace una pregunta de seguimiento, utiliza el contexto anterior para proporcionar uma resposta mais completa.
+8.  **Contexto e Continuidade:** Basa tus respuestas en el historial de la conversación para mantener la coerência y la relevancia. Si el colaborador hace uma pergunta de seguimiento, utiliza el contexto anterior para proporcionar uma resposta mais completa.
 9.  **Proatividade (Opcional):** Si es apropriado, sugiere al colaborador los próximos passos o informação adicional que possa ser relevante para o serviço al cliente.`,
         tutorialText: `
             <h3 class="text-2xl font-bold text-center mb-5 text-blue-700">Descubre Almail: Tu Plataforma de Soporte Inteligente</h3>
@@ -402,16 +400,16 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
                     <p class="text-base"><strong>Botón de Inicio:</strong> Ubicado en la esquina superior izquierda del encabezado, haz clic en este icono <i data-feather="home" class="inline-block"></i> para regresar a la pantalla de inicio en cualquier momento y comenzar una nueva interacción.</p>
                 </li>
                 <li class="mb-3 flex items-center">
+                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Alternar Idioma:</strong> Al lado del botón de Guia Rápida, usa este botón (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre los idiomas disponibles (Português, Inglês, Espanhol). El cambio de idioma reiniciará la conversación actual.</p>
+                </li>
+                <li class="mb-3 flex items-center">
                     <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Botón de Guía Rápida:</strong> En la esquina superior derecha del encabezado, haz clic en este icono <i data-feather="help-circle" class="inline-block"></i> en cualquier momento para acceder a esta guía y recordar las funcionalidades de Almail.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Alternar Tema:</strong> En la esquina superior derecha del encabezado, al lado del botón de idioma, usa este botón <i data-feather="moon" class="inline-block"></i> (o <i data-feather="sun" class="inline-block"></i>) para cambiar entre el tema claro y el tema oscuro, personalizando tu experiencia visual.</p>
-                </li>
-                <li class="mb-3 flex items-center">
-                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Alternar Idioma:</strong> Al lado del botón de Guía Rápida, usa este botón (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre los idiomas disponibles (Português, Inglês, Espanhol). El cambio de idioma reiniciará la conversación actual.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
@@ -445,7 +443,7 @@ function setLanguage(lang) { // Removido o parâmetro skipConfirmation
 
     currentLanguage = lang;
     document.documentElement.setAttribute('lang', lang);
-    localStorage.setItem('preferredLanguage', lang);
+    // REMOVIDO: localStorage.setItem('preferredLanguage', lang);
 
     // Atualiza o texto do botão de idioma
     currentLanguageText.textContent = lang.substring(0, 2).toUpperCase(); // Ex: PT, EN, ES
@@ -590,16 +588,10 @@ function typeMessage(text, addFeedbackButtons = false) {
     historyList.classList.add('disabled'); // Desabilita o histórico de conversas
 
     // Desabilita os botões de controle (exceto mainSidebarToggleButton, themeToggleButton, tutorialButton)
-    // themeToggleButton.disabled = true; // Mantido habilitado
-    // themeToggleButton.classList.add('disabled'); // Mantido habilitado
-    // tutorialButton.disabled = true; // Mantido habilitado
-    // tutorialButton.classList.add('disabled'); // Mantido habilitado
     languageToggleButton.disabled = true; // Desabilita o botão de idioma
     languageToggleButton.classList.add('disabled'); // Adiciona a classe disabled
     homeButton.disabled = true;
     homeButton.classList.add('disabled');
-    // mainSidebarToggleButton.disabled = true; // Removido para manter habilitado
-    // mainSidebarToggleButton.classList.add('disabled'); // Removido para manter habilitado
 
 
     const messageBubble = document.createElement('div');
@@ -623,17 +615,11 @@ function typeMessage(text, addFeedbackButtons = false) {
             sendButton.classList.remove('disabled');
             historyList.classList.remove('disabled'); // Habilita o histórico de conversas
 
-            // Habilita os botões de controle (exceto mainSidebarToggleButton, themeToggleButton, tutorialButton)
-            // themeToggleButton.disabled = false; // Mantido habilitado
-            // themeToggleButton.classList.remove('disabled'); // Mantido habilitado
-            // tutorialButton.disabled = false; // Mantido habilitado
-            // tutorialButton.classList.remove('disabled'); // Mantido habilitado
+            // Habilita os botões de controle
             languageToggleButton.disabled = false; // Habilita o botão de idioma
             languageToggleButton.classList.remove('disabled'); // Remove a classe disabled
             homeButton.disabled = false;
             homeButton.classList.remove('disabled');
-            // mainSidebarToggleButton.disabled = false; // Removido para manter habilitado
-            // mainSidebarToggleButton.classList.remove('disabled'); // Removido para manter habilitado
             return;
         }
 
@@ -652,17 +638,11 @@ function typeMessage(text, addFeedbackButtons = false) {
             sendButton.classList.remove('disabled');
             historyList.classList.remove('disabled'); // Habilita o histórico de conversas
 
-            // Habilita os botões de controle (exceto mainSidebarToggleButton, themeToggleButton, tutorialButton)
-            // themeToggleButton.disabled = false; // Mantido habilitado
-            // themeToggleButton.classList.remove('disabled'); // Mantido habilitado
-            // tutorialButton.disabled = false; // Mantido habilitado
-            // tutorialButton.classList.remove('disabled'); // Mantido habilitado
+            // Habilita os botões de controle
             languageToggleButton.disabled = false; // Habilita o botão de idioma
             languageToggleButton.classList.remove('disabled'); // Remove a classe disabled
             homeButton.disabled = false;
             homeButton.classList.remove('disabled');
-            // mainSidebarToggleButton.disabled = false; // Removido para manter habilitado
-            // mainSidebarToggleButton.classList.remove('disabled'); // Removido para manter habilitado
 
             if (chatAndInputArea.classList.contains('show')) { // Use o ID correto
                  userInput.focus();
@@ -882,18 +862,30 @@ async function startNewConversation() {
 //     showConfirmationModal(); // Mantém o modal de confirmação
 // }
 
-// Alterna entre tema claro e escuro
-function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-
-    if (currentTheme === 'dark') {
+/**
+ * Aplica o tema (claro/escuro) ao documento.
+ * @param {string} theme 'light' ou 'dark'.
+ * @param {boolean} updateLocalStorage Se true, atualiza a preferência no localStorage.
+ */
+function applyTheme(theme, updateLocalStorage = false) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
         themeIcon.innerHTML = '<i data-feather="moon"></i>';
     } else {
         themeIcon.innerHTML = '<i data-feather="sun"></i>';
     }
     feather.replace();
+
+    // REMOVIDO: if (updateLocalStorage) {
+    // REMOVIDO:     localStorage.setItem('userPreferredTheme', theme);
+    // REMOVIDO: }
+}
+
+// Alterna entre tema claro e escuro
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme, true); // Atualiza o tema e salva no localStorage
 }
 
 // Mostra o modal de tutorial
@@ -1342,7 +1334,7 @@ async function loadConversationHistory() {
             homeButton.classList.remove('active'); // Desativa o botão de Início se uma conversa estiver ativa
         }
 
-        // Atualiza o texto do botão de idioma
+        // REMOVIDO: Atualiza o texto do botão de idioma (não relacionado ao userIdDisplay)
         currentLanguageText.textContent = currentLanguage.substring(0, 2).toUpperCase();
         feather.replace(); // Garante que os ícones Feather sejam renderizados
     } catch (error) {
@@ -1540,12 +1532,30 @@ window.addEventListener('load', async () => {
     const storedLanguage = localStorage.getItem('preferredLanguage') || 'pt-BR';
     setLanguage(storedLanguage); // Carrega o idioma sem o segundo parâmetro (skipConfirmation)
 
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    if (currentTheme === 'dark') {
-        themeIcon.innerHTML = '<i data-feather="moon"></i>';
+    // Lógica para aplicar o tema com base na preferência do sistema
+    // REMOVIDO: const userPreferredTheme = localStorage.getItem('userPreferredTheme');
+    // REMOVIDO: if (userPreferredTheme) {
+    // REMOVIDO:     // Se o usuário já escolheu um tema, use-o
+    // REMOVIDO:     applyTheme(userPreferredTheme, false);
+    // REMOVIDO: } else
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // Se o sistema preferir dark mode, aplique dark
+        applyTheme('dark', false);
     } else {
-        themeIcon.innerHTML = '<i data-feather="sun"></i>';
+        // Caso contrário, aplique light mode
+        applyTheme('light', false);
     }
+
+    // Adiciona um listener para mudanças na preferência do sistema
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            // Se o usuário não tiver uma preferência manual salva, atualize o tema automaticamente
+            // REMOVIDO: if (!localStorage.getItem('userPreferredTheme')) {
+                applyTheme(event.matches ? 'dark' : 'light', false);
+            // REMOVIDO: }
+        });
+    }
+
     feather.replace();
 
     loadingIndicator.style.display = 'none';
@@ -1555,6 +1565,12 @@ window.addEventListener('load', async () => {
     sendButton.disabled = true;
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
+
+    // Define o estado inicial da sidebar como oculta e atualiza o ícone do botão
+    isSidebarVisible = false; // Garante que a variável de controle está em sync
+    conversationHistorySidebar.classList.add('hidden'); // Garante que a classe 'hidden' está aplicada
+    mainSidebarToggleButton.innerHTML = '<i data-feather="chevron-right"></i>'; // Ícone para "abrir"
+    feather.replace();
 
 
     // Inicializa Firebase e autentica
@@ -1576,7 +1592,6 @@ window.addEventListener('load', async () => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                userIdText.textContent = userId;
                 isAuthReady = true;
                 console.log("Usuário autenticado:", userId);
                 // Carrega o histórico apenas se o Firebase estiver configurado corretamente
@@ -1600,7 +1615,6 @@ window.addEventListener('load', async () => {
                     }
                 } catch (anonError) {
                     console.error("Erro na autenticação anônima:", anonError);
-                    userIdText.textContent = "Erro de Autenticação";
                     // Em caso de erro de autenticação, o input e o botão permanecem desabilitados
                 }
             }

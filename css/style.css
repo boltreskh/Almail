@@ -3,145 +3,181 @@
 :root {
     --font-primary: 'Poppins', sans-serif;
 
-    /* Light Mode Colors */
-    --lm-bg-body: #f0f4f8; /* Cinza azulado muito claro */
-    --lm-bg-app: #ffffff;
-    --lm-bg-chat: #f8f9fa; /* Fundo do chat um pouco mais escuro que o app */
-    --lm-text-primary: #1a202c; /* Quase preto */
-    --lm-text-secondary: #4a5568; /* Cinza escuro */
-    --lm-text-tertiary: #718096; /* Cinza médio */
-    --lm-border-color: #e2e8f0; /* Cinza claro para bordas */
-    --lm-shadow-color: rgba(0, 0, 0, 0.08);
-    --lm-accent-primary: #3b82f6; /* Azul primário */
-    --lm-accent-secondary: #2563eb; /* Azul mais escuro */
-    --lm-header-bg: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
-    --lm-footer-bg: #e9ecef;
-    --lm-modal-bg: #ffffff;
-    --lm-modal-overlay: rgba(0, 0, 0, 0.3);
+    /* Light Mode Colors - Nova Paleta com base na Logo */
+    --lm-bg-body: #F9F9F9; /* Off-white para o fundo principal */
+    --lm-bg-app: #FFFFFF; /* Branco puro para o container principal */
+    --lm-bg-chat: #F3F3F3; /* Cinza muito claro para o fundo do chat */
+    --lm-text-primary: #1A202C; /* Cor do círculo da logo - quase preto */
+    --lm-text-secondary: #4A5568; /* Cinza escuro para textos secundários */
+    --lm-text-tertiary: #718096; /* Cinza médio para textos terciários/placeholders */
+    --lm-border-color: #E0E0E0; /* Cinza suave para bordas */
+    --lm-shadow-color: rgba(0, 0, 0, 0.08); /* Sombra suave */
+    /* Cores de Destaque (Azul-acinzentado profundo) */
+    --lm-accent-primary: #2C3E50; /* Carvão azulado profundo - profissional e forte */
+    --lm-accent-secondary: #1F2E3D; /* Tom ainda mais escuro para hover/ativo */
+
+    --lm-header-bg: linear-gradient(135deg, #FFFFFF 0%, #F9F9F9 100%); /* Gradiente suave para cabeçalho */
+    --lm-footer-bg: #E9ECEF; /* Cinza claro para o rodapé */
+    --lm-modal-bg: #FFFFFF; /* Branco para modais */
+    --lm-modal-overlay: rgba(0, 0, 0, 0.3); /* Overlay ligeiramente mais escuro para destaque */
+    --lm-modal-shadow: rgba(0, 0, 0, 0.25); /* Sombra mais visível para modais */
+    --lm-modal-title-color: var(--lm-text-primary); /* Cor do título do modal */
+    --lm-modal-text-color: var(--lm-text-secondary); /* Cor do texto do modal */
+
+    /* Botões de Ação Principal (Ex: Enviar, Iniciar Conversa) */
     --lm-button-bg: var(--lm-accent-primary);
-    --lm-button-text: #ffffff;
+    --lm-button-text: #FFFFFF; /* Texto branco nos botões de destaque */
     --lm-button-hover-bg: var(--lm-accent-secondary);
-    --lm-control-button-bg: #f0f4f8;
+
+    /* Botões de Controle (no cabeçalho) */
+    --lm-control-button-bg: #EFEFEF; /* Fundo cinza claro */
     --lm-control-button-text: var(--lm-text-secondary);
-    --lm-control-button-hover-bg: #e2e8f0;
-    --lm-user-message-bg: linear-gradient(135deg, var(--lm-accent-primary) 0%, var(--lm-accent-secondary) 100%);
-    --lm-user-message-text: #ffffff;
-    --lm-ai-message-bg: #e9ecef; /* Cinza claro para mensagens da IA */
+    --lm-control-button-hover-bg: #DCDCDC; /* Cinza mais claro no hover */
+
+    /* Mensagens */
+    --lm-user-message-bg: linear-gradient(135deg, var(--lm-accent-primary) 0%, var(--lm-accent-secondary) 100%); /* Gradiente azul-acinzentado para mensagens do usuário */
+    --lm-user-message-text: #FFFFFF;
+    --lm-ai-message-bg: #E9ECEF; /* Cinza claro para mensagens da IA */
     --lm-ai-message-text: var(--lm-text-primary);
-    --lm-input-bg: #ffffff;
+
+    /* Input de Texto */
+    --lm-input-bg: #FFFFFF;
     --lm-input-border: var(--lm-border-color);
     --lm-input-focus-border: var(--lm-accent-primary);
     --lm-input-text: var(--lm-text-primary);
-    --lm-loading-bg: #e9ecef;
-    --lm-loading-text: var(--lm-text-secondary);
-    --lm-error-bg: #fee2e2; /* Fundo vermelho claro para erro */
-    --lm-error-text: #dc2626; /* Vermelho escuro para texto de erro */
 
-    /* Cores da nova logo para o tema claro */
-    --almail-logo-circle-light: #1a202c; /* Cor do círculo externo (quase preto) */
-    --almail-logo-symbol-light: #ffffff; /* Cor do símbolo de IA interno (branco) */
+    /* Indicadores */
+    --lm-loading-bg: #E9ECEF;
+    --lm-loading-text: var(--lm-text-secondary);
+    --lm-error-bg: #FEE2E2; /* Fundo vermelho claro para erro */
+    --lm-error-text: #DC2626; /* Vermelho escuro para texto de erro */
+
+    /* Cores da logo para o tema claro - Mantidas conforme a logo original */
+    --almail-logo-circle-light: #1A202C; /* Cor do círculo externo (quase preto) */
+    --almail-logo-symbol-light: #FFFFFF; /* Cor do símbolo de IA interno (branco) */
     --lm-logo-shadow-color: rgba(0, 0, 0, 0.15); /* Sombra da logo para tema claro */
 
     /* Cores para feedback */
-    --lm-feedback-button-bg: #e2e8f0;
+    --lm-feedback-button-bg: #E2E8F0;
     --lm-feedback-button-text: #718096;
-    --lm-feedback-button-hover-bg: #cbd5e0;
+    --lm-feedback-button-hover-bg: #CBD5E0;
     --lm-feedback-liked-bg: #4CAF50; /* Verde para gostei */
-    --lm-feedback-liked-text: #ffffff;
+    --lm-feedback-liked-text: #FFFFFF;
     --lm-feedback-disliked-bg: #F44336; /* Vermelho para não gostei */
-    --lm-feedback-disliked-text: #ffffff;
+    --lm-feedback-disliked-text: #FFFFFF;
 
     /* Cores para o histórico de conversas (Light Mode) */
-    --lm-sidebar-bg: #f0f4f8;
-    --lm-sidebar-border: #e2e8f0;
-    --lm-sidebar-text: #4a5568;
-    --lm-sidebar-item-bg: #ffffff;
-    --lm-sidebar-item-hover-bg: #e9ecef;
-    --lm-sidebar-item-active-bg: #dbeafe; /* Azul claro para item ativo */
-    --lm-sidebar-item-active-text: #2563eb; /* Azul mais escuro para texto ativo */
+    --lm-sidebar-bg: #F9F9F9; /* Fundo da sidebar igual ao body */
+    --lm-sidebar-border: #E0E0E0;
+    --lm-sidebar-text: #4A5568;
+    --lm-sidebar-header-bg: linear-gradient(135deg, #FFFFFF 0%, #F3F3F3 100%); /* Gradiente suave para o cabeçalho da sidebar */
+    --lm-sidebar-item-bg: #FFFFFF;
+    --lm-sidebar-item-hover-bg: #F3F3F3; /* Cinza claro no hover */
+    --lm-sidebar-item-active-bg: #E0E6EB; /* Azul-acinzentado muito claro para item ativo */
+    --lm-sidebar-item-active-text: var(--lm-accent-primary); /* Texto ativo com a cor de destaque */
+    --lm-sidebar-footer-bg: #E9ECEF; /* Fundo do rodapé da sidebar */
 
-    /* Cores para o botão de Nova Conversa */
-    --lm-new-chat-button-bg: #e0f2f7; /* Azul claro suave */
-    --lm-new-chat-button-text: #0288d1; /* Azul mais escuro */
-    --lm-new-chat-button-hover-bg: #b3e5fc; /* Azul ainda mais claro no hover */
+    /* Cores para o botão de Nova Conversa (se reativado) */
+    --lm-new-chat-button-bg: #E0E6EB; /* Azul-acinzentado suave */
+    --lm-new-chat-button-text: var(--lm-accent-primary);
+    --lm-new-chat-button-hover-bg: #D4DCE2;
 
-    /* Cores para o botão de idioma ativo (agora para o único botão) */
+    /* Cores para o botão de idioma ativo */
     --lm-lang-button-active-bg: var(--lm-accent-primary);
-    --lm-lang-button-active-text: #ffffff;
+    --lm-lang-button-active-text: #FFFFFF;
 
-    /* NOVO: Cores para o estado de erro do input */
-    --lm-input-error-border: #ef4444; /* Vermelho */
+    /* Cores para o estado de erro do input */
+    --lm-input-error-border: #EF4444; /* Vermelho */
     --lm-input-error-shadow: rgba(239, 68, 68, 0.2); /* Sombra vermelha */
 }
 
 html[data-theme='dark'] {
-    --dm-bg-body: #0d1117; /* GitHub dark background */
-    --dm-bg-app: #161b22; /* GitHub dark container */
-    --dm-bg-chat: #0d1117; /* Mesmo que o body para um look mais imersivo */
-    --dm-text-primary: #c9d1d9; /* GitHub dark text */
-    --dm-text-secondary: #8b949e; /* GitHub dark secondary text */
-    --dm-text-tertiary: #586069; /* GitHub dark tertiary text */
-    --dm-border-color: #30363d; /* GitHub dark border */
-    --dm-shadow-color: rgba(0, 0, 0, 0.3);
-    --dm-accent-primary: #58a6ff; /* Azul claro vibrante */
-    --dm-accent-secondary: #3b82f6; /* Azul um pouco mais escuro */
-    --dm-header-bg: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    --dm-footer-bg: #111827;
-    --dm-modal-bg: #1f2937; /* Azul acinzentado escuro para modais */
-    --dm-modal-overlay: rgba(0, 0, 0, 0.7);
+    /* Dark Mode Colors - Nova Paleta com base na Logo */
+    --dm-bg-body: #0A0A0A; /* Quase preto para o fundo principal */
+    --dm-bg-app: #121212; /* Preto ligeiramente mais claro para o container principal */
+    --dm-bg-chat: #0A0A0A; /* Fundo do chat igual ao body para imersão */
+    --dm-text-primary: #C9D1D9; /* Cor do círculo da logo no tema escuro */
+    --dm-text-secondary: #8B949E; /* Cinza para textos secundários */
+    --dm-text-tertiary: #586069; /* Cinza para textos terciários/placeholders */
+    --dm-border-color: #282828; /* Bordas escuras */
+    --dm-shadow-color: rgba(0, 0, 0, 0.4); /* Sombra mais intensa */
+
+    /* Cores de Destaque (Azul-acinzentado claro) */
+    --dm-accent-primary: #8E9AA7; /* Azul-acinzentado claro - destaca-se no escuro */
+    --dm-accent-secondary: #6C7A89; /* Tom ligeiramente mais escuro para hover/ativo */
+
+    --dm-header-bg: linear-gradient(135deg, #1A1A1A 0%, #0A0A0A 100%); /* Gradiente escuro para cabeçalho */
+    --dm-footer-bg: #1A1A1A; /* Rodapé escuro */
+    --dm-modal-bg: #1A1A1A; /* Modais escuros */
+    --dm-modal-overlay: rgba(0, 0, 0, 0.85); /* Overlay mais escuro para destaque */
+    --dm-modal-shadow: rgba(0, 0, 0, 0.6); /* Sombra mais visível para modais */
+    --dm-modal-title-color: var(--dm-text-primary); /* Cor do título do modal */
+    --dm-modal-text-color: var(--dm-text-secondary); /* Cor do texto do modal */
+
+    /* Botões de Ação Principal */
     --dm-button-bg: var(--dm-accent-primary);
-    --dm-button-text: #0d1117; /* Texto escuro no botão claro */
+    --dm-button-text: var(--dm-bg-body); /* Texto quase preto nos botões claros */
     --dm-button-hover-bg: var(--dm-accent-secondary);
-    --dm-control-button-bg: #21262d; /* GitHub dark button */
+
+    /* Botões de Controle */
+    --dm-control-button-bg: #282828; /* Fundo escuro */
     --dm-control-button-text: var(--dm-text-primary);
-    --dm-control-button-hover-bg: #30363d;
-    --dm-user-message-bg: linear-gradient(135deg, var(--dm-accent-primary) 0%, var(--dm-accent-secondary) 100%);
-    --dm-user-message-text: #ffffff;
-    --dm-ai-message-bg: #21262d; /* Cinza escuro para mensagens da IA */
+    --dm-control-button-hover-bg: #3A3A3A; /* Fundo mais escuro no hover */
+
+    /* Mensagens */
+    --dm-user-message-bg: linear-gradient(135deg, var(--dm-accent-primary) 0%, var(--dm-accent-secondary) 100%); /* Gradiente azul-acinzentado para mensagens do usuário */
+    --dm-user-message-text: var(--dm-bg-body); /* Texto quase preto */
+    --dm-ai-message-bg: #212121; /* Cinza escuro para mensagens da IA */
     --dm-ai-message-text: var(--dm-text-primary);
-    --dm-input-bg: #0d1117; /* Fundo do input igual ao body */
+
+    /* Input de Texto */
+    --dm-input-bg: #0A0A0A; /* Fundo do input igual ao body */
     --dm-input-border: var(--dm-border-color);
     --dm-input-focus-border: var(--dm-accent-primary);
     --dm-input-text: var(--dm-text-primary);
-    --dm-loading-bg: #21262d;
-    --dm-loading-text: var(--dm-text-secondary);
-    --dm-error-bg: #4b1f1f; /* Fundo vermelho escuro para erro */
-    --dm-error-text: #ff8989; /* Vermelho claro para texto de erro */
 
-    /* Cores da nova logo para o tema escuro */
-    --almail-logo-circle-dark: #c9d1d9; /* Cor do círculo externo (texto primário) */
-    --almail-logo-symbol-dark: #161b22; /* Cor do símbolo de IA interno (fundo do app) */
+    /* Indicadores */
+    --dm-loading-bg: #212121;
+    --dm-loading-text: var(--dm-text-secondary);
+    --dm-error-bg: #4B1F1F; /* Fundo vermelho escuro para erro */
+    --dm-error-text: #FF8989; /* Vermelho claro para texto de erro */
+
+    /* Cores da logo para o tema escuro - Mantidas conforme a logo original */
+    --almail-logo-circle-dark: #C9D1D9; /* Cor do círculo externo (texto primário) */
+    --almail-logo-symbol-dark: #161B22; /* Cor do símbolo de IA interno (fundo do app) */
     --dm-logo-shadow-color: rgba(0, 0, 0, 0.4); /* Sombra da logo para tema escuro */
 
     /* Cores para feedback */
-    --dm-feedback-button-bg: #30363d;
-    --dm-feedback-button-text: #8b949e;
-    --dm-feedback-button-hover-bg: #444c56;
-    --dm-feedback-liked-bg: #28a745; /* Verde para gostei */
-    --dm-feedback-liked-text: #ffffff;
-    --dm-feedback-disliked-bg: #cb2431; /* Vermelho para não gostei */
-    --dm-feedback-disliked-text: #ffffff;
+    --dm-feedback-button-bg: #30363D;
+    --dm-feedback-button-text: #8B949E;
+    --dm-feedback-button-hover-bg: #444C56;
+    --dm-feedback-liked-bg: #28A745; /* Verde para gostei */
+    --dm-feedback-liked-text: #FFFFFF;
+    --dm-feedback-disliked-bg: #CB2431; /* Vermelho para não gostei */
+    --dm-feedback-disliked-text: #FFFFFF;
 
     /* Cores para o histórico de conversas (Dark Mode) */
-    --dm-sidebar-bg: #1f2937;
-    --dm-sidebar-border: #30363d;
-    --dm-sidebar-text: #c9d1d9;
-    --dm-sidebar-item-bg: #21262d;
-    --dm-sidebar-item-hover-bg: #30363d;
-    --dm-sidebar-item-active-bg: #1a365d; /* Azul escuro para item ativo */
-    --dm-sidebar-item-active-text: #58a6ff; /* Azul claro para texto ativo */
+    --dm-sidebar-bg: #1A1A1A; /* Fundo da sidebar */
+    --dm-sidebar-border: #282828;
+    --dm-sidebar-text: #C9D1D9;
+    --dm-sidebar-header-bg: linear-gradient(135deg, #121212 0%, #0A0A0A 100%); /* Gradiente escuro para o cabeçalho da sidebar */
+    --dm-sidebar-item-bg: #121212;
+    --dm-sidebar-item-hover-bg: #212121;
+    --dm-sidebar-item-active-bg: #2D3A47; /* Azul-acinzentado escuro para item ativo */
+    --dm-sidebar-item-active-text: var(--dm-accent-primary); /* Texto ativo com a cor de destaque */
+    --dm-sidebar-footer-bg: #1A1A1A; /* Fundo do rodapé da sidebar */
 
-    /* Cores para o botão de Nova Conversa (Dark Mode) */
-    --dm-new-chat-button-bg: #004d61; /* Azul escuro suave */
-    --dm-new-chat-button-text: #4dd0e1; /* Azul claro */
-    --dm-new-chat-button-hover-bg: #007c91; /* Azul ainda mais escuro no hover */
+    /* Cores para o botão de Nova Conversa (se reativado) */
+    --dm-new-chat-button-bg: #2D3A47; /* Azul-acinzentado escuro suave */
+    --dm-new-chat-button-text: var(--dm-accent-primary);
+    --dm-new-chat-button-hover-bg: #3A4B5C;
 
-    /* Cores para o botão de idioma ativo (agora para o único botão) */
+    /* Cores para o botão de idioma ativo */
     --dm-lang-button-active-bg: var(--dm-accent-primary);
-    --dm-lang-button-active-text: #0d1117;
+    --dm-lang-button-active-text: var(--dm-bg-body);
 
-    /* NOVO: Cores para o estado de erro do input */
-    --dm-input-error-border: #ef4444; /* Vermelho */
+    /* Cores para o estado de erro do input */
+    --dm-input-error-border: #EF4444; /* Vermelho */
     --dm-input-error-shadow: rgba(239, 68, 68, 0.2); /* Sombra vermelha */
 }
 
@@ -224,7 +260,7 @@ html[data-theme='dark'] .app-wrapper {
 .tutorial-modal-overlay,
 .confirmation-modal-overlay,
 #custom-confirm-overlay,
-#name-input-modal-overlay { /* Adicionado o novo modal de nome */
+#name-input-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -243,7 +279,7 @@ html[data-theme='dark'] .notification-modal-overlay,
 html[data-theme='dark'] .tutorial-modal-overlay,
 html[data-theme='dark'] .confirmation-modal-overlay,
 html[data-theme='dark'] #custom-confirm-overlay,
-html[data-theme='dark'] #name-input-modal-overlay { /* Adicionado o novo modal de nome */
+html[data-theme='dark'] #name-input-modal-overlay {
     background-color: var(--dm-modal-overlay);
 }
 
@@ -251,7 +287,7 @@ html[data-theme='dark'] #name-input-modal-overlay { /* Adicionado o novo modal d
 .tutorial-modal-overlay.show,
 .confirmation-modal-overlay.show,
 #custom-confirm-overlay.show,
-#name-input-modal-overlay.show { /* Adicionado o novo modal de nome */
+#name-input-modal-overlay.show {
     opacity: 1;
     visibility: visible;
 }
@@ -259,18 +295,18 @@ html[data-theme='dark'] #name-input-modal-overlay { /* Adicionado o novo modal d
 .notification-modal-content,
 .tutorial-modal-content,
 .confirmation-modal-content,
-#custom-confirm-content { /* Adicionado o novo modal customizado */
+#custom-confirm-content {
     background-color: var(--lm-modal-bg);
-    color: var(--lm-text-primary);
+    color: var(--lm-modal-text-color); /* Usando nova variável de cor para texto */
     border-radius: 16px;
-    padding: 32px 40px;
-    max-width: 550px; /* Um pouco mais estreito */
+    padding: 32px 40px; /* Aumentado um pouco para mais espaço */
+    max-width: 550px;
     text-align: center;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 30px var(--lm-modal-shadow); /* Usando nova variável de sombra */
     transform: scale(0.95);
     opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    position: relative; /* Para o botão de fechar do tutorial */
+    transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 /* O novo modal de nome também usa .notification-modal-content para o seu conteúdo */
 #name-input-modal-overlay .notification-modal-content {
@@ -281,81 +317,73 @@ html[data-theme='dark'] .notification-modal-content,
 html[data-theme='dark'] .tutorial-modal-content,
 html[data-theme='dark'] .confirmation-modal-content,
 html[data-theme='dark'] #custom-confirm-content,
-html[data-theme='dark'] #name-input-modal-overlay .notification-modal-content { /* Adicionado o novo modal de nome */
+html[data-theme='dark'] #name-input-modal-overlay .notification-modal-content {
     background-color: var(--dm-modal-bg);
-    color: var(--dm-text-primary);
+    color: var(--dm-modal-text-color); /* Usando nova variável de cor para texto */
+    box-shadow: 0 15px 30px var(--dm-modal-shadow); /* Usando nova variável de sombra */
 }
 
 .notification-modal-overlay.show .notification-modal-content,
 .tutorial-modal-overlay.show .tutorial-modal-content,
 .confirmation-modal-overlay.show .confirmation-modal-content,
 #custom-confirm-overlay.show #custom-confirm-content,
-#name-input-modal-overlay.show .notification-modal-content { /* Adicionado o novo modal de nome */
+#name-input-modal-overlay.show .notification-modal-content {
     transform: scale(1);
     opacity: 1;
 }
 
 .modal-icon-container {
-    margin-bottom: 24px;
+    margin-bottom: 28px; /* Aumentado o espaçamento abaixo do ícone */
 }
 .modal-icon-container svg {
-    filter: drop-shadow(0px 4px 10px var(--lm-logo-shadow-color)); /* Usando variável de sombra */
+    width: 64px; /* Aumentado o tamanho do ícone */
+    height: 64px; /* Aumentado o tamanho do ícone */
+    filter: drop-shadow(0px 6px 12px var(--lm-logo-shadow-color)); /* Sombra mais pronunciada para o ícone */
 }
 html[data-theme='dark'] .modal-icon-container svg {
-     filter: drop-shadow(0px 4px 10px var(--dm-logo-shadow-color)); /* Usando variável de sombra */
+     filter: drop-shadow(0px 6px 12px var(--dm-logo-shadow-color)); /* Sombra mais pronunciada para o ícone */
 }
 
 /* Novas regras de preenchimento para a logo SVG */
 .almail-logo .logo-circle-fill,
-.almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+.almail-logo-large .logo-circle-fill {
     fill: var(--almail-logo-circle-light);
 }
 .almail-logo .logo-symbol-fill,
-.almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
-    fill: var(--almail-logo-symbol-light);
-    stroke: var(--almail-logo-symbol-light); /* Para as linhas do símbolo */
-}
-
-html[data-theme='dark'] .almail-logo .logo-circle-fill,
-html[data-theme='dark'] .almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
-    fill: var(--almail-logo-circle-dark);
-}
-html[data-theme='dark'] .almail-logo .logo-symbol-fill,
-html[data-theme='dark'] .almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
-    fill: var(--almail-logo-symbol-dark);
-    stroke: var(--almail-logo-symbol-dark); /* Para as linhas do símbolo */
-}
-
-/* Removido: Regras de preenchimento para o favicon SVG, agora embutidas no SVG */
-/* .fav-logo-circle-fill {
-    fill: var(--almail-logo-circle-light);
-}
-.fav-logo-symbol-fill {
+.almail-logo-large .logo-symbol-fill {
     fill: var(--almail-logo-symbol-light);
     stroke: var(--almail-logo-symbol-light);
 }
-html[data-theme='dark'] .fav-logo-circle-fill {
+
+html[data-theme='dark'] .almail-logo .logo-circle-fill,
+html[data-theme='dark'] .almail-logo-large .logo-circle-fill {
     fill: var(--almail-logo-circle-dark);
 }
-html[data-theme='dark'] .fav-logo-symbol-fill {
+html[data-theme='dark'] .almail-logo .logo-symbol-fill,
+html[data-theme='dark'] .almail-logo-large .logo-symbol-fill {
     fill: var(--almail-logo-symbol-dark);
     stroke: var(--almail-logo-symbol-dark);
-} */
+}
 
 
 .notification-modal-content h2 {
-    font-size: 1.75rem; /* Ajuste de tamanho */
-    font-weight: 600;
-    margin-bottom: 12px;
+    font-size: 1.85rem; /* Levemente maior para destaque */
+    font-weight: 700; /* Mais negrito */
+    margin-bottom: 16px; /* Mais espaçamento */
+    color: var(--lm-modal-title-color); /* Usando nova variável de cor para título */
 }
+html[data-theme='dark'] .notification-modal-content h2 {
+    color: var(--dm-modal-title-color);
+}
+
 .notification-modal-content p {
-    font-size: 1rem;
-    color: var(--lm-text-secondary);
-    line-height: 1.6;
-    margin-bottom: 8px;
+    font-size: 1.05rem; /* Levemente maior para legibilidade */
+    color: var(--lm-modal-text-color); /* Usando nova variável de cor para texto */
+    line-height: 1.7; /* Melhor espaçamento entre linhas */
+    margin-bottom: 12px; /* Mais espaçamento */
 }
 html[data-theme='dark'] .notification-modal-content p {
-    color: var(--dm-text-secondary);
+    color: var(--dm-modal-text-color);
 }
 
 /* Estilos para a nova lista de créditos (mantidos, apesar de o modal ter sido removido) */
@@ -399,10 +427,10 @@ html[data-theme='dark'] .credits-list li {
 .start-button {
     background: var(--lm-button-bg);
     color: var(--lm-button-text);
-    padding: 12px 32px;
+    padding: 14px 36px; /* Aumentado o padding para um botão mais proeminente */
     border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: 1.05rem; /* Levemente maior */
+    font-weight: 600; /* Mais negrito */
     cursor: pointer;
     border: none;
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -411,7 +439,7 @@ html[data-theme='dark'] .credits-list li {
 html[data-theme='dark'] .start-button {
     background: var(--dm-button-bg);
     color: var(--dm-button-text);
-    box-shadow: 0 4px 15px rgba(88, 166, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Sombra mais escura para o dark mode */
 }
 
 .start-button:hover:not(:disabled) {
@@ -421,7 +449,7 @@ html[data-theme='dark'] .start-button {
 }
 html[data-theme='dark'] .start-button:hover:not(:disabled) {
     background-color: var(--dm-button-hover-bg);
-    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3); /* Sombra mais intensa no hover para dark mode */
 }
 
 /* Tutorial Modal Específico */
@@ -492,7 +520,7 @@ html[data-theme='dark'] #tutorial-content h3 {
     color: var(--lm-text-primary);
     transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     min-height: 80px;
-    flex-shrink: 0; /* Garante que o cabeçalho não encolha */
+    flex-shrink: 0;
 }
 html[data-theme='dark'] .chat-header {
     background: var(--dm-header-bg);
@@ -516,23 +544,23 @@ html[data-theme='dark'] .chat-header {
 
 /* Novas regras de preenchimento para a logo SVG */
 .almail-logo .logo-circle-fill,
-.almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+.almail-logo-large .logo-circle-fill {
     fill: var(--almail-logo-circle-light);
 }
 .almail-logo .logo-symbol-fill,
-.almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
+.almail-logo-large .logo-symbol-fill {
     fill: var(--almail-logo-symbol-light);
-    stroke: var(--almail-logo-symbol-light); /* Para as linhas do símbolo */
+    stroke: var(--almail-logo-symbol-light);
 }
 
 html[data-theme='dark'] .almail-logo .logo-circle-fill,
-html[data-theme='dark'] .almail-logo-large .logo-circle-fill { /* Adicionado .almail-logo-large */
+html[data-theme='dark'] .almail-logo-large .logo-circle-fill {
     fill: var(--almail-logo-circle-dark);
 }
 html[data-theme='dark'] .almail-logo .logo-symbol-fill,
-html[data-theme='dark'] .almail-logo-large .logo-symbol-fill { /* Adicionado .almail-logo-large */
+html[data-theme='dark'] .almail-logo-large .logo-symbol-fill {
     fill: var(--almail-logo-symbol-dark);
-    stroke: var(--almail-logo-symbol-dark); /* Para as linhas do símbolo */
+    stroke: var(--almail-logo-symbol-dark);
 }
 
 
@@ -631,13 +659,13 @@ html[data-theme='dark'] .language-toggle-button:hover:not(:disabled) {
     background-color: var(--lm-lang-button-active-bg);
     color: var(--lm-lang-button-active-text);
     border-color: var(--lm-lang-button-active-bg);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2); /* Sombra com base no novo accent-primary */
 }
 html[data-theme='dark'] .language-toggle-button.active {
     background-color: var(--dm-lang-button-active-bg);
     color: var(--dm-lang-button-active-text);
     border-color: var(--dm-lang-button-active-bg);
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2); /* Sombra com base no novo dm-accent-primary */
 }
 
 .language-toggle-button i {
@@ -926,11 +954,11 @@ html[data-theme='dark'] .chat-input::placeholder {
 }
 .chat-input:focus {
     border-color: var(--lm-input-focus-border);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2); /* Sombra com base no novo accent-primary */
 }
 html[data-theme='dark'] .chat-input:focus {
     border-color: var(--dm-input-focus-border);
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(142, 154, 167, 0.2); /* Sombra com base no novo dm-accent-primary */
 }
 
 /* NOVO: Estilo para input com erro */
@@ -1036,10 +1064,13 @@ html[data-theme='dark'] .conversation-history-sidebar {
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
+    background: var(--lm-sidebar-header-bg);
     border-bottom: 1px solid var(--lm-sidebar-border);
     color: var(--lm-text-primary);
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 html[data-theme='dark'] .sidebar-header {
+    background: var(--dm-sidebar-header-bg);
     border-bottom: 1px solid var(--dm-sidebar-border);
     color: var(--dm-text-primary);
 }
@@ -1099,7 +1130,7 @@ html[data-theme='dark'] .history-list::-webkit-scrollbar-thumb:hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 html[data-theme='dark'] .history-item {
     background-color: var(--dm-sidebar-item-bg);
@@ -1108,19 +1139,23 @@ html[data-theme='dark'] .history-item {
 
 .history-item:hover {
     background-color: var(--lm-sidebar-item-hover-bg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 html[data-theme='dark'] .history-item:hover {
     background-color: var(--dm-sidebar-item-hover-bg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .history-item.active {
     background-color: var(--lm-sidebar-item-active-bg);
     color: var(--lm-sidebar-item-active-text);
     font-weight: 600;
+    box-shadow: 0 0 0 2px var(--lm-accent-primary), 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 html[data-theme='dark'] .history-item.active {
     background-color: var(--dm-sidebar-item-active-bg);
     color: var(--dm-sidebar-item-active-text);
+    box-shadow: 0 0 0 2px var(--dm-accent-primary), 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Estilos para o contêiner do título e botões de ação */
@@ -1189,7 +1224,7 @@ html[data-theme='dark'] .history-item .conversation-title.editing {
 .edit-conversation-button:hover:not(:disabled) {
     opacity: 1;
     color: var(--lm-accent-primary);
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: rgba(44, 62, 80, 0.1);
 }
 
 .delete-conversation-button:hover:not(:disabled) {
@@ -1205,7 +1240,7 @@ html[data-theme='dark'] .delete-conversation-button {
 
 html[data-theme='dark'] .edit-conversation-button:hover:not(:disabled) {
     color: var(--dm-accent-primary);
-    background-color: rgba(88, 166, 255, 0.1);
+    background-color: rgba(142, 154, 167, 0.1);
 }
 
 html[data-theme='dark'] .delete-conversation-button:hover:not(:disabled) {
@@ -1221,13 +1256,16 @@ html[data-theme='dark'] .delete-conversation-button:hover:not(:disabled) {
 
 .sidebar-footer {
     padding: 10px 20px;
+    background: var(--lm-sidebar-footer-bg);
     border-top: 1px solid var(--lm-sidebar-border);
     font-size: 0.75rem;
     color: var(--lm-text-tertiary);
     text-align: center;
     flex-shrink: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 html[data-theme='dark'] .sidebar-footer {
+    background: var(--dm-sidebar-footer-bg);
     border-top: 1px solid var(--dm-sidebar-border);
     color: var(--dm-text-tertiary);
 }
@@ -1372,10 +1410,15 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
     }
     .sidebar-header h3 {
         font-size: 1rem;
+        white-space: nowrap; /* Garante que o texto não quebre linha */
+        overflow: hidden;    /* Esconde o texto que transborda */
+        text-overflow: ellipsis; /* Adiciona "..." ao texto que transborda */
+        flex-grow: 1; /* Permite que o título ocupe o espaço disponível */
+        min-width: 0; /* Permite que o flex item encolha abaixo do seu conteúdo intrínseco */
     }
 
     .history-list {
-        padding: 5px 0;
+        padding: 15px 0; /* Aumentado o padding superior para evitar corte */
     }
     .history-item {
         padding: 8px 16px;
@@ -1399,6 +1442,7 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
     .chat-header {
         padding: 12px 16px;
         min-height: 70px;
+        z-index: 101; /* Garante que o cabeçalho esteja acima da sidebar */
     }
     .almail-logo-container svg {
         width: 36px;
@@ -1411,7 +1455,7 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
         width: 40px;
         height: 40px;
     }
-    .control-button i, .control-button span i {
+    .control-button i, .control-button-span i { /* Corrigido o seletor aqui */
         width: 20px;
         height: 20px;
     }
@@ -1434,7 +1478,29 @@ html[data-theme='dark'] .initial-screen-content p.text-gray-600 {
         padding: 10px 16px;
         font-size: 0.7rem;
     }
-    /* Ajustes para o novo botão de alternância de idioma em mobile */
+    /* Aprimoramento para o botão de alternância do histórico em mobile */
+    #toggle-history-sidebar {
+        background-color: var(--lm-accent-primary); /* Fundo com a cor de destaque principal */
+        color: var(--lm-button-text); /* Texto branco para contraste */
+        border-color: var(--lm-accent-primary); /* Borda com a mesma cor de destaque */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra sutil para destacá-lo */
+    }
+    html[data-theme='dark'] #toggle-history-sidebar {
+        background-color: var(--dm-accent-primary);
+        color: var(--dm-button-text);
+        border-color: var(--dm-accent-primary);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.4); /* Sombra mais intensa no dark mode */
+    }
+    #toggle-history-sidebar:hover:not(:disabled) {
+        background-color: var(--lm-accent-secondary); /* Cor de hover mais escura */
+        border-color: var(--lm-accent-secondary);
+        transform: translateY(-1px); /* Efeito de elevação sutil */
+    }
+    html[data-theme='dark'] #toggle-history-sidebar:hover:not(:disabled) {
+        background-color: var(--dm-accent-secondary);
+        border-color: var(--dm-accent-secondary);
+        transform: translateY(-1px);
+    }
     .language-toggle-button {
         width: auto;
         min-width: 50px;

@@ -13,7 +13,7 @@
     <div class="notification-modal-overlay" id="notification-modal-overlay">
         <div class="notification-modal-content">
             <div class="modal-icon-container">
-                <svg class="almail-logo" width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <svg class="almail-logo-large" width="120" height="120" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="50" class="logo-circle-fill"/>
                     <g class="logo-symbol-fill">
                         <circle cx="30" cy="30" r="8"/>
@@ -121,8 +121,7 @@
                         <span id="theme-icon"><i data-feather="moon"></i></span>
                     </button>
                     <button id="main-sidebar-toggle-button" class="control-button" aria-label="Alternar Histórico">
-                        <i data-feather="chevron-left"></i>
-                    </button>
+                        <i data-feather="chevron-right"></i> </button>
                 </div>
             </div>
 
@@ -168,15 +167,12 @@
                         </button>
                     </div>
                 </div>
-                <aside class="conversation-history-sidebar" id="conversation-history-sidebar">
+                <aside class="conversation-history-sidebar hidden" id="conversation-history-sidebar">
                     <div class="sidebar-header">
                         <h3 data-i18n="historyTitle">Histórico de Conversas</h3>
                         </div>
                     <ul id="history-list" class="history-list">
                         </ul>
-                    <div class="sidebar-footer">
-                        <p data-i18n="userIdDisplay">ID do Usuário: <span id="user-id-text">Carregando...</span></p>
-                    </div>
                 </aside>
             </div>
         </div>
