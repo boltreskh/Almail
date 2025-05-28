@@ -53,6 +53,7 @@ const initialDataModalOverlay = document.getElementById('initial-data-modal-over
 const collaboratorNameInput = document.getElementById('collaborator-name-input');
 const clientNameInput = document.getElementById('client-name-input');
 const serviceChannelSelect = document.getElementById('service-channel-select');
+const ecosystemSelect = document.getElementById('ecosystem-select'); // NOVO: Elemento de seleção de Ecossistema
 const initialDataConfirmButton = document.getElementById('initial-data-confirm-button');
 const initialDataCloseButton = document.getElementById('initial-data-close-button');
 
@@ -108,6 +109,8 @@ let currentClientName = null;
 let collaboratorName = null;
 // Nova variável para armazenar o canal de atendimento
 let serviceChannel = null;
+// Nova variável para armazenar o Ecossistema de atendimento
+let ecosystem = null; // NOVO
 
 // Variável para armazenar o idioma atual e o idioma pendente de confirmação
 let currentLanguage = 'pt-BR'; // Padrão
@@ -122,9 +125,9 @@ let isSidebarVisible = false;
 // Objeto de traduções
 const translations = {
     'pt-BR': {
-        appTitle: 'Almail Suporte IA - Cartões',
+        appTitle: 'Almail Suporte IA - Ecossistema MELI',
         creditsModalTitle: 'Créditos',
-        creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Cartões do Mercado Pago.',
+        creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Mercado Livre e Mercado Pago.',
         creditsModalDescription: `
             <ul class="list-none p-0 text-center">
                 <li class="mb-2"><strong>Desenvolvedores:</strong></li>
@@ -132,14 +135,14 @@ const translations = {
                 <li class="mb-1">Lucas Candido</li>
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoio e Colaboração:</strong></li>
-                <li class="mb-1">Time de Cartões (Concentrix)</li>
+                <li class="mb-1">Time de Mercado Livre e Mercado Pago (Concentrix)</li>
                 <li class="mb-2 mt-3"><strong>Links:</strong></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositório do Projeto</a></li>
             </ul>
         `,
         creditsModalButton: 'Entendi',
-        creditsButtonAria: 'Ver Créditos', // NOVO: Texto para o aria-label do botão de créditos
+        creditsButtonAria: 'Ver Créditos',
         initialDataModalTitle: 'Informações Iniciais',
         initialDataModalSubtitle: 'Por favor, preencha os dados para otimizar o atendimento.',
         collaboratorNameLabel: 'Seu Nome:',
@@ -150,6 +153,9 @@ const translations = {
         channelChat: 'Chat',
         channelEmail: 'Email',
         channelC2C: 'C2C (Voz)',
+        ecosystemLabel: 'Ecossistema:', // NOVO
+        ecosystemMercadoLivre: 'Mercado Livre', // NOVO
+        ecosystemMercadoPago: 'Mercado Pago', // NOVO
         initialDataConfirmButton: 'Confirmar',
 
         tutorialModalTitle: 'Guia Rápido: Almail Suporte IA',
@@ -162,7 +168,7 @@ const translations = {
         languageConfirmSubtitle: 'Ao trocar o idioma, a conversa atual será apagada. Deseja continuar?',
         languageConfirmYes: 'Sim, Trocar',
         languageConfirmNo: 'Não, Cancelar',
-        headerSubtitle: 'Suporte IA - Cartões',
+        headerSubtitle: 'Suporte IA - Ecossistema MELI',
         tutorialButtonAria: 'Abrir Tutorial',
         themeToggleButtonAria: 'Alternar Tema',
         homeButtonAria: 'Voltar para o Início',
@@ -170,8 +176,8 @@ const translations = {
         inputPlaceholder: 'Pergunte à Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
-        footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.',
-        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
+        footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Livre ou Mercado Pago.',
+        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para o Ecossistema Mercado Livre e Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Histórico de Conversas',
         userIdDisplay: 'ID do Usuário:',
         homeButton: 'Início',
@@ -185,7 +191,7 @@ const translations = {
         saveTitle: 'Salvar Título',
         cancelEdit: 'Cancelar Edição',
         errorMessage: 'Ocorreu um erro. Por favor, tente novamente.',
-        systemInstructions: `Você é a Almail, uma assistente virtual especializada em suporte para Cartões do Mercado Pago.
+        systemInstructions: `Você é a Almail, uma assistente virtual especializada em suporte para o **Ecossistema Mercado Livre e Mercado Pago**.
 Seu objetivo principal é **auxiliar o colaborador** a fornecer um atendimento de excelência aos clientes.
 Você deve agir como um **agente de suporte para o colaborador**, fornecendo informações precisas e estruturadas para que ele possa, por sua vez, ajudar o cliente.
 
@@ -196,20 +202,25 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
 * **Nome do Colaborador:** {COLLABORATOR_NAME}
 * **Nome do Cliente Final:** {CLIENT_NAME} (Se o cliente não tiver um nome específico, este campo será "Não Informado")
 * **Canal de Atendimento:** {SERVICE_CHANNEL} (Pode ser "Chat", "Email" ou "C2C (Voz)")
+* **Ecossistema de Atendimento:** {ECOSYSTEM}
 
 **Adaptação da Resposta com base no Canal de Atendimento:**
 
 {SERVICE_CHANNEL_INSTRUCTIONS}
 
+**Adaptação da Resposta com base no Ecossistema:**
+
+{ECOSYSTEM_INSTRUCTIONS}
+
 **Diretrizes operacionais:**
-1.  **Foco e Escopo:** Seu conhecimento é exclusivo sobre Cartões Mercado Pago e serviços relacionados (emissão, bloqueio, transações, limites, faturas, etc.). **Não responda a perguntas fora deste escopo.** Se a pergunta não for clara ou estiver fora do escopo, peça ao colaborador para reformular ou esclarecer.
+1.  **Foco e Escopo:** Seu conhecimento é exclusivo sobre o **Ecossistema Mercado Livre e Mercado Pago** (vendas, compras, pagamentos, envios, contas, etc.). **Não responda a perguntas fora deste escopo.** Se a pergunta não for clara ou estiver fora do escopo, peça ao colaborador para reformular ou esclarecer.
 2.  **Linguagem:** Formal, profissional, clara, concisa e direta. **Nunca use emojis.** Utilize uma linguagem que seja útil para o colaborador, como se estivesse fornecendo um "roteiro" ou "base de conhecimento".
 3.  **Personalização e Identificação:**
     * **Sempre se dirija ao colaborador pelo nome, se disponível.** Ex: "Olá, {COLLABORATOR_NAME}! Para a sua dúvida..."
     * **Nunca confunda o colaborador com o cliente.** Se o nome do cliente for fornecido, use-o para personalizar a *resposta que o colaborador dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, você pode informar que...".
     * Se o nome do cliente não for fornecido, use termos neutros como "o cliente" ou "o usuário" ao se referir a ele, mas sempre no contexto de como o *colaborador* deve interagir.
-4.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Pago. Evite divagações.
-5.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, números completos de cartão, CVV, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
+4.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Livre/Mercado Pago. Evite divagações.
+5.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
 6.  **Resolução e Aprofundamento:** Seu objetivo é ajudar o colaborador a resolver o problema do cliente. Se a resposta inicial não for suficiente, reformule ou aprofunde a explicação, sempre pensando em como o colaborador pode usar essa informação.
 7.  **Estrutura da Resposta:** Utilize Markdown para organizar as informações (negrito, itálico, listas, blocos de código se necessário) para facilitar a leitura e o uso pelo colaborador. Considere usar títulos e subtítulos para respostas mais complexas.
 8.  **Contexto e Continuidade:** Baseie-se no histórico da conversa para manter a coerência e a relevância. Se o colaborador fizer uma pergunta de acompanhamento, use o contexto anterior para fornecer uma resposta mais completa.
@@ -249,16 +260,16 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         dislikeFeedback: 'Agradeço seu feedback! Estou aprendendo e vou tentar gerar uma resposta mais útil, estruturada e personalizada para você.',
         dislikePrompt: `A resposta anterior não foi satisfatória. Por favor, gere uma nova resposta mais útil, com melhor argumentação e estruturação de texto, e personalize-a para o cliente se o nome dele estiver disponível. Lembre-se de me ajudar a resolver o problema do problema do cliente.`,
         initialScreenTitle: 'Bem-vindo(a) à Almail Suporte IA!',
-        initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no time de Cartões do Mercado Pago.',
-        initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados a cartões. Clique em "Nova Conversa" para começar a interagir com a IA.',
+        initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no Ecossistema Mercado Livre e Mercado Pago.',
+        initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Nova Conversa" para começar a interagir com a IA.',
         startChatButton: 'Iniciar Nova Conversa',
         collaboratorNameRequired: 'Por favor, informe seu nome.',
         clientNameRequired: 'Por favor, informe o nome do cliente.',
     },
     'en': {
-        appTitle: 'Almail AI Support - Cards',
+        appTitle: 'Almail AI Support - MELI Ecosystem',
         creditsModalTitle: 'Credits',
-        creditsModalSubtitle: 'An intelligent support tool for the Mercado Pago Cards team.',
+        creditsModalSubtitle: 'An intelligent support tool for the Mercado Livre and Mercado Pago team.',
         creditsModalDescription: `
             <ul class="list-none p-0 text-center">
                 <li class="mb-2"><strong>Developers:</strong></li>
@@ -266,7 +277,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
                 <li class="mb-1">Lucas Candido</li>
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Support and Collaboration:</strong></li>
-                <li class="mb-1">Cards Team (Concentrix)</li>
+                <li class="mb-1">Mercado Livre and Mercado Pago Team (Concentrix)</li>
                 <li class="mb-2 mt-3"><strong>Links:</strong></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Project Repository</a></li>
@@ -284,6 +295,9 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         channelChat: 'Chat',
         channelEmail: 'Email',
         channelC2C: 'C2C (Voice)',
+        ecosystemLabel: 'Ecosystem:', // NOVO
+        ecosystemMercadoLivre: 'Mercado Livre', // NOVO
+        ecosystemMercadoPago: 'Mercado Pago', // NOVO
         initialDataConfirmButton: 'Confirm',
 
         tutorialModalTitle: 'Quick Guide: Almail AI Support',
@@ -296,7 +310,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         languageConfirmSubtitle: 'Changing the language will clear the current conversation. Do you want to continue?',
         languageConfirmYes: 'Yes, Change',
         languageConfirmNo: 'No, Cancel',
-        headerSubtitle: 'AI Support - Cards',
+        headerSubtitle: 'AI Support - MELI Ecosystem',
         tutorialButtonAria: 'Open Tutorial',
         themeToggleButtonAria: 'Toggle Theme',
         homeButtonAria: 'Back to Home',
@@ -304,8 +318,8 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         inputPlaceholder: 'Ask Almail...',
         sendButtonAria: 'Send Message',
         footerCopyright: '© 2025 Almail AI Support. All rights reserved.',
-        footerDisclaimer: 'This AI uses public data and does not store Mercado Pago information.',
-        welcomeMessage: "Hello {COLLABORATOR_NAME}! I'm Almail, your virtual assistant specialized in support for Mercado Pago Cards. I'm here to help you assist {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
+        footerDisclaimer: 'This AI uses public data and does not store Mercado Livre or Mercado Pago information.',
+        welcomeMessage: "Hello {COLLABORATOR_NAME}! I'm Almail, your virtual assistant specialized in support for the Mercado Livre and Mercado Pago Ecosystem. I'm here to help you assist {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Conversation History',
         userIdDisplay: 'User ID:',
         homeButton: 'Home',
@@ -319,7 +333,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         saveTitle: 'Save Title',
         cancelEdit: 'Cancel Edit',
         errorMessage: 'An error occurred. Please try again.',
-        systemInstructions: `You are Almail, a virtual assistant specialized in support for Mercado Pago Cards.
+        systemInstructions: `You are Almail, a virtual assistant specialized in support for the **Mercado Livre and Mercado Pago Ecosystem**.
 Your main objective is to **assist the collaborator** in providing excellent customer service.
 You should act as a **support agent for the collaborator**, providing accurate and structured information so that they, in turn, can help the customer.
 
@@ -330,20 +344,25 @@ You should act as a **support agent for the collaborator**, providing accurate a
 * **Collaborator Name:** {COLLABORATOR_NAME}
 * **End Client Name:** {CLIENT_NAME} (If the client does not have a specific name, this field will be "Not Informed")
 * **Service Channel:** {SERVICE_CHANNEL} (Can be "Chat", "Email", or "C2C (Voice)")
+* **Ecosystem of Service:** {ECOSYSTEM}
 
 **Adapting the Response based on the Service Channel:**
 
 {SERVICE_CHANNEL_INSTRUCTIONS}
 
+**Adapting the Response based on the Ecosystem:**
+
+{ECOSYSTEM_INSTRUCTIONS}
+
 **Operational guidelines:**
-1.  **Focus and Scope:** Your knowledge is exclusive to Mercado Pago Cards and related services (issuance, blocking, transactions, limits, invoices, etc.). **Do not answer questions outside this scope.** If the question is unclear or out of scope, ask the collaborator to rephrase or clarify.
+1.  **Focus and Scope:** Your knowledge is exclusive to the **Mercado Livre and Mercado Pago Ecosystem** (sales, purchases, payments, shipments, accounts, etc.). **Do not answer questions outside this scope.** If the question is unclear or out of scope, ask the collaborator to rephrase or clarify.
 2.  **Language:** Formal, professional, clear, concise, and direct. **Never use emojis.** Use language that is helpful to the collaborator, as if providing a "script" or "knowledge base."
 3.  **Personalization and Identification:**
     * **Always address the collaborator by name, if available.** Ex: "Hello, {COLLABORATOR_NAME}! Regarding your question..."
     * **Never confuse the collaborator with the customer.** If the customer's name is provided, use it to personalize the *response the collaborator will give to the customer*. Ex: "For customer {CLIENT_NAME}, you can inform that...".
     * If the customer's name is not provided, use neutral terms like "the customer" or "the user" when referring to them, but always in the context of how the *colaborador* should interact.
-4.  **Objetivity and Clarity:** Respond only to what was asked, providing accurate information based on Mercado Pago policies and procedures. Evite divagações.
-5.  **Security and Sensitive Data:** **NEVER request or process sensitive customer information** (passwords, full card numbers, CVV, full bank details, etc.). If such information is mentioned by the collaborator, instruct them to handle it securely and offline, without the AI processing or storing.
+4.  **Objetivity and Clarity:** Respond only to what was asked, providing accurate information based on Mercado Livre/Mercado Pago policies and procedures. Evite divagações.
+5.  **Security and Sensitive Data:** **NEVER request or process sensitive customer information** (passwords, full bank details, etc.). If such information is mentioned by the collaborator, instruct them to handle it securely and offline, without the AI processing or storing.
 6.  **Resolution and Deepening:** Your goal is to help the collaborator solve the customer's problem. If the initial response is not sufficient, rephrase or deepen the explanation, always thinking about how the collaborator can use this information.
 7.  **Response Structure:** Use Markdown to organize information (bold, italics, lists, code blocks if necessary) to facilitate reading and use by the collaborator. Consider using titles and subtitles for more complex responses.
 8.  **Context and Continuity:** Base your responses on the conversation history to maintain coherence and and relevance. If the collaborator asks a follow-up question, use the previous context to provide a more complete answer.
@@ -374,7 +393,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Send Message:</strong> Located in the text input area, after typing your question or request, click this button <i data-feather="send" class="inline-block"></i> or press <strong>Enter</strong> to send your message to Almail.</p>
+                    <p class="text-base"><strong>Enviar Mensagem:</strong> Ubicado en el área de entrada de texto, después de escribir tu pregunta o solicitud, haz clic en este botón <i data-feather="send" class="inline-block"></i> o presiona <strong>Enter</strong> para enviar tu mensaje a Almail.</p>
                 </li>
             </ul>
             <p class="mt-6 text-lg leading-relaxed">With these resources, you will have full control over your interaction with Almail. We are here to simplify your daily life and offer the best support!</p>
@@ -383,16 +402,16 @@ You should act as a **support agent for the collaborator**, providing accurate a
         dislikeFeedback: 'Thank you for your feedback! I am learning and will try to generate a more useful, structured, and personalized response for you.',
         dislikePrompt: `The previous response was not satisfactory. Please generate a new, more useful response, with better argumentation and text structuring, and personalize it for the customer if their name is available. Remember to help me solve the customer's problem.`,
         initialScreenTitle: 'Welcome to Almail AI Support!',
-        initialScreenSubtitle: 'Your intelligent assistant to optimize support for the Mercado Pago Cards team.',
-        initialScreenDescription: 'Here you can get quick and accurate information on various card-related topics. Click "New Chat" to start interacting with the AI.',
+        initialScreenSubtitle: 'Your intelligent assistant to optimize support for the Mercado Livre and Mercado Pago team.',
+        initialScreenDescription: 'Here you can get quick and accurate information on various topics related to Mercado Livre and Mercado Pago. Click "New Chat" to start interacting with the AI.',
         startChatButton: 'Start New Chat',
         collaboratorNameRequired: 'Please enter your name.',
         clientNameRequired: 'Please enter the client\'s name.',
     },
     'es': {
-        appTitle: 'Almail Soporte IA - Tarjetas',
+        appTitle: 'Almail Soporte IA - Ecosistema MELI',
         creditsModalTitle: 'Créditos',
-        creditsModalSubtitle: 'Una herramienta de soporte inteligente para el equipo de Tarjetas de Mercado Pago.',
+        creditsModalSubtitle: 'Una herramienta de soporte inteligente para el equipo de Mercado Libre y Mercado Pago.',
         creditsModalDescription: `
             <ul class="list-none p-0 text-center">
                 <li class="mb-2"><strong>Desarrolladores:</strong></li>
@@ -400,7 +419,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
                 <li class="mb-1">Lucas Candido</li>
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoyo y Colaboración:</strong></li>
-                <li class="mb-1">Equipo de Tarjetas (Concentrix)</li>
+                <li class="mb-1">Equipo de Mercado Libre y Mercado Pago (Concentrix)</li>
                 <li class="mb-2 mt-3"><strong>Enlaces:</strong></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositorio del Proyecto</a></li>
@@ -418,6 +437,9 @@ You should act as a **support agent for the collaborator**, providing accurate a
         channelChat: 'Chat',
         channelEmail: 'Correo Electrónico',
         channelC2C: 'C2C (Voz)',
+        ecosystemLabel: 'Ecosistema:', // NOVO
+        ecosystemMercadoLivre: 'Mercado Livre', // NOVO
+        ecosystemMercadoPago: 'Mercado Pago', // NOVO
         initialDataConfirmButton: 'Confirmar',
 
         tutorialModalTitle: 'Guía Rápida: Almail Soporte IA',
@@ -430,7 +452,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         languageConfirmSubtitle: 'Al cambiar el idioma, la conversación actual se borrará. ¿Deseas continuar?',
         languageConfirmYes: 'Sí, Cambiar',
         languageConfirmNo: 'No, Cancelar',
-        headerSubtitle: 'Soporte IA - Tarjetas',
+        headerSubtitle: 'Soporte IA - Ecosistema MELI',
         tutorialButtonAria: 'Abrir Tutorial',
         themeToggleButtonAria: 'Alternar Tema',
         homeButtonAria: 'Volver al Inicio',
@@ -438,8 +460,8 @@ You should act as a **support agent for the collaborator**, providing accurate a
         inputPlaceholder: 'Pregunta a Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Soporte IA. Todos los derechos reservados.',
-        footerDisclaimer: 'Esta IA utiliza datos públicos y no almacena información de Mercado Pago.',
-        welcomeMessage: "¡Hola {COLLABORATOR_NAME}! Soy Almail, tu asistente virtual especializada en soporte para Tarjetas de Mercado Pago. Estoy aquí para ayudarte a atender a {CLIENT_NAME_ADAPTED} vía {SERVICE_CHANNEL_ADAPTED}.",
+        footerDisclaimer: 'Esta IA utiliza datos públicos y no almacena información de Mercado Libre o Mercado Pago.',
+        welcomeMessage: "¡Hola {COLLABORATOR_NAME}! Soy Almail, tu asistente virtual especializada en soporte para el Ecosistema Mercado Libre y Mercado Pago. Estoy aquí para ayudarte a atender a {CLIENT_NAME_ADAPTED} vía {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Historial de Conversaciones',
         userIdDisplay: 'ID de Usuario:',
         homeButton: 'Inicio',
@@ -453,7 +475,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         saveTitle: 'Guardar Título',
         cancelEdit: 'Cancelar Edición',
         errorMessage: 'Ocurrió un error. Por favor, inténtalo de nuevo.',
-        systemInstructions: `Eres Almail, una asistente virtual especializada en soporte para Tarjetas de Mercado Pago.
+        systemInstructions: `Eres Almail, una asistente virtual especializada en soporte para el **Ecosistema Mercado Libre y Mercado Pago**.
 Tu objetivo principal es **ayudar al colaborador** a proporcionar un excelente servicio al cliente.
 Debes actuar como un **agente de soporte para el colaborador**, proporcionando información precisa y estructurada para que él, a su vez, possa ajudar o cliente.
 
@@ -464,20 +486,25 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 * **Nombre del Colaborador:** {COLLABORATOR_NAME}
 * **Nombre del Cliente Final:** {CLIENT_NAME} (Si el cliente no tiene un nombre específico, este campo será "No Informado")
 * **Canal de Atención:** {SERVICE_CHANNEL} (Puede ser "Chat", "Correo Electrónico" o "C2C (Voz)")
+* **Ecossistema de Atendimento:** {ECOSYSTEM}
 
-**Adaptación de la Respuesta según el Canal de Atención:**
+**Adaptación de la Respuesta con base no Canal de Atendimento:**
 
 {SERVICE_CHANNEL_INSTRUCTIONS}
 
+**Adaptação da Resposta com base no Ecossistema:**
+
+{ECOSYSTEM_INSTRUCTIONS}
+
 **Directrices operacionales:**
-1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre Tarjetas Mercado Pago y servicios relacionados (emissão, bloqueo, transacciones, límites, facturas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
+1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre el **Ecosistema Mercado Libre y Mercado Pago** (ventas, compras, pagos, envíos, cuentas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
 2.  **Linguagem:** Formal, profesional, clara, concisa y directa. **Nunca uses emojis.** Utiliza un lenguaje que sea útil para el colaborador, como si estuvieras proporcionado um "guion" o uma "base de conocimiento".
 3.  **Personalização e Identificação:**
     * **Dirígete siempre al colaborador por su nombre, si está disponible.** Ej: "¡Hola, {COLLABORATOR_NAME}! Respecto a tu pregunta..."
     * **Nunca confundas al colaborador com o cliente.** Si o nome do cliente é fornecido pelo colaborador, úsalo para personalizar a *resposta que o colaborador le dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, puedes informar que...".
     * Si el nome do cliente não se proporciona, usa termos neutros como "el cliente" o "el usuario" ao referirte a ele, pero siempre en el contexto de como o *colaborador* deve interagir.
-4.  **Objetividade e Clareza:** Responde solo a lo que se preguntó, proporcionando información precisa e baseada en las políticas y procedimentos de Mercado Pago. Evita divagações.
-5.  **Segurança e Dados Sensíveis:** **NUNCA solicites ni proceses informação sensível do cliente** (contraseñas, números completos de tarjeta, CVV, detalles bancarios completos, etc.). Si el colaborador menciona dicha informação, instrúyelo a manejarla de forma segura y fora de linha, sin que la IA la procese o armazene.
+4.  **Objetividade e Clareza:** Responde solo a lo que se preguntó, proporcionando información precisa e baseada en las políticas y procedimentos de Mercado Livre/Mercado Pago. Evita divagações.
+5.  **Segurança e Dados Sensíveis:** **NUNCA solicites ni proceses informação sensível do cliente** (contraseñas, datos bancarios completos, etc.). Si el colaborador menciona dicha informação, instrúyelo a manejarla de forma segura y fora de linha, sin que la IA la procese o armazene.
 6.  **Resolução e Profundização:** Tu objetivo es ajudar al colaborador a resolver o problema do cliente. Si la resposta inicial não é suficiente, reformula ou profundiza a explicação, sempre pensando em como o colaborador pode usar esta informação.
 7.  **Estructura de la Resposta:** Utiliza Markdown para organizar la informação (negrita, cursiva, listas, blocos de código se é necessário) para facilitar a leitura e o uso por parte do colaborador. Considera usar títulos e subtítulos para respostas mais complexas.
 8.  **Contexto e Continuidade:** Basa tus respuestas en el historial de la conversación para mantener la coerência y la relevancia. Si el colaborador hace uma pergunta de seguimiento, utiliza el contexto anterior para proporcionar uma resposta mais completa.
@@ -517,8 +544,8 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
         dislikeFeedback: '¡Agradezco tus comentarios! Estoy aprendiendo e intentaré generar una respuesta más útil, estructurada y personalizada para ti.',
         dislikePrompt: `La respuesta anterior no fue satisfactoria. Por favor, genera una nueva respuesta más útil, con mejor argumentación y estructuración de texto, y personalízala para el cliente si su nombre está disponible. Recuerda ayudarme a resolver el problema del cliente.`,
         initialScreenTitle: '¡Bienvenido(a) a Almail Soporte IA!',
-        initialScreenSubtitle: 'Tu asistente inteligente para optimizar el soporte para el equipo de Tarjetas de Mercado Pago.',
-        initialScreenDescription: 'Aquí puedes obtener información rápida y precisa sobre diversos temas relacionados con tarjetas. Haz clic en "Nueva Conversación" para comenzar a interactuar con la IA.',
+        initialScreenSubtitle: 'Tu asistente inteligente para optimizar el soporte para el equipo de Mercado Libre y Mercado Pago.',
+        initialScreenDescription: 'Aquí puedes obtener información rápida y precisa sobre diversos temas relacionados con Mercado Libre y Mercado Pago. Haz clic en "Nueva Conversación" para comenzar a interactuar con la IA.',
         startChatButton: 'Iniciar Nueva Conversação',
         collaboratorNameRequired: 'Por favor, introduce tu nombre.',
         clientNameRequired: 'Por favor, introduce el nombre del cliente.',
@@ -576,6 +603,12 @@ function setLanguage(lang) {
         document.querySelector('label[for="client-name-input"]').textContent = translations[lang].clientNameLabel;
         clientNameInput.placeholder = translations[lang].clientNamePlaceholder;
         document.querySelector('label[for="service-channel-select"]').textContent = translations[lang].serviceChannelLabel;
+        // NOVO: Atualiza label do Ecossistema
+        document.querySelector('label[for="ecosystem-select"]').textContent = translations[lang].ecosystemLabel;
+        // NOVO: Atualiza opções do Ecossistema
+        ecosystemSelect.querySelector('option[value="mercadoLivre"]').textContent = translations[lang].ecosystemMercadoLivre;
+        ecosystemSelect.querySelector('option[value="mercadoPago"]').textContent = translations[lang].ecosystemMercadoPago;
+
         initialDataConfirmButton.textContent = translations[lang].initialDataConfirmButton;
 
         // Atualiza as opções do select
@@ -831,7 +864,8 @@ async function saveConversation(title) {
             timestamp: Date.now(),
             collaboratorName: collaboratorName || "Não Informado",
             clientName: currentClientName || "Não Informado",
-            serviceChannel: serviceChannel || "Não Informado"
+            serviceChannel: serviceChannel || "Não Informado",
+            ecosystem: ecosystem || "Não Informado" // NOVO: Salva o Ecossistema
         });
         console.log("Conversa salva com sucesso!");
         loadConversationHistory();
@@ -867,6 +901,7 @@ async function loadConversation(conversationId) {
     currentClientName = null;
     collaboratorName = null;
     serviceChannel = null;
+    ecosystem = null; // NOVO: Reseta o Ecossistema
 
     userInput.value = '';
     userInput.style.height = 'auto';
@@ -891,6 +926,7 @@ async function loadConversation(conversationId) {
             collaboratorName = data.collaboratorName || null;
             currentClientName = data.clientName || null;
             serviceChannel = data.serviceChannel || null;
+            ecosystem = data.ecosystem || null; // NOVO: Carrega o Ecossistema
 
             chatHistory.forEach((msg, index) => {
                 const addFeedback = (msg.role === 'assistant' && index === chatHistory.length - 1);
@@ -941,6 +977,7 @@ async function startNewConversation() {
     currentClientName = null;
     collaboratorName = null;
     serviceChannel = null;
+    ecosystem = null; // NOVO: Reseta o Ecossistema
     currentConversationId = null;
     initialUserMessage = null;
 
@@ -1014,6 +1051,7 @@ function showInitialDataModal() {
     collaboratorNameInput.value = '';
     clientNameInput.value = '';
     serviceChannelSelect.value = 'chat';
+    ecosystemSelect.value = 'mercadoLivre'; // NOVO: Define um valor padrão para o Ecossistema
     setLanguage(currentLanguage);
     initialDataModalOverlay.classList.add('show');
     collaboratorNameInput.focus();
@@ -1156,19 +1194,20 @@ async function sendMessage(isRegeneration = false) {
         systemInstructions = systemInstructions.replace('{COLLABORATOR_NAME}', collaboratorName || "Não Informado");
         systemInstructions = systemInstructions.replace('{CLIENT_NAME}', currentClientName);
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL}', serviceChannel || "Não Informado");
+        systemInstructions = systemInstructions.replace('{ECOSYSTEM}', ecosystem || "Não Informado"); // NOVO: Adiciona o Ecossistema às instruções
 
         let channelSpecificInstructions = '';
         if (serviceChannel === 'email') {
             channelSpecificInstructions = `
 * **Canal de Email:** As respostas devem ser mais diretas, com menos exploração para levar o cliente a uma solução mais rápida. Use soluções com empatia, conexão emocional, parafraseando para demonstrar escuta ativa e focando na necessidade do cliente.
-    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Pago. (Parafraseie o problema do usuário aqui)"
+    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Livre/Mercado Pago. (Parafraseie o problema do usuário aqui)"
     * Após este parágrafo, siga com a tratativa do caso com a solução.
 `;
         } else if (serviceChannel === 'chat') {
             channelSpecificInstructions = `
 * **Canal de Chat:** A solução deverá ter 4 etapas: BOAS-VINDAS MELI, EXPLORAÇÃO MELI, ORIENTAÇÃO E ACONSELHAMENTO MELI, ENCERRAMENTO MELI.
     * **1. BOAS-VINDAS MELI:**
-        * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Pago.
+        * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Livre/Mercado Pago.
         * Personalizar o contato: Se dirigir ao usuário pelo nome com proximidade.
         * Colocar-se à disposição com contexto: Expressar disposição para a resolução de inconvenientes.
         * Mencionar de forma resumida as informações do motivo do contato de maneira proativa.
@@ -1188,7 +1227,7 @@ async function sendMessage(isRegeneration = false) {
         * Inclua o usuário na busca/apresentação das alternativas de solução e personaliza as explicações: gerencie a solução em conjunto com o usuário, buscando e apresentando as melhores alternativas que se adaptem ao caso, à situação e ao contexto (personalização). Assegure que as recomendações sejam relevantes e eficazes.
         * Na explicação, seja conciso e claro (fale de forma direta): Ofereça explicações claras e diretas, utilizando uma linguagem simples, adaptada ao nível de conhecimento do usuário. Apresente as informações do processo e seus passos de forma ordenada e assertiva. Não solicite informações desnecessárias nem faça o usuário perder tempo com etapas que não agreguem valor.
         * Realize verificações de compreensão, atento a sinais que o usuário forneça (silêncios, perguntas adicionais): Preste atenção a sinais como silêncios, perguntas ou qualquer expressão que indique dúvidas, esclarecendo-as quando necessário. Confirme se o usuário está compreendendo as explicações, oferecendo-se proativamente para revisar ou ampliar as informações.
-        * Momento, duração, explicação de uso e acompanhamento durante a espera: Caso necessário, utilize os silêncios de forma mínima. Se usar, não ultrapasse 5 minutos e explique previamente ao usuário o motivo. Analise com o usuário o que aparece na tela, explicando políticas e processos e evitando silêncios na conversa. Exemplo: "Irei verificar o que aconteceu que o seu cartão não chegou no sistema, já retorno com mais informações, mas estou disponível, pode me chamar a qualquer momento."
+        * Momento, duração, explicação de uso e acompanhamento durante a espera: Caso necessário, utilize os silêncios de forma mínima. Se usar, não ultrapasse 5 minutos e explique previamente ao usuário o motivo. Analise com o usuário o que aparece na tela, explicando políticas e processos e evitando silêncios na conversa. Exemplo: "Irei verificar o que aconteceu que o seu caso não foi resolvido no sistema, já retorno com mais informações, mas estou disponível, pode me chamar a qualquer momento."
     * **4. ENCERRAMENTO MELI:**
         * Realize verificações finais de compreensão: Preocupe-se em garantir que o usuário fique tranquilo e satisfeito com o atendimento. Busque que o usuário inicie o encerramento do contato, sem forçar um fechamento antecipado, evitando perder o usuário no processo.
         * Expresse e mostre proatividade e disposição para resolver outras questões adicionais: ofereça soluções adicionais e demonstre disposição em ajudar proativamente, antecipando-se a possíveis perguntas ou preocupações que não tenham sido abordadas durante a interação.
@@ -1200,10 +1239,10 @@ async function sendMessage(isRegeneration = false) {
 * **Canal C2C (Voz):** As respostas seguirão as mesmas 4 etapas do canal de Chat, mas com algumas adaptações para o atendimento por voz.
     * **Aviso Importante para o Atendente:** No início da interação, atente-se ao tom de voz do usuário para se adequar a esse tom de voz e possa se conectar melhor ao perfil emocional do usuário.
     * As soluções devem ser mais diretas para agilizar o atendimento.
-    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Pago. (Parafraseie o problema do usuário aqui)"
+    * **Obrigatório:** O primeiro parágrafo deve ser uma breve apresentação: "Bom dia/ Boa tarde/Boa noite, {CLIENT_NAME} espero que esteja bem. Me chamo {COLLABORATOR_NAME}, sou representante do Mercado Livre/Mercado Pago. (Parafraseie o problema do usuário aqui)"
     * **Sugestões de Perguntas:** Sempre inclua sugestões de perguntas para guiar o atendente para soluções direcionadas, similar ao canal de chat.
     * **1. BOAS-VINDAS MELI:** (Mesmas subetapas do Chat)
-        * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Pago.
+        * Saudação, apresentação inicial: Mencionar claramente o nome do colaborador e o nome do Mercado Livre/Mercado Pago.
         * Personalizar o contato: Se dirigir ao usuário pelo nome com proximidade.
         * Colocar-se à disposição com contexto: Expressar disposição para a resolução de inconvenientes.
         * Mencionar de forma resumida as informações do motivo do contato de maneira proativa.
@@ -1223,7 +1262,7 @@ async function sendMessage(isRegeneration = false) {
         * Inclua o usuário na busca/apresentação das alternativas de solução e personaliza as explicações: gerencie a solução em conjunto com o usuário, buscando e apresentando as melhores alternativas que se adaptem ao caso, à situação e ao contexto (personalização). Assegure que as recomendações sejam relevantes e eficazes.
         * Na explicação, seja conciso e claro (fale de forma direta): Ofereça explicações claras e diretas, utilizando uma linguagem simples, adaptada ao nível de conhecimento do usuário. Apresente as informações do processo e seus passos de forma ordenada e assertiva. Não solicite informações desnecessárias nem faça o usuário perder tempo com etapas que não agreguem valor.
         * Realize verificações de compreensão, atento a sinais que o usuário forneça (silêncios, perguntas adicionais): Preste atenção a sinais como silêncios, perguntas ou qualquer expressão que indique dúvidas, esclarecendo-as quando necessário. Confirme se o usuário está compreendendo as explicações, oferecendo-se proativamente para revisar ou ampliar as informações.
-        * Momento, duração, explicação de uso e acompanhamento durante a espera: Caso necessário, utilize os silêncios de forma mínima. Se usar, não ultrapasse 5 minutos e explique previamente ao usuário o motivo. Analise com o usuário o que aparece na tela, explicando políticas e processos e evitando silêncios na conversa. Exemplo: "Irei verificar o que aconteceu que o seu cartão não chegou no sistema, já retorno com mais informações, mas estou disponível, pode me chamar a qualquer momento."
+        * Momento, duração, explicação de uso e acompanhamento durante a espera: Caso necessário, utilize os silêncios de forma mínima. Se usar, não ultrapasse 5 minutos e explique previamente ao usuário o motivo. Analise com o usuário o que aparece na tela, explicando políticas e processos e evitando silêncios na conversa. Exemplo: "Irei verificar o que aconteceu que o seu caso não foi resolvido no sistema, já retorno com mais informações, mas estou disponível, pode me chamar a qualquer momento."
     * **4. ENCERRAMENTO MELI:** (Mesmas subetapas do Chat)
         * Realize verificações finais de compreensão: Preocupe-se em garantir que o usuário fique tranquilo e satisfeito com o atendimento. Busque que o usuário inicie o encerramento do contato, sem forçar um fechamento antecipado, evitando perder o usuário no processo.
         * Expresse e mostre proatividade e disposição para resolver outras questões adicionais: ofereça soluções adicionais e demonstre disposição em ajudar proativamente, antecipando-se a possíveis perguntas ou preocupações que não tenham sido abordadas durante a interação.
@@ -1236,7 +1275,23 @@ async function sendMessage(isRegeneration = false) {
 `;
         }
 
+        let ecosystemSpecificInstructions = ''; // NOVO: Bloco de instruções específicas do Ecossistema
+        if (ecosystem === 'mercadoLivre') {
+            ecosystemSpecificInstructions = `
+* **Foco no Mercado Livre:** Priorize informações e procedimentos relacionados a vendas, compras, anúncios, reputação, envios (Mercado Envios) e problemas gerais da plataforma Mercado Livre.
+`;
+        } else if (ecosystem === 'mercadoPago') {
+            ecosystemSpecificInstructions = `
+* **Foco no Mercado Pago:** Priorize informações e procedimentos relacionados a pagamentos, recebimentos, Pix, transferências, conta digital, rendimentos, maquininhas de cartão (Point) e ferramentas financeiras do Mercado Pago.
+`;
+        } else {
+            ecosystemSpecificInstructions = `
+* **Foco Geral no Ecossistema MELI:** Forneça informações gerais que englobem tanto Mercado Livre quanto Mercado Pago, ou peça ao colaborador para especificar se a dúvida se refere a um ou outro.
+`;
+        }
+
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL_INSTRUCTIONS}', channelSpecificInstructions);
+        systemInstructions = systemInstructions.replace('{ECOSYSTEM_INSTRUCTIONS}', ecosystemSpecificInstructions); // NOVO: Adiciona as instruções do Ecossistema
 
         const contentsToSend = [
             { role: "user", parts: [{ text: systemInstructions }] },
@@ -1294,7 +1349,8 @@ async function sendMessage(isRegeneration = false) {
                     timestamp: Date.now(),
                     collaboratorName: collaboratorName || "Não Informado",
                     clientName: currentClientName || "Não Informado",
-                    serviceChannel: serviceChannel || "Não Informado"
+                    serviceChannel: serviceChannel || "Não Informado",
+                    ecosystem: ecosystem || "Não Informado" // NOVO: Salva o Ecossistema
                 });
                 currentConversationId = newDocRef.id;
                 loadConversationHistory();
@@ -1429,16 +1485,24 @@ async function loadConversationHistory() {
     }
 
     try {
-        const q = query(collection(db, `artifacts/${appId}/users/${userId}/conversations`), orderBy("timestamp", "asc"), limit(10));
+        // Removendo orderBy para evitar problemas de índice, e ordenando no cliente
+        const q = query(collection(db, `artifacts/${appId}/users/${userId}/conversations`), limit(10));
         const querySnapshot = await getDocs(q);
+
+        const conversations = [];
+        querySnapshot.forEach((doc) => {
+            conversations.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Ordenar as conversas pelo timestamp no cliente
+        conversations.sort((a, b) => a.timestamp - b.timestamp);
 
         historyList.innerHTML = '';
 
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
+        conversations.forEach((data) => {
             const li = document.createElement('li');
             li.classList.add('history-item');
-            li.id = `history-item-${doc.id}`;
+            li.id = `history-item-${data.id}`;
 
             const titleAndActions = document.createElement('div');
             titleAndActions.classList.add('title-and-actions');
@@ -1480,7 +1544,7 @@ async function loadConversationHistory() {
                 }
             });
 
-            if (currentConversationId === doc.id) {
+            if (currentConversationId === data.id) {
                 li.classList.add('active');
             }
 
@@ -1488,17 +1552,17 @@ async function loadConversationHistory() {
                 if (titleSpan.contentEditable === 'true') {
                     return;
                 }
-                loadConversation(doc.id);
+                loadConversation(data.id);
             });
 
             deleteButton.addEventListener('click', (event) => {
                 event.stopPropagation();
-                deleteConversation(doc.id);
+                deleteConversation(data.id);
             });
 
             editButton.addEventListener('click', (event) => {
                 event.stopPropagation();
-                toggleEditMode(doc.id, titleSpan, editButton, deleteButton, actionButtons);
+                toggleEditMode(data.id, titleSpan, editButton, deleteButton, actionButtons);
             });
         });
 
@@ -1626,6 +1690,7 @@ initialDataConfirmButton.addEventListener('click', () => {
     collaboratorName = collaboratorNameInput.value.trim();
     currentClientName = clientNameInput.value.trim();
     serviceChannel = serviceChannelSelect.value;
+    ecosystem = ecosystemSelect.value; // NOVO: Captura o valor do Ecossistema
 
     if (!collaboratorName) {
         collaboratorNameInput.classList.add('input-error');
@@ -1679,60 +1744,88 @@ initialDataConfirmButton.addEventListener('click', () => {
 
     let serviceChannelDisplay = "";
     let finalHelpPhrase = "";
+    let ecosystemDisplay = ""; // NOVO
 
     if (currentLanguage === 'pt-BR') {
         switch (serviceChannel) {
             case 'chat':
                 serviceChannelDisplay = 'chat';
-                finalHelpPhrase = `Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
                 break;
             case 'email':
                 serviceChannelDisplay = 'e-mail';
-                finalHelpPhrase = `Estou aqui para te fornecer informações detalhadas e estruturadas para auxiliar nas suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
                 break;
             case 'c2c':
                 serviceChannelDisplay = 'C2C (voz)';
-                finalHelpPhrase = `Estou aqui para te dar um roteiro claro e objetivo para auxiliar nas suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
                 break;
             default:
                 serviceChannelDisplay = 'um canal de atendimento';
-                finalHelpPhrase = `Estou aqui para te ajudar com suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
+        }
+        switch (ecosystem) { // NOVO
+            case 'mercadoLivre':
+                ecosystemDisplay = 'Mercado Livre';
+                finalHelpPhrase = `Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de ${clientNameAdapted} no **Mercado Livre**. Como posso te auxiliar hoje?`;
+                break;
+            case 'mercadoPago':
+                ecosystemDisplay = 'Mercado Pago';
+                finalHelpPhrase = `Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de ${clientNameAdapted} no **Mercado Pago**. Como posso te auxiliar hoje?`;
+                break;
+            default:
+                ecosystemDisplay = 'Ecossistema MELI';
+                finalHelpPhrase = `Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de ${clientNameAdapted} no **Ecossistema Mercado Livre e Mercado Pago**. Como posso te auxiliar hoje?`;
         }
     } else if (currentLanguage === 'en') {
         switch (serviceChannel) {
             case 'chat':
                 serviceChannelDisplay = 'chat';
-                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
                 break;
             case 'email':
                 serviceChannelDisplay = 'email';
-                finalHelpPhrase = `I'm here to provide you with detailed and structured information to help with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
                 break;
             case 'c2c':
                 serviceChannelDisplay = 'C2C (voice)';
-                finalHelpPhrase = `I'm here to give you a clear and objective script to help with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
                 break;
             default:
                 serviceChannelDisplay = 'a service channel';
-                finalHelpPhrase = `I'm here to help you with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
+        }
+        switch (ecosystem) { // NOVO
+            case 'mercadoLivre':
+                ecosystemDisplay = 'Mercado Livre';
+                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} on **Mercado Livre**. How can I assist you today?`;
+                break;
+            case 'mercadoPago':
+                ecosystemDisplay = 'Mercado Pago';
+                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} on **Mercado Pago**. How can I assist you today?`;
+                break;
+            default:
+                ecosystemDisplay = 'MELI ecosystem';
+                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} in the **Mercado Livre and Mercado Pago Ecosystem**. How can I assist you today?`;
         }
     } else if (currentLanguage === 'es') {
         switch (serviceChannel) {
             case 'chat':
                 serviceChannelDisplay = 'chat';
-                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
                 break;
             case 'email':
                 serviceChannelDisplay = 'correo electrónico';
-                finalHelpPhrase = `Estoy aquí para proporcionarte información detallada y estructurada para ayudarte con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
                 break;
             case 'c2c':
                 serviceChannelDisplay = 'C2C (voz)';
-                finalHelpPhrase = `Estoy aquí para darte un guion claro y objetivo para ayudarte con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
                 break;
             default:
                 serviceChannelDisplay = 'un canal de atención';
-                finalHelpPhrase = `Estoy aquí para ayudarte con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
+        }
+        switch (ecosystem) { // NOVO
+            case 'mercadoLivre':
+                ecosystemDisplay = 'Mercado Livre';
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en **Mercado Livre**. ¿Cómo puedo asistirte hoy?`;
+                break;
+            case 'mercadoPago':
+                ecosystemDisplay = 'Mercado Pago';
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en **Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
+                break;
+            default:
+                ecosystemDisplay = 'ecosistema MELI';
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en el **Ecosistema Mercado Livre y Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
         }
     }
 

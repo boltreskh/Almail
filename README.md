@@ -1,15 +1,15 @@
 <!-- English Version -->
 
-# Almail AI Support - Cards
+# Almail AI Support - MELI Ecosystem
 
 > 📘 This section is in English. For the Portuguese version, scroll down to the section marked "Versão em Português".
 
-A smart and interactive web application designed to assist **Mercado Pago's Cards team** collaborators in providing excellent customer support. It leverages **Artificial Intelligence** to offer precise and structured information, enhancing the efficiency and quality of service.
+A smart and interactive web application designed to assist **Mercado Libre (MELI) ecosystem** collaborators in providing excellent customer support. It leverages **Artificial Intelligence** to offer precise and structured information, enhancing the efficiency and quality of service.
 
 ## 🚀 Features
 
 * Interactive chat interface for collaborators.
-* AI-powered responses for Mercado Pago Cards related queries.
+* AI-powered responses for Mercado Libre/Mercado Pago related queries.
 * **Persistent conversation history** (stored in Firebase Firestore).
 * **Edit and delete conversation titles** directly in the sidebar.
 * **Multi-language support** (Portuguese, English, Spanish) with instant switching.
@@ -27,7 +27,7 @@ A smart and interactive web application designed to assist **Mercado Pago's Card
 - **Multi-language UI:** Instantly switch between Portuguese, English, and Spanish. All interface elements and system messages are translated.
 - **Improved Sidebar:** Sidebar can be toggled on/off and highlights the active conversation.
 - **Accessibility & UX:** Enhanced keyboard navigation, tooltips, and focus management for a better user experience.
-- **Security:** No sensitive Mercado Pago data is stored or processed by the AI.
+- **Security:** No sensitive Mercado Libre or Mercado Pago data is stored or processed by the AI.
 
 ## 🗖️ Technologies
 
@@ -80,16 +80,16 @@ MIT License. See `LICENSE` file.
 
 <!-- Versão em Português -->
 
-# Almail Suporte IA - Cartões
+# Almail Suporte IA - Ecossistema MELI
 
 > 📘 Esta seção está em português. Para a versão em inglês, volte para o topo ou procure pela seção "English Version".
 
-Uma aplicação web inteligente e interativa projetada para auxiliar os colaboradores do **time de Cartões do Mercado Pago** a fornecerem um suporte de excelência aos clientes. Ela utiliza **Inteligência Artificial** para oferecer informações precisas e estruturadas, otimizando a eficiência e a qualidade do atendimento.
+Uma aplicação web inteligente e interativa projetada para auxiliar os colaboradores do **Ecossistema Mercado Livre (MELI)** a fornecerem um suporte de excelência aos clientes. Ela utiliza **Inteligência Artificial** para oferecer informações precisas e estruturadas, otimizando a eficiência e a qualidade do atendimento.
 
 ## 🚀 Funcionalidades
 
 * Interface de chat interativa para colaboradores.
-* Respostas geradas por IA para dúvidas relacionadas a Cartões Mercado Pago.
+* Respostas geradas por IA para dúvidas relacionadas ao Ecossistema Mercado Livre/Mercado Pago.
 * **Histórico de conversas persistente** (armazenado no Firebase Firestore).
 * **Edição e exclusão de títulos das conversas** diretamente na barra lateral.
 * **Suporte multilíngue** (Português, Inglês, Espanhol) com troca instantânea.
@@ -107,7 +107,7 @@ Uma aplicação web inteligente e interativa projetada para auxiliar os colabora
 - **Interface Multilíngue:** Troque instantaneamente entre Português, Inglês e Espanhol. Todos os textos e mensagens do sistema são traduzidos.
 - **Sidebar Aprimorada:** A barra lateral pode ser ocultada/exibida e destaca a conversa ativa.
 - **Acessibilidade & UX:** Melhor navegação por teclado, tooltips e foco aprimorado para uma experiência mais acessível.
-- **Segurança:** Nenhum dado sensível do Mercado Pago é armazenado ou processado pela IA.
+- **Segurança:** Nenhum dado sensível do Mercado Livre ou Mercado Pago é armazenado ou processado pela IA.
 
 ## 🗖️ Tecnologias
 

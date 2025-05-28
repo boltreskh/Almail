@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="appTitle">Almail Suporte IA - Cartões</title>
+    <title data-i18n="appTitle">Almail Suporte IA - Ecossistema MELI</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cstyle%3E.circle-fill%7Bfill:%231a202c%7D.symbol-fill%7Bfill:%23ffffff;stroke:%23ffffff%7D@media(prefers-color-scheme:dark)%7B.circle-fill%7Bfill:%23c9d1d9%7D.symbol-fill%7Bfill:%23161b22;stroke:%23161b22%7D%7D%3C/style%3E%3Ccircle cx='50' cy='50' r='50' class='circle-fill'/%3E%3Cg class='symbol-fill'%3E%3Ccircle cx='30' cy='30' r='8'/%3E%3Ccircle cx='70' cy='30' r='8'/%3E%3Ccircle cx='50' cy='70' r='8'/%3E%3Cline x1='30' y1='30' x2='70' y2='30' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='30' y1='30' x2='50' y2='70' stroke-width='4' stroke-linecap='round'/%3E%3Cline x1='70' y1='30' x2='50' y2='70' stroke-width='4' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css"> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
             </button>
             <h2 class="text-3xl font-bold" data-i18n="creditsModalTitle">Créditos</h2>
             <p class="text-lg" data-i18n="creditsModalSubtitle">
-                Uma ferramenta de suporte inteligente para o time de Cartões do Mercado Pago.
+                Uma ferramenta de suporte inteligente para o time de Mercado Livre e Mercado Pago.
             </p>
             <div class="credits-list" data-i18n="creditsModalDescription">
                 </div>
@@ -52,6 +52,13 @@
                 </select>
             </div>
 
+            <div class="input-group">
+                <label for="ecosystem-select" class="input-label" data-i18n="ecosystemLabel">Ecossistema:</label>
+                <select id="ecosystem-select" class="modal-select">
+                    <option value="mercadoLivre" data-i18n="ecosystemMercadoLivre">Mercado Livre</option>
+                    <option value="mercadoPago" data-i18n="ecosystemMercadoPago">Mercado Pago</option>
+                </select>
+            </div>
             <button id="initial-data-confirm-button" class="start-button mt-8" data-i18n="initialDataConfirmButton">Confirmar</button>
         </div>
     </div>
@@ -123,7 +130,7 @@
                     </svg>
                     <h1 class="text-2xl font-semibold">Almail</h1>
                 </div>
-                <span class="header-subtitle" data-i18n="headerSubtitle">Suporte IA - Cartões</span>
+                <span class="header-subtitle" data-i18n="headerSubtitle">Suporte IA - Ecossistema MELI</span>
                 <div class="header-controls">
                     <button id="home-button" class="control-button" aria-label="Voltar para o Início" data-i18n="homeButtonAria">
                         <i data-feather="home"></i>
@@ -158,12 +165,12 @@
                                 <circle cx="50" cy="70" r="8"/>
                                 <line x1="30" y1="30" x2="70" y2="30" stroke-width="4" stroke-linecap="round"/>
                                 <line x1="30" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
-                                <line x1="70" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
+                                <line x1="70" y1="30" x2="50" y2="70" stroke-width='4' stroke-linecap='round'/>
                             </g>
                         </svg>
                         <h2 class="text-3xl font-bold mt-6" data-i18n="initialScreenTitle">Bem-vindo(a) à Almail Suporte IA!</h2>
-                        <p class="text-lg mt-4" data-i18n="initialScreenSubtitle">Sua assistente inteligente para otimizar o suporte no time de Cartões do Mercado Pago.</p>
-                        <p class="text-md mt-2 text-gray-600" data-i18n="initialScreenDescription">Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados a cartões. Clique em "Nova Conversa" para começar a interagir com a IA.</p>
+                        <p class="text-lg mt-4" data-i18n="initialScreenSubtitle">Sua assistente inteligente para otimizar o suporte no ecossistema Mercado Livre e Mercado Pago.</p>
+                        <p class="text-md mt-2 text-gray-600" data-i18n="initialScreenDescription">Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Nova Conversa" para começar a interagir com a IA.</p>
                         <button id="start-chat-button" class="start-button mt-8" data-i18n="startChatButton">Iniciar Nova Conversa</button>
                     </div>
                 </div>
@@ -200,7 +207,7 @@
         </div>
         <footer class="app-footer">
             <p data-i18n="footerCopyright">© 2025 Almail Suporte IA. Todos os direitos reservados.</p>
-            <p class="disclaimer" data-i18n="footerDisclaimer">Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.</p>
+            <p class="disclaimer" data-i18n="footerDisclaimer">Esta IA utiliza dados públicos e não armazena informações do Mercado Livre ou Mercado Pago.</p>
         </footer>
     </div>
 
