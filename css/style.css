@@ -1646,6 +1646,30 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         width: 20px;
         height: 20px;
     }
+    /* Aprimoramento para o botão de alternância do histórico em mobile */
+    #main-sidebar-toggle-button { /* Target the specific button */
+        background-color: var(--lm-accent-primary);
+        color: var(--lm-button-text);
+        border-color: var(--lm-accent-primary);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    html[data-theme='dark'] #main-sidebar-toggle-button { /* Target the specific button */
+        background-color: var(--dm-accent-primary);
+        color: var(--dm-button-text);
+        border-color: var(--dm-accent-primary);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+    #main-sidebar-toggle-button:hover:not(:disabled) { /* Target the specific button */
+        background-color: var(--lm-accent-secondary);
+        border-color: var(--lm-accent-secondary);
+        transform: translateY(-1px);
+    }
+    html[data-theme='dark'] #main-sidebar-toggle-button:hover:not(:disabled) { /* Target the specific button */
+        background-color: var(--dm-accent-secondary);
+        border-color: var(--dm-accent-secondary);
+        transform: translateY(-1px);
+    }
+
     .chat-messages {
         padding: 16px;
     }
@@ -1664,29 +1688,6 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     .app-footer {
         padding: 10px 16px;
         font-size: 0.7rem;
-    }
-    /* Aprimoramento para o botão de alternância do histórico em mobile */
-    #toggle-history-sidebar {
-        background-color: var(--lm-accent-primary);
-        color: var(--lm-button-text);
-        border-color: var(--lm-accent-primary);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-    html[data-theme='dark'] #toggle-history-sidebar {
-        background-color: var(--dm-accent-primary);
-        color: var(--dm-button-text);
-        border-color: var(--dm-accent-primary);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.4);
-    }
-    #toggle-history-sidebar:hover:not(:disabled) {
-        background-color: var(--lm-accent-secondary);
-        border-color: var(--lm-accent-secondary);
-        transform: translateY(-1px);
-    }
-    html[data-theme='dark'] #toggle-history-sidebar:hover:not(:disabled) {
-        background-color: var(--dm-accent-secondary);
-        border-color: var(--dm-accent-secondary);
-        transform: translateY(-1px);
     }
     .language-toggle-button {
         width: auto;

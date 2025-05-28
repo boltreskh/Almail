@@ -28,11 +28,8 @@
     <div class="notification-modal-overlay" id="initial-data-modal-overlay">
         <div class="notification-modal-content">
             <button class="close-button" id="initial-data-close-button" aria-label="Fechar Informações Iniciais">
-                <i data-feather="user" class="text-blue-500" style="width: 60px; height: 60px;"></i>
+                <i data-feather="x"></i>
             </button>
-            <div class="modal-icon-container">
-                <i data-feather="user" class="text-blue-500" style="width: 60px; height: 60px;"></i>
-            </div>
             <h2 class="text-3xl font-bold mb-4" data-i18n="initialDataModalTitle">Informações Iniciais</h2>
             <p class="text-lg mb-6" data-i18n="initialDataModalSubtitle">Por favor, preencha os dados para otimizar o atendimento.</p>
 
@@ -147,9 +144,10 @@
                     <button id="theme-toggle" class="control-button" aria-label="Alternar Tema" data-i18n="themeToggleButtonAria">
                         <span id="theme-icon"><i data-feather="moon"></i></span>
                     </button>
-                    <button id="main-sidebar-toggle-button" class="control-button" aria-label="Alternar Histórico">
-                        <i data-feather="chevron-right"></i> </button>
                 </div>
+                <button id="main-sidebar-toggle-button" class="control-button" aria-label="Alternar Histórico">
+                    <i data-feather="chevron-right"></i> 
+                </button>
             </div>
 
             <div class="content-area" id="content-area">
