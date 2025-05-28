@@ -168,7 +168,7 @@ const translations = {
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
         footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Pago.',
-        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTado} via {SERVICE_CHANNEL_ADAPTED}.",
+        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para Cartões do Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
         historyTitle: 'Histórico de Conversas',
         userIdDisplay: 'ID do Usuário:',
         homeButton: 'Início',
@@ -1675,62 +1675,62 @@ initialDataConfirmButton.addEventListener('click', () => {
         switch (serviceChannel) {
             case 'chat':
                 serviceChannelDisplay = 'chat';
-                finalHelpPhrase = "Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                finalHelpPhrase = `Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
                 break;
             case 'email':
                 serviceChannelDisplay = 'e-mail';
-                finalHelpPhrase = "Estou aqui para te fornecer informações detalhadas e estruturadas para auxiliar nas suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                finalHelpPhrase = `Estou aqui para te fornecer informações detalhadas e estruturadas para auxiliar nas suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
                 break;
             case 'c2c':
                 serviceChannelDisplay = 'C2C (voz)';
-                finalHelpPhrase = "Estou aqui para te dar um roteiro claro e objetivo para auxiliar nas suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                finalHelpPhrase = `Estou aqui para te dar um roteiro claro e objetivo para auxiliar nas suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
                 break;
             default:
                 serviceChannelDisplay = 'um canal de atendimento';
-                finalHelpPhrase = "Estou aqui para te ajudar com suas dúvidas e resolver os problemas de {CLIENT_NAME_ADAPTED}. Como posso te auxiliar hoje?";
+                finalHelpPhrase = `Estou aqui para te ajudar com suas dúvidas e resolver os problemas de ${clientNameAdapted}. Como posso te auxiliar hoje?`;
         }
     } else if (currentLanguage === 'en') {
         switch (serviceChannel) {
             case 'chat':
                 serviceChannelDisplay = 'chat';
-                finalHelpPhrase = "I'm here to help you quickly with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
                 break;
             case 'email':
                 serviceChannelDisplay = 'email';
-                finalHelpPhrase = "I'm here to provide you with detailed and structured information to help with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                finalHelpPhrase = `I'm here to provide you with detailed and structured information to help with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
                 break;
             case 'c2c':
                 serviceChannelDisplay = 'C2C (voice)';
-                finalHelpPhrase = "I'm here to give you a clear and objective script to help with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                finalHelpPhrase = `I'm here to give you a clear and objective script to help with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
                 break;
             default:
                 serviceChannelDisplay = 'a service channel';
-                finalHelpPhrase = "I'm here to help you with your questions and solve the problems of {CLIENT_NAME_ADAPTED}. How can I assist you today?";
+                finalHelpPhrase = `I'm here to help you with your questions and solve the problems of ${clientNameAdapted}. How can I assist you today?`;
         }
     } else if (currentLanguage === 'es') {
         switch (serviceChannel) {
             case 'chat':
                 serviceChannelDisplay = 'chat';
-                finalHelpPhrase = "Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
                 break;
             case 'email':
                 serviceChannelDisplay = 'correo electrónico';
-                finalHelpPhrase = "Estoy aquí para proporcionarte información detallada y estructurada para ayudarte con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                finalHelpPhrase = `Estoy aquí para proporcionarte información detallada y estructurada para ayudarte con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
                 break;
             case 'c2c':
                 serviceChannelDisplay = 'C2C (voz)';
-                finalHelpPhrase = "Estoy aquí para darte un guion claro y objetivo para ayudarte con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                finalHelpPhrase = `Estoy aquí para darte un guion claro y objetivo para ayudarte con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
                 break;
             default:
                 serviceChannelDisplay = 'un canal de atención';
-                finalHelpPhrase = "Estoy aquí para ayudarte con tus dudas y resolver los problemas de {CLIENT_NAME_ADAPTED}. ¿Cómo puedo asistirte hoy?";
+                finalHelpPhrase = `Estoy aquí para ayudarte con tus dudas y resolver los problemas de ${clientNameAdapted}. ¿Cómo puedo asistirte hoy?`;
         }
     }
 
     let fullWelcomeMessage = baseWelcomeMessage
         .replace('{COLLABORATOR_NAME}', collaboratorName)
         .replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted)
-        .replace('{SERVICE_CHANNEL_ADAPTED}', serviceChannelDisplay) + " " + finalHelpPhrase.replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted);
+        .replace('{SERVICE_CHANNEL_ADAPTED}', serviceChannelDisplay) + " " + finalHelpPhrase;
 
 
     chatHistory = [
