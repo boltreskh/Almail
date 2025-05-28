@@ -133,6 +133,9 @@ const translations = {
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoio e Colaboração:</strong></li>
                 <li class="mb-1">Time de Cartões (Concentrix)</li>
+                <li class="mb-2 mt-3"><strong>Links:</strong></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositório do Projeto</a></li>
             </ul>
         `,
         creditsModalButton: 'Entendi',
@@ -264,6 +267,9 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Support and Collaboration:</strong></li>
                 <li class="mb-1">Cards Team (Concentrix)</li>
+                <li class="mb-2 mt-3"><strong>Links:</strong></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Project Repository</a></li>
             </ul>
         `,
         creditsModalButton: 'Understood',
@@ -395,6 +401,9 @@ You should act as a **support agent for the collaborator**, providing accurate a
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoyo y Colaboración:</strong></li>
                 <li class="mb-1">Equipo de Tarjetas (Concentrix)</li>
+                <li class="mb-2 mt-3"><strong>Enlaces:</strong></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositorio del Proyecto</a></li>
             </ul>
         `,
         creditsModalButton: 'Entendido',
@@ -1164,7 +1173,7 @@ async function sendMessage(isRegeneration = false) {
         * Colocar-se à disposição com contexto: Expressar disposição para a resolução de inconvenientes.
         * Mencionar de forma resumida as informações do motivo do contato de maneira proativa.
         * Demonstrar conhecimento e proximidade.
-        * Manter a conexão durante toda a saudação: Ajustar o tom e a velocidade da conversa conforme o perfil inicial identificado do usuário (idade e emocionalidade).
+        * Manter a conexão durante toda a saudação: Ajustar o tone e a velocidade da conversa conforme o perfil inicial identificado do usuário (idade e emocionalidade).
         * Assegurar a ausência de silêncio.
         * Demonstrar interesse pelo usuário com expressões empáticas (escuta ativa).
     * **2. EXPLORAÇÃO MELI:**

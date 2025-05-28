@@ -115,7 +115,7 @@ html[data-theme='dark'] {
     --dm-modal-overlay: rgba(0, 0, 0, 0.85); /* Overlay mais escuro para destaque */
     --dm-modal-shadow: rgba(0, 0, 0, 0.6); /* Sombra mais visível para modais */
     --dm-modal-title-color: var(--dm-text-primary); /* Cor do título do modal */
-    --dm-modal-text-color: var(--dm-text-secondary); /* Cor do texto do modal */
+    --dm-modal-text-color: var(--dm-modal-text-secondary); /* Cor do texto do modal */
 
     /* Botões de Ação Principal */
     --dm-button-bg: var(--dm-accent-primary);
@@ -1748,16 +1748,15 @@ html[data-theme='dark'] .credits-list strong {
 
 .credits-list li {
     margin-bottom: 5px; /* Espaçamento entre os itens da lista */
-    transition: color 0.2s ease, transform 0.2s ease;
+    /* Animações removidas conforme solicitado */
 }
 
 .credits-list li:hover {
-    color: var(--lm-accent-primary); /* Cor de destaque no hover */
-    transform: translateX(5px); /* Efeito sutil de movimento */
+    /* Efeitos de hover removidos conforme solicitado */
 }
 
 html[data-theme='dark'] .credits-list li:hover {
-    color: var(--dm-accent-primary);
+    /* Efeitos de hover removidos conforme solicitado */
 }
 
 /* Ajustes finos para o modal de créditos */
