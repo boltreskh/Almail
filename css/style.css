@@ -279,6 +279,7 @@ html[data-theme='dark'] .app-wrapper {
 .confirmation-modal-overlay,
 #custom-confirm-overlay,
 #initial-data-modal-overlay,
+#settings-modal-overlay, /* NOVO: Adicionado o modal de configurações */
 #version-info-modal-overlay { /* NOVO: Adicionado o modal de versão */
     position: fixed;
     top: 0;
@@ -299,6 +300,7 @@ html[data-theme='dark'] .tutorial-modal-overlay,
 html[data-theme='dark'] .confirmation-modal-overlay,
 html[data-theme='dark'] #custom-confirm-overlay,
 html[data-theme='dark'] #initial-data-modal-overlay,
+html[data-theme='dark'] #settings-modal-overlay, /* NOVO: Adicionado o modal de configurações */
 html[data-theme='dark'] #version-info-modal-overlay { /* NOVO: Adicionado o modal de versão */
     background-color: var(--dm-modal-overlay);
 }
@@ -308,6 +310,7 @@ html[data-theme='dark'] #version-info-modal-overlay { /* NOVO: Adicionado o moda
 .confirmation-modal-overlay.show,
 #custom-confirm-overlay.show,
 #initial-data-modal-overlay.show,
+#settings-modal-overlay.show, /* NOVO: Adicionado o modal de configurações */
 #version-info-modal-overlay.show { /* NOVO: Adicionado o modal de versão */
     opacity: 1;
     visibility: visible;
@@ -321,17 +324,18 @@ html[data-theme='dark'] #version-info-modal-overlay { /* NOVO: Adicionado o moda
     color: var(--lm-modal-text-color);
     border-radius: 16px;
     padding: 32px 40px;
-    padding-top: 48px;
-    padding-right: 48px;
+    padding-top: 48px; /* Increased top padding for close button */
+    padding-right: 48px; /* Increased right padding for close button */
     max-width: 550px;
     text-align: center;
     box-shadow: 0 15px 30px var(--lm-modal-shadow);
     transform: scale(0.95);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
+    position: relative; /* Needed for absolute positioning of close button */
 }
 #initial-data-modal-overlay .notification-modal-content,
+#settings-modal-overlay .notification-modal-content, /* NOVO: Adicionado o modal de configurações */
 #version-info-modal-overlay .notification-modal-content { /* NOVO: Adicionado o modal de versão */
     /* Não precisa de estilos específicos aqui, pois já herda de .notification-modal-content */
 }
@@ -341,6 +345,7 @@ html[data-theme='dark'] .tutorial-modal-content,
 html[data-theme='dark'] .confirmation-modal-content,
 html[data-theme='dark'] #custom-confirm-content,
 html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content,
+html[data-theme='dark'] #settings-modal-overlay .notification-modal-content, /* NOVO: Adicionado o modal de configurações */
 html[data-theme='dark'] #version-info-modal-overlay .notification-modal-content { /* NOVO: Adicionado o modal de versão */
     background-color: var(--dm-modal-bg);
     color: var(--dm-modal-text-color);
@@ -352,6 +357,7 @@ html[data-theme='dark'] #version-info-modal-overlay .notification-modal-content 
 .confirmation-modal-overlay.show .confirmation-modal-content,
 #custom-confirm-overlay.show #custom-confirm-content,
 #initial-data-modal-overlay.show .notification-modal-content,
+#settings-modal-overlay.show .notification-modal-content, /* NOVO: Adicionado o modal de configurações */
 #version-info-modal-overlay.show .notification-modal-content { /* NOVO: Adicionado o modal de versão */
     transform: scale(1);
     opacity: 1;
@@ -1821,10 +1827,11 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     .tutorial-modal-content,
     .confirmation-modal-content,
     #initial-data-modal-overlay .notification-modal-content,
+    #settings-modal-overlay .notification-modal-content, /* NOVO: Adicionado o modal de configurações */
     #version-info-modal-overlay .notification-modal-content { /* NOVO: Adicionado o modal de versão */
         padding: 1.5rem;
-        padding-top: 2.5rem;
-        padding-right: 2.5rem;
+        padding-top: 2.5rem; /* Ensure space for close button */
+        padding-right: 2.5rem; /* Ensure space for close button */
         width: 95%;
     }
 
@@ -2072,4 +2079,85 @@ html[data-theme='dark'] .ai-tone-button.selected {
     color: var(--dm-button-text);
     border-color: var(--dm-accent-primary);
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* NOVO: Estilos para o Modal de Configurações de Tema */
+#settings-modal-overlay .notification-modal-content {
+    max-width: 700px; /* Um pouco mais largo para as opções de tema */
+}
+
+.theme-options-container {
+    margin-bottom: 24px;
+    max-height: 40vh; /* Altura máxima para evitar que o modal fique muito grande */
+    overflow-y: auto; /* Adiciona scroll se houver muitas opções de tema */
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--lm-bg-chat); /* Fundo sutil para o container */
+}
+html[data-theme='dark'] .theme-options-container {
+    background-color: var(--dm-bg-chat);
+}
+
+.theme-option {
+    cursor: pointer;
+    border: 2px solid var(--lm-border-color);
+    border-radius: 12px;
+    padding: 16px;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--lm-modal-bg); /* Fundo do card de tema */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+html[data-theme='dark'] .theme-option {
+    border-color: var(--dm-border-color);
+    background-color: var(--dm-modal-bg);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.theme-option:hover {
+    border-color: var(--lm-accent-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+html[data-theme='dark'] .theme-option:hover {
+    border-color: var(--dm-accent-primary);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+.theme-option.selected {
+    border-color: var(--lm-accent-primary);
+    box-shadow: 0 0 0 3px var(--lm-accent-primary), 0 6px 12px rgba(0,0,0,0.15);
+}
+html[data-theme='dark'] .theme-option.selected {
+    border-color: var(--dm-accent-primary);
+    box-shadow: 0 0 0 3px var(--dm-accent-primary), 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.theme-preview {
+    display: flex;
+    width: 100%;
+    height: 60px; /* Altura da pré-visualização das cores */
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--lm-border-color);
+}
+html[data-theme='dark'] .theme-preview {
+    border-color: var(--dm-border-color);
+}
+
+.theme-preview-color {
+    flex-grow: 1;
+    height: 100%;
+}
+
+.theme-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--lm-text-primary);
+}
+html[data-theme='dark'] .theme-name {
+    color: var(--dm-text-primary);
 }

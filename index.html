@@ -10,6 +10,19 @@
     <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body class="antialiased">
+    <div class="notification-modal-overlay" id="settings-modal-overlay">
+        <div class="notification-modal-content">
+            <button class="close-button" id="settings-close-button" aria-label="Fechar Configurações">
+                <i data-feather="x"></i>
+            </button>
+            <h2 class="text-3xl font-bold mb-6" data-i18n="settingsModalTitle">Configurações de Tema</h2>
+            <p class="text-lg mb-6" data-i18n="settingsModalSubtitle">Escolha uma paleta de cores para personalizar sua experiência.</p>
+            <div class="theme-options-container grid grid-cols-2 sm:grid-cols-3 gap-4" id="theme-options-container">
+                </div>
+            <button id="settings-save-button" class="start-button mt-8" data-i18n="settingsModalSaveButton">Salvar Tema</button>
+        </div>
+    </div>
+
     <div class="notification-modal-overlay" id="version-info-modal-overlay">
         <div class="notification-modal-content">
             <h2 class="text-3xl font-bold mb-4" data-i18n="versionInfoTitle"></h2>
@@ -148,6 +161,9 @@
                 <div class="header-controls">
                     <button id="home-button" class="control-button" aria-label="Voltar para o Início" data-i18n="homeButtonAria">
                         <i data-feather="home"></i>
+                    </button>
+                    <button id="settings-button" class="control-button" aria-label="Abrir Configurações de Tema" data-i18n="settingsButtonAria">
+                        <i data-feather="settings"></i>
                     </button>
                     <button id="language-toggle-button" class="control-button language-toggle-button">
                         <i data-feather="globe"></i>

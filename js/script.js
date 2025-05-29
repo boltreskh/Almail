@@ -24,7 +24,7 @@ try {
 if (!firebaseConfig.projectId) {
     console.warn("projectId do Firebase não encontrado na configuração fornecida. Os recursos do Firebase serão desativados.");
     firebaseConfig = {
-        apiKey: "AIzaSyBLyIuKHL1QGtixLrvkwb-SvWrwcD7zRxA",
+        apiKey: "AIzaSyBLyIuKHL1QGtixLrvkwb-SvWrwcD7zRxA", // Chave de API de exemplo, substitua se necessário
         authDomain: "almail-9b8d9.firebaseapp.com",
         projectId: "almail-9b8d9",
         storageBucket: "almail-9b8d9.firebasestorage.app",
@@ -43,7 +43,7 @@ let auth;
 let userId = null; // ID do usuário autenticado ou anônimo
 let isAuthReady = false; // Flag para indicar que a autenticação foi concluída
 
-// NOVO: Elementos do DOM para o modal de versão e atualizações
+// Elementos do DOM para o modal de versão e atualizações
 const versionInfoModalOverlay = document.getElementById('version-info-modal-overlay');
 const versionInfoUseButton = document.getElementById('version-info-use-button');
 
@@ -60,6 +60,14 @@ const serviceChannelSelect = document.getElementById('service-channel-select');
 const ecosystemSelect = document.getElementById('ecosystem-select');
 const initialDataConfirmButton = document.getElementById('initial-data-confirm-button');
 const initialDataCloseButton = document.getElementById('initial-data-close-button');
+
+// NOVO: Elementos do DOM para o modal de configurações de tema
+const settingsModalOverlay = document.getElementById('settings-modal-overlay');
+const settingsButton = document.getElementById('settings-button');
+const settingsCloseButton = document.getElementById('settings-close-button');
+const settingsSaveButton = document.getElementById('settings-save-button');
+const themeOptionsContainer = document.getElementById('theme-options-container');
+
 
 const chatAndInputArea = document.getElementById('chat-and-input-area');
 const initialScreen = document.getElementById('initial-screen');
@@ -139,11 +147,214 @@ let currentConversationId = null;
 // Variável para controlar o estado da sidebar. Inicia como 'false' para vir fechada por padrão.
 let isSidebarVisible = false;
 
+// NOVO: Definição das paletas de cores
+const colorPalettes = {
+    original: {
+        name: 'original', // Alterado para identificador consistente
+        light: {
+            '--lm-bg-body': '#F9F9F9',
+            '--lm-bg-app': '#FFFFFF',
+            '--lm-bg-chat': '#F3F3F3',
+            '--lm-text-primary': '#1A202C',
+            '--lm-text-secondary': '#4A5568',
+            '--lm-text-tertiary': '#718096',
+            '--lm-border-color': '#E0E0E0',
+            '--lm-accent-primary': '#2C3E50',
+            '--lm-accent-secondary': '#1F2E3D',
+            '--lm-user-message-bg': 'linear-gradient(135deg, #2C3E50 0%, #1F2E3D 100%)',
+            '--lm-user-message-text': '#FFFFFF',
+            '--lm-ai-message-bg': '#E9ECEF',
+            '--lm-ai-message-text': '#1A202C',
+        },
+        dark: {
+            '--dm-bg-body': '#0A0A0A',
+            '--dm-bg-app': '#121212',
+            '--dm-bg-chat': '#0A0A0A',
+            '--dm-text-primary': '#C9D1D9',
+            '--dm-text-secondary': '#8B949E',
+            '--dm-text-tertiary': '#586069',
+            '--dm-border-color': '#282828',
+            '--dm-accent-primary': '#8E9AA7',
+            '--dm-accent-secondary': '#6C7A89',
+            '--dm-user-message-bg': 'linear-gradient(135deg, #8E9AA7 0%, #6C7A89 100%)',
+            '--dm-user-message-text': '#0A0A0A',
+            '--dm-ai-message-bg': '#212121',
+            '--dm-ai-message-text': '#C9D1D9',
+        }
+    },
+    pastelDreams: {
+        name: 'pastelDreams', // Alterado para identificador consistente
+        light: {
+            '--lm-bg-body': '#FDF6F0',
+            '--lm-bg-app': '#FFFFFF',
+            '--lm-bg-chat': '#F9EBEA',
+            '--lm-text-primary': '#5D6D7E',
+            '--lm-text-secondary': '#85929E',
+            '--lm-text-tertiary': '#AEB6BF',
+            '--lm-border-color': '#F5EEF8',
+            '--lm-accent-primary': '#A9CCE3',
+            '--lm-accent-secondary': '#85C1E9',
+            '--lm-user-message-bg': 'linear-gradient(135deg, #A9CCE3 0%, #85C1E9 100%)',
+            '--lm-user-message-text': '#2E4053',
+            '--lm-ai-message-bg': '#E8F8F5',
+            '--lm-ai-message-text': '#5D6D7E',
+        },
+        dark: {
+            '--dm-bg-body': '#2C3E50',
+            '--dm-bg-app': '#34495E',
+            '--dm-bg-chat': '#2C3E50',
+            '--dm-text-primary': '#FADBD8',
+            '--dm-text-secondary': '#D2B4DE',
+            '--dm-text-tertiary': '#A9DFBF',
+            '--dm-border-color': '#566573',
+            '--dm-accent-primary': '#F5CBA7',
+            '--dm-accent-secondary': '#EDBB99',
+            '--dm-user-message-bg': 'linear-gradient(135deg, #F5CBA7 0%, #EDBB99 100%)',
+            '--dm-user-message-text': '#5D4037',
+            '--dm-ai-message-bg': '#4A235A',
+            '--dm-ai-message-text': '#FADBD8',
+        }
+    },
+    oceanMist: {
+        name: 'oceanMist', // Alterado para identificador consistente
+        light: {
+            '--lm-bg-body': '#E0F7FA',
+            '--lm-bg-app': '#FFFFFF',
+            '--lm-bg-chat': '#B2EBF2',
+            '--lm-text-primary': '#004D40',
+            '--lm-text-secondary': '#00695C',
+            '--lm-text-tertiary': '#00838F',
+            '--lm-border-color': '#80DEEA',
+            '--lm-accent-primary': '#0097A7',
+            '--lm-accent-secondary': '#00838F',
+            '--lm-user-message-bg': 'linear-gradient(135deg, #0097A7 0%, #00838F 100%)',
+            '--lm-user-message-text': '#FFFFFF',
+            '--lm-ai-message-bg': '#E0F2F1',
+            '--lm-ai-message-text': '#004D40',
+        },
+        dark: {
+            '--dm-bg-body': '#00313A',
+            '--dm-bg-app': '#00424E',
+            '--dm-bg-chat': '#00313A',
+            '--dm-text-primary': '#B2EBF2',
+            '--dm-text-secondary': '#80DEEA',
+            '--dm-text-tertiary': '#4DD0E1',
+            '--dm-border-color': '#005F6B',
+            '--dm-accent-primary': '#26C6DA',
+            '--dm-accent-secondary': '#00BCD4',
+            '--dm-user-message-bg': 'linear-gradient(135deg, #26C6DA 0%, #00BCD4 100%)',
+            '--dm-user-message-text': '#00313A',
+            '--dm-ai-message-bg': '#005662',
+            '--dm-ai-message-text': '#B2EBF2',
+        }
+    },
+    sunsetGlow: {
+        name: 'sunsetGlow', // Alterado para identificador consistente
+        light: {
+            '--lm-bg-body': '#FFF3E0',
+            '--lm-bg-app': '#FFFFFF',
+            '--lm-bg-chat': '#FFE0B2',
+            '--lm-text-primary': '#BF360C',
+            '--lm-text-secondary': '#D84315',
+            '--lm-text-tertiary': '#E65100',
+            '--lm-border-color': '#FFCC80',
+            '--lm-accent-primary': '#FF7043',
+            '--lm-accent-secondary': '#FF5722',
+            '--lm-user-message-bg': 'linear-gradient(135deg, #FF7043 0%, #FF5722 100%)',
+            '--lm-user-message-text': '#FFFFFF',
+            '--lm-ai-message-bg': '#FFF9C4',
+            '--lm-ai-message-text': '#BF360C',
+        },
+        dark: {
+            '--dm-bg-body': '#4E342E',
+            '--dm-bg-app': '#5D4037',
+            '--dm-bg-chat': '#4E342E',
+            '--dm-text-primary': '#FFCCBC',
+            '--dm-text-secondary': '#FFAB91',
+            '--dm-text-tertiary': '#FF8A65',
+            '--dm-border-color': '#6D4C41',
+            '--dm-accent-primary': '#FF8A80',
+            '--dm-accent-secondary': '#FF5252',
+            '--dm-user-message-bg': 'linear-gradient(135deg, #FF8A80 0%, #FF5252 100%)',
+            '--dm-user-message-text': '#4E342E',
+            '--dm-ai-message-bg': '#795548',
+            '--dm-ai-message-text': '#FFCCBC',
+        }
+    },
+    forestWhisper: {
+        name: 'forestWhisper', // Alterado para identificador consistente
+        light: {
+            '--lm-bg-body': '#E8F5E9',
+            '--lm-bg-app': '#FFFFFF',
+            '--lm-bg-chat': '#C8E6C9',
+            '--lm-text-primary': '#1B5E20',
+            '--lm-text-secondary': '#2E7D32',
+            '--lm-text-tertiary': '#388E3C',
+            '--lm-border-color': '#A5D6A7',
+            '--lm-accent-primary': '#66BB6A',
+            '--lm-accent-secondary': '#4CAF50',
+            '--lm-user-message-bg': 'linear-gradient(135deg, #66BB6A 0%, #4CAF50 100%)',
+            '--lm-user-message-text': '#FFFFFF',
+            '--lm-ai-message-bg': '#F1F8E9',
+            '--lm-ai-message-text': '#1B5E20',
+        },
+        dark: {
+            '--dm-bg-body': '#1B2631',
+            '--dm-bg-app': '#283747',
+            '--dm-bg-chat': '#1B2631',
+            '--dm-text-primary': '#A3E4D7',
+            '--dm-text-secondary': '#76D7C4',
+            '--dm-text-tertiary': '#48C9B0',
+            '--dm-border-color': '#344E41',
+            '--dm-accent-primary': '#588157',
+            '--dm-accent-secondary': '#3A5A40',
+            '--dm-user-message-bg': 'linear-gradient(135deg, #588157 0%, #3A5A40 100%)',
+            '--dm-user-message-text': '#E0E0E0',
+            '--dm-ai-message-bg': '#2E463B',
+            '--dm-ai-message-text': '#A3E4D7',
+        }
+    },
+    lavenderMist: {
+        name: 'lavenderMist', // Alterado para identificador consistente
+        light: {
+            '--lm-bg-body': '#F3E5F5',
+            '--lm-bg-app': '#FFFFFF',
+            '--lm-bg-chat': '#E1BEE7',
+            '--lm-text-primary': '#4A148C',
+            '--lm-text-secondary': '#6A1B9A',
+            '--lm-text-tertiary': '#7B1FA2',
+            '--lm-border-color': '#CE93D8',
+            '--lm-accent-primary': '#BA68C8',
+            '--lm-accent-secondary': '#AB47BC',
+            '--lm-user-message-bg': 'linear-gradient(135deg, #BA68C8 0%, #AB47BC 100%)',
+            '--lm-user-message-text': '#FFFFFF',
+            '--lm-ai-message-bg': '#FCE4EC',
+            '--lm-ai-message-text': '#4A148C',
+        },
+        dark: {
+            '--dm-bg-body': '#311B92',
+            '--dm-bg-app': '#4527A0',
+            '--dm-bg-chat': '#311B92',
+            '--dm-text-primary': '#D1C4E9',
+            '--dm-text-secondary': '#B39DDB',
+            '--dm-text-tertiary': '#9575CD',
+            '--dm-border-color': '#512DA8',
+            '--dm-accent-primary': '#7E57C2',
+            '--dm-accent-secondary': '#673AB7',
+            '--dm-user-message-bg': 'linear-gradient(135deg, #7E57C2 0%, #673AB7 100%)',
+            '--dm-user-message-text': '#EDE7F6',
+            '--dm-ai-message-bg': '#5E35B1',
+            '--dm-ai-message-text': '#D1C4E9',
+        }
+    }
+};
+let currentPalette = 'original'; // Paleta padrão
+let selectedPaletteForModal = 'original'; // Para rastrear a seleção no modal antes de salvar
+
 // Objeto de traduções
 const translations = {
     'pt-BR': {
         appTitle: 'Almail Suporte IA - Ecossistema MELI',
-        // NOVO: Traduções para o modal de versão e atualizações
         versionInfoTitle: 'Bem-vindo(a) à Almail Suporte IA!',
         versionInfoSubtitle: 'Versão: Beta 1.4.0',
         latestUpdatesTitle: 'Últimas Atualizações:',
@@ -198,6 +409,16 @@ const translations = {
         headerSubtitle: 'Suporte IA - Ecossistema MELI',
         tutorialButtonAria: 'Abrir Tutorial',
         themeToggleButtonAria: 'Alternar Tema',
+        settingsButtonAria: 'Abrir Configurações de Tema',
+        settingsModalTitle: 'Configurações de Tema',
+        settingsModalSubtitle: 'Escolha uma paleta de cores para personalizar sua experiência.',
+        settingsModalSaveButton: 'Salvar Tema',
+        themeNameOriginal: 'Original',
+        themeNamePastelDreams: 'Sonhos Pastel',
+        themeNameOceanMist: 'Névoa do Oceano',
+        themeNameSunsetGlow: 'Brilho do Pôr do Sol',
+        themeNameForestWhisper: 'Sussurro da Floresta',
+        themeNameLavenderMist: 'Névoa de Lavanda',
         homeButtonAria: 'Voltar para o Início',
         typingIndicator: 'Almail está digitando...',
         thinkingMessage: 'Almail está analisando a sua pergunta...',
@@ -263,6 +484,10 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
                     <i data-feather="home" class="text-green-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Botão de Início:</strong> Localizado no canto superior esquerdo do cabeçalho, clique neste ícone <i data-feather="home" class="inline-block"></i> para retornar à tela inicial a qualquer momento e iniciar uma nova interação.</p>
                 </li>
+                 <li class="mb-3 flex items-center">
+                    <i data-feather="settings" class="text-gray-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Configurações:</strong> Ao lado do botão de Início, clique neste ícone <i data-feather="settings" class="inline-block"></i> para abrir as configurações de tema e personalizar as cores da interface.</p>
+                </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
                     <p class="text-base"><strong>Alternar Idioma:</strong> Ao lado do botão de Guia Rápido, use este botão (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre os idiomas disponíveis (Português, Inglês, Espanhol). A troca de idioma reiniciará a conversa atual.</p>
@@ -277,7 +502,303 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Alternar Tema:</strong> No canto superior direito do cabeçalho, ao lado do botão de idioma, use este botão <i data-feather="moon" class="inline-block"></i> (ou <i data-feather="sun" class="inline-block"></i>) para mudar entre o tema claro e o tema escuro, personalizando sua experiência visual.</p>
+                    <p class="text-base"><strong>Alternar Tema Claro/Escuro:</strong> No canto superior direito do cabeçalho, ao lado do botão de idioma, use este botão <i data-feather="moon" class="inline-block"></i> (ou <i data-feather="sun" class="inline-block"></i>) para mudar entre o tema claro e o tema escuro, personalizando sua experiência visual.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Enviar Mensagem:</strong> Localizado na área de entrada de texto, após digitar sua pergunta ou solicitação, clique neste botão <i data-feather="send" class="inline-block"></i> ou pressione <strong>Enter</strong> para enviar sua mensagem à Almail.</p>
+                </li>
+            </ul>
+            <p class="mt-6 text-lg leading-relaxed">Com estes recursos, você terá total controle sobre sua interação com a Almail. Estamos aqui para simplificar seu dia a dia e oferecer o melhor suporte!</p>
+        `,
+        versionInfoUseButton: 'Utilizar',
+        creditsModalTitle: 'Créditos',
+        creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Mercado Livre e Mercado Pago.',
+        creditsModalDescription: `
+            <ul class="list-none p-0 text-center">
+                <li class="mb-2"><strong>Desenvolvedores:</strong></li>
+                <li class="mb-1">Lucas Carneiro</li>
+                <li class="mb-1">Lucas Candido</li>
+                <li class="mb-1">Vitória Pinheiro</li>
+                <li class="mb-2 mt-3"><strong>Apoio e Colaboração:</strong></li>
+                <li class="mb-1">Time de Mercado Livre e Mercado Pago (Concentrix)</li>
+                <li class="mb-2 mt-3"><strong>Links:</strong></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositório do Projeto</a></li>
+            </ul>
+        `,
+        creditsModalButton: 'Entendi',
+        creditsButtonAria: 'Ver Créditos',
+        initialDataModalTitle: 'Informações Iniciais',
+        initialDataModalSubtitle: 'Por favor, preencha os dados para otimizar o atendimento.',
+        collaboratorNameLabel: 'Seu Nome:',
+        collaboratorNamePlaceholder: 'Ex: Ana Silva',
+        clientNameLabel: 'Nome do Cliente:',
+        clientNamePlaceholder: 'Ex: João Souza',
+        serviceChannelLabel: 'Canal de Atendimento:',
+        channelChat: 'Chat',
+        channelEmail: 'Email',
+        channelC2C: 'C2C (Voz)',
+        ecosystemLabel: 'Ecossistema:',
+        ecosystemMercadoLivre: 'Mercado Livre',
+        ecosystemMercadoPago: 'Mercado Pago',
+        initialDataConfirmButton: 'Confirmar',
+
+        tutorialModalTitle: 'Guia Rápido: Almail Suporte IA',
+        tutorialModalButton: 'Entendido!',
+        restartConfirmTitle: 'Reiniciar Conversa?',
+        restartConfirmSubtitle: 'Tem certeza que deseja reiniciar a conversa? Todo o histórico será apagado.',
+        restartConfirmYes: 'Sim, Reiniciar',
+        restartConfirmNo: 'Não, Cancelar',
+        languageConfirmTitle: 'Trocar Idioma?',
+        languageConfirmSubtitle: 'Ao trocar o idioma, a conversa atual será apagada. Deseja continuar?',
+        languageConfirmYes: 'Sim, Trocar',
+        languageConfirmNo: 'Não, Cancelar',
+        headerSubtitle: 'Suporte IA - Ecossistema MELI',
+        tutorialButtonAria: 'Abrir Tutorial',
+        themeToggleButtonAria: 'Alternar Tema',
+        settingsButtonAria: 'Abrir Configurações de Tema',
+        settingsModalTitle: 'Configurações de Tema',
+        settingsModalSubtitle: 'Escolha uma paleta de cores para personalizar sua experiência.',
+        settingsModalSaveButton: 'Salvar Tema',
+        themeNameOriginal: 'Original',
+        themeNamePastelDreams: 'Sonhos Pastel',
+        themeNameOceanMist: 'Névoa do Oceano',
+        themeNameSunsetGlow: 'Brilho do Pôr do Sol',
+        themeNameForestWhisper: 'Sussurro da Floresta',
+        themeNameLavenderMist: 'Névoa de Lavanda',
+        homeButtonAria: 'Voltar para o Início',
+        typingIndicator: 'Almail está digitando...',
+        thinkingMessage: 'Almail está analisando a sua pergunta...',
+        inputPlaceholder: 'Pergunte à Almail...',
+        sendButtonAria: 'Enviar Mensagem',
+        footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
+        footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Livre ou Mercado Pago.',
+        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para o Ecossistema Mercado Livre e Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
+        historyTitle: 'Histórico de Conversas',
+        userIdDisplay: 'ID do Usuário:',
+        homeButton: 'Início',
+        newChat: 'Nova Conversa',
+        deleteConfirm: 'Tem certeza que deseja excluir esta conversa?',
+        deleteConfirmYes: 'Sim, Excluir',
+        deleteConfirmNo: 'No, Manter',
+        confirmYesDefault: 'Sim',
+        confirmNoDefault: 'Não',
+        editTitle: 'Editar Título',
+        saveTitle: 'Salvar Título',
+        cancelEdit: 'Cancelar Edição',
+        errorMessage: 'Ocorreu um erro. Por favor, tente novamente.',
+        systemInstructions: `Você é a Almail, uma assistente virtual especializada em suporte para o **Ecossistema Mercado Livre e Mercado Pago**.
+Seu objetivo principal é **auxiliar o colaborador** a fornecer um atendimento de excelência aos clientes.
+Você deve agir como um **agente de suporte para o colaborador**, fornecendo informações precisas e estruturadas para que ele possa, por sua vez, ajudar o cliente.
+
+**É CRÍTICO que você responda SEMPRE e SOMENTE em Português (Brasil).**
+**Nunca utilize palavras negativas como: infelizmente, frustração, decepção, desapontamento, desgosto, decepcionado.**
+
+**Informações do Atendimento Atual:**
+* **Nome do Colaborador:** {COLLABORATOR_NAME}
+* **Nome do Cliente Final:** {CLIENT_NAME} (Se o cliente não tiver um nome específico, este campo será "Não Informado")
+* **Canal de Atendimento:** {SERVICE_CHANNEL} (Pode ser "Chat", "Email" ou "C2C (Voz)")
+* **Ecossistema de Atendimento:** {ECOSYSTEM}
+* **Sentimento do Cliente:** {CLIENT_SENTIMENT} (Este é o sentimento que o colaborador indicou para o cliente: "Satisfeito", "Neutro", "Frustrado" ou "Não Informado". Leve isso em consideração para adaptar o tone e a profundidade da sua resposta, focando em soluções e empatia.)
+* **Tom da Resposta da IA:** {AI_TONE} (Este é o tom que a IA deve usar na sua resposta: "Formal", "Empático" ou "Direto". Adapte a linguagem e a estrutura da sua resposta para refletir este tom.)
+
+**Adaptação da Resposta com base no Canal de Atendimento:**
+
+{SERVICE_CHANNEL_INSTRUCTIONS}
+
+**Adaptação da Resposta com base no Ecossistema:**
+
+{ECOSYSTEM_INSTRUCTIONS}
+
+**Diretrizes operacionais:**
+1.  **Foco e Escopo:** Seu conhecimento é exclusivo sobre o **Ecossistema Mercado Livre e Mercado Pago** (vendas, compras, pagamentos, envios, contas, etc.). **Não responda a perguntas fora deste escopo.** Se a pergunta não for clara ou estiver fora do escopo, peça ao colaborador para reformular ou esclarecer.
+2.  **Linguagem:** Formal, profissional, clara, concisa e direta. **Nunca use emojis.** Utilize uma linguagem que seja útil para o colaborador, como se estivesse fornecendo um "roteiro" ou "base de conhecimento".
+3.  **Personalização e Identificação:**
+    * **Sempre se dirija ao colaborador pelo nome, se disponível.** Ex: "Olá, {COLLABORATOR_NAME}! Para a sua dúvida..."
+    * **Nunca confunda o colaborador com o cliente.** Se o nome do cliente for fornecido, use-o para personalizar a *resposta que o colaborador dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, você pode informar que...".
+    * Se o nome do cliente não for fornecido, use termos neutros como "o cliente" ou "o usuário" ao se referir a ele, mas sempre no contexto de como o *colaborador* deve interagir.
+3.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Livre/Mercado Pago. Evite divagações.
+4.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
+5.  **Resolução e Aprofundamento:** Seu objetivo é ajudar o colaborador a resolver o problema do cliente. Se a resposta inicial não for suficiente, reformule ou aprofunde a explicação, sempre pensando em como o colaborador pode usar essa informação.
+6.  **Estrutura da Resposta:** Utilize Markdown para organizar as informações (negrito, itálico, listas, blocos de código se necessário) para facilitar a leitura e o uso pelo colaborador. Considere usar títulos e subtítulos para respostas mais complexas.
+7.  **Contexto e Continuidade:** Baseie-se no histórico da conversa para manter a coerência e a relevância. Se o colaborador fizer uma pergunta de acompanhamento, use o contexto anterior para fornecer uma resposta mais completa.
+8.  **Proatividade (Opcional):** Se apropriado, sugira ao colaborador próximos passos ou informações adicionais que possam ser relevantes para o atendimento do cliente.`,
+        tutorialText: `
+            <h3 class="2xl font-bold text-center mb-5 text-blue-700">Desvende a Almail: Sua Plataforma de Suporte Inteligente</h3>
+            <p class="mb-4 text-lg leading-relaxed">Abaixo, explore os principais botões e suas funções:</p>
+            <ul class="list-none pl-0">
+                <li class="mb-3 flex items-center">
+                    <i data-feather="home" class="text-green-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Início:</strong> Localizado no canto superior esquerdo do cabeçalho, clique neste ícone <i data-feather="home" class="inline-block"></i> para retornar à tela inicial a qualquer momento e iniciar uma nova interação.</p>
+                </li>
+                 <li class="mb-3 flex items-center">
+                    <i data-feather="settings" class="text-gray-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Configurações:</strong> Ao lado do botão de Início, clique neste ícone <i data-feather="settings" class="inline-block"></i> para abrir as configurações de tema e personalizar as cores da interface.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Alternar Idioma:</strong> Ao lado do botão de Guia Rápido, use este botão (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre os idiomas disponíveis (Português, Inglês, Espanhol). A troca de idioma reiniciará a conversa atual.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Guia Rápido:</strong> No canto superior direito do cabeçalho, clique neste ícone <i data-feather="help-circle" class="inline-block"></i> a qualquer momento para acessar este guia e relembrar as funcionalidades da Almail.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="info" class="text-yellow-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Créditos:</strong> Ao lado do botão de Tema, clique neste ícone <i data-feather="info" class="inline-block"></i> para visualizar os créditos dos desenvolvedores e colaboradores da Almail.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Alternar Tema Claro/Escuro:</strong> No canto superior direito do cabeçalho, ao lado do botão de idioma, use este botão <i data-feather="moon" class="inline-block"></i> (ou <i data-feather="sun" class="inline-block"></i>) para mudar entre o tema claro e o tema escuro, personalizando sua experiência visual.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Enviar Mensagem:</strong> Localizado na área de entrada de texto, após digitar sua pergunta ou solicitação, clique neste botão <i data-feather="send" class="inline-block"></i> ou pressione <strong>Enter</strong> para enviar sua mensagem à Almail.</p>
+                </li>
+            </ul>
+            <p class="mt-6 text-lg leading-relaxed">Com estes recursos, você terá total controle sobre sua interação com a Almail. Estamos aqui para simplificar seu dia a dia e oferecer o melhor suporte!</p>
+        `,
+        versionInfoUseButton: 'Utilizar',
+        creditsModalTitle: 'Créditos',
+        creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Mercado Livre e Mercado Pago.',
+        creditsModalDescription: `
+            <ul class="list-none p-0 text-center">
+                <li class="mb-2"><strong>Desenvolvedores:</strong></li>
+                <li class="mb-1">Lucas Carneiro</li>
+                <li class="mb-1">Lucas Candido</li>
+                <li class="mb-1">Vitória Pinheiro</li>
+                <li class="mb-2 mt-3"><strong>Apoio e Colaboração:</strong></li>
+                <li class="mb-1">Time de Mercado Livre e Mercado Pago (Concentrix)</li>
+                <li class="mb-2 mt-3"><strong>Links:</strong></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
+                <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositório do Projeto</a></li>
+            </ul>
+        `,
+        creditsModalButton: 'Entendi',
+        creditsButtonAria: 'Ver Créditos',
+        initialDataModalTitle: 'Informações Iniciais',
+        initialDataModalSubtitle: 'Por favor, preencha os dados para otimizar o atendimento.',
+        collaboratorNameLabel: 'Seu Nome:',
+        collaboratorNamePlaceholder: 'Ex: Ana Silva',
+        clientNameLabel: 'Nome do Cliente:',
+        clientNamePlaceholder: 'Ex: João Souza',
+        serviceChannelLabel: 'Canal de Atendimento:',
+        channelChat: 'Chat',
+        channelEmail: 'Email',
+        channelC2C: 'C2C (Voz)',
+        ecosystemLabel: 'Ecossistema:',
+        ecosystemMercadoLivre: 'Mercado Livre',
+        ecosystemMercadoPago: 'Mercado Pago',
+        initialDataConfirmButton: 'Confirmar',
+
+        tutorialModalTitle: 'Guia Rápido: Almail Suporte IA',
+        tutorialModalButton: 'Entendido!',
+        restartConfirmTitle: 'Reiniciar Conversa?',
+        restartConfirmSubtitle: 'Tem certeza que deseja reiniciar a conversa? Todo o histórico será apagado.',
+        restartConfirmYes: 'Sim, Reiniciar',
+        restartConfirmNo: 'Não, Cancelar',
+        languageConfirmTitle: 'Trocar Idioma?',
+        languageConfirmSubtitle: 'Ao trocar o idioma, a conversa atual será apagada. Deseja continuar?',
+        languageConfirmYes: 'Sim, Trocar',
+        languageConfirmNo: 'Não, Cancelar',
+        headerSubtitle: 'Suporte IA - Ecossistema MELI',
+        tutorialButtonAria: 'Abrir Tutorial',
+        themeToggleButtonAria: 'Alternar Tema',
+        settingsButtonAria: 'Abrir Configurações de Tema',
+        settingsModalTitle: 'Configurações de Tema',
+        settingsModalSubtitle: 'Escolha uma paleta de cores para personalizar sua experiência.',
+        settingsModalSaveButton: 'Salvar Tema',
+        themeNameOriginal: 'Original',
+        themeNamePastelDreams: 'Sonhos Pastel',
+        themeNameOceanMist: 'Névoa do Oceano',
+        themeNameSunsetGlow: 'Brilho do Pôr do Sol',
+        themeNameForestWhisper: 'Sussurro da Floresta',
+        themeNameLavenderMist: 'Névoa de Lavanda',
+        homeButtonAria: 'Voltar para o Início',
+        typingIndicator: 'Almail está digitando...',
+        thinkingMessage: 'Almail está analisando a sua pergunta...',
+        inputPlaceholder: 'Pergunte à Almail...',
+        sendButtonAria: 'Enviar Mensagem',
+        footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
+        footerDisclaimer: 'Esta IA utiliza dados públicos e não armazena informações do Mercado Livre ou Mercado Pago.',
+        welcomeMessage: "Olá {COLLABORATOR_NAME}! Sou a Almail, sua assistente virtual especializada em suporte para o Ecossistema Mercado Livre e Mercado Pago. Estou aqui para te ajudar a atender {CLIENT_NAME_ADAPTED} via {SERVICE_CHANNEL_ADAPTED}.",
+        historyTitle: 'Histórico de Conversas',
+        userIdDisplay: 'ID do Usuário:',
+        homeButton: 'Início',
+        newChat: 'Nova Conversa',
+        deleteConfirm: 'Tem certeza que deseja excluir esta conversa?',
+        deleteConfirmYes: 'Sim, Excluir',
+        deleteConfirmNo: 'No, Manter',
+        confirmYesDefault: 'Sim',
+        confirmNoDefault: 'Não',
+        editTitle: 'Editar Título',
+        saveTitle: 'Salvar Título',
+        cancelEdit: 'Cancelar Edição',
+        errorMessage: 'Ocorreu um erro. Por favor, tente novamente.',
+        systemInstructions: `Você é a Almail, uma assistente virtual especializada em suporte para o **Ecossistema Mercado Livre e Mercado Pago**.
+Seu objetivo principal é **auxiliar o colaborador** a fornecer um atendimento de excelência aos clientes.
+Você deve agir como um **agente de suporte para o colaborador**, fornecendo informações precisas e estruturadas para que ele possa, por sua vez, ajudar o cliente.
+
+**É CRÍTICO que você responda SEMPRE e SOMENTE em Português (Brasil).**
+**Nunca utilize palavras negativas como: infelizmente, frustração, decepção, desapontamento, desgosto, decepcionado.**
+
+**Informações do Atendimento Atual:**
+* **Nome do Colaborador:** {COLLABORATOR_NAME}
+* **Nome do Cliente Final:** {CLIENT_NAME} (Se o cliente não tiver um nome específico, este campo será "Não Informado")
+* **Canal de Atendimento:** {SERVICE_CHANNEL} (Pode ser "Chat", "Email" ou "C2C (Voz)")
+* **Ecossistema de Atendimento:** {ECOSYSTEM}
+* **Sentimento do Cliente:** {CLIENT_SENTIMENT} (Este é o sentimento que o colaborador indicou para o cliente: "Satisfeito", "Neutro", "Frustrado" ou "Não Informado". Leve isso em consideração para adaptar o tone e a profundidade da sua resposta, focando em soluções e empatia.)
+* **Tom da Resposta da IA:** {AI_TONE} (Este é o tom que a IA deve usar na sua resposta: "Formal", "Empático" ou "Direto". Adapte a linguagem e a estrutura da sua resposta para refletir este tom.)
+
+**Adaptação da Resposta com base no Canal de Atendimento:**
+
+{SERVICE_CHANNEL_INSTRUCTIONS}
+
+**Adaptação da Resposta com base no Ecossistema:**
+
+{ECOSYSTEM_INSTRUCTIONS}
+
+**Diretrizes operacionais:**
+1.  **Foco e Escopo:** Seu conhecimento é exclusivo sobre o **Ecossistema Mercado Livre e Mercado Pago** (vendas, compras, pagamentos, envios, contas, etc.). **Não responda a perguntas fora deste escopo.** Se a pergunta não for clara ou estiver fora do escopo, peça ao colaborador para reformular ou esclarecer.
+2.  **Linguagem:** Formal, profissional, clara, concisa e direta. **Nunca use emojis.** Utilize uma linguagem que seja útil para o colaborador, como se estivesse fornecendo um "roteiro" ou "base de conhecimento".
+3.  **Personalização e Identificação:**
+    * **Sempre se dirija ao colaborador pelo nome, se disponível.** Ex: "Olá, {COLLABORATOR_NAME}! Para a sua dúvida..."
+    * **Nunca confunda o colaborador com o cliente.** Se o nome do cliente for fornecido, use-o para personalizar a *resposta que o colaborador dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, você pode informar que...".
+    * Se o nome do cliente não for fornecido, use termos neutros como "o cliente" ou "o usuário" ao se referir a ele, mas sempre no contexto de como o *colaborador* deve interagir.
+3.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Livre/Mercado Pago. Evite divagações.
+4.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
+5.  **Resolução e Aprofundamento:** Seu objetivo é ajudar o colaborador a resolver o problema do cliente. Se a resposta inicial não for suficiente, reformule ou aprofunde a explicação, sempre pensando em como o colaborador pode usar essa informação.
+6.  **Estrutura da Resposta:** Utilize Markdown para organizar as informações (negrito, itálico, listas, blocos de código se necessário) para facilitar a leitura e o uso pelo colaborador. Considere usar títulos e subtítulos para respostas mais complexas.
+7.  **Contexto e Continuidade:** Baseie-se no histórico da conversa para manter a coerência e a relevância. Se o colaborador fizer uma pergunta de acompanhamento, use o contexto anterior para fornecer uma resposta mais completa.
+8.  **Proatividade (Opcional):** Se apropriado, sugira ao colaborador próximos passos ou informações adicionais que possam ser relevantes para o atendimento do cliente.`,
+        tutorialText: `
+            <h3 class="2xl font-bold text-center mb-5 text-blue-700">Desvende a Almail: Sua Plataforma de Suporte Inteligente</h3>
+            <p class="mb-4 text-lg leading-relaxed">Abaixo, explore os principais botões e suas funções:</p>
+            <ul class="list-none pl-0">
+                <li class="mb-3 flex items-center">
+                    <i data-feather="home" class="text-green-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Início:</strong> Localizado no canto superior esquerdo do cabeçalho, clique neste ícone <i data-feather="home" class="inline-block"></i> para retornar à tela inicial a qualquer momento e iniciar uma nova interação.</p>
+                </li>
+                 <li class="mb-3 flex items-center">
+                    <i data-feather="settings" class="text-gray-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Configurações:</strong> Ao lado do botão de Início, clique neste ícone <i data-feather="settings" class="inline-block"></i> para abrir as configurações de tema e personalizar as cores da interface.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Alternar Idioma:</strong> Ao lado do botão de Guia Rápido, use este botão (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) para alternar entre os idiomas disponíveis (Português, Inglês, Espanhol). A troca de idioma reiniciará a conversa atual.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Guia Rápido:</strong> No canto superior direito do cabeçalho, clique neste ícone <i data-feather="help-circle" class="inline-block"></i> a qualquer momento para acessar este guia e relembrar as funcionalidades da Almail.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="info" class="text-yellow-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botão de Créditos:</strong> Ao lado do botão de Tema, clique neste ícone <i data-feather="info" class="inline-block"></i> para visualizar os créditos dos desenvolvedores e colaboradores da Almail.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Alternar Tema Claro/Escuro:</strong> No canto superior direito do cabeçalho, ao lado do botão de idioma, use este botão <i data-feather="moon" class="inline-block"></i> (ou <i data-feather="sun" class="inline-block"></i>) para mudar entre o tema claro e o tema escuro, personalizando sua experiência visual.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
@@ -289,7 +810,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         likeFeedback: 'Que ótimo que a resposta foi útil! Continuarei aprimorando para melhor te atender.',
         dislikeFeedback: 'Agradeço seu feedback! Estou aprendendo e vou tentar gerar uma resposta mais útil, estruturada e personalizada para você.',
         dislikePrompt: `A resposta anterior não foi satisfatória. Por favor, gere uma nova resposta mais útil, com melhor argumentação e estruturação de texto, e personalize-a para o cliente se o nome dele estiver disponível. Lembre-se de me ajudar a resolver o problema do problema do cliente.`,
-        initialScreenTitle: 'Almail Suporte IA!', // Título alterado aqui
+        initialScreenTitle: 'Almail Suporte IA!',
         initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no Ecossistema Mercado Livre e Mercado Pago.',
         initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Iniciar Nova Conversa" para começar a interagir com a IA.',
         startChatButton: 'Iniciar Nova Conversa',
@@ -305,13 +826,12 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         aiToneEmpathetic: 'Empático',
         aiToneDirect: 'Direto',
         aiToneSelected: 'Tom da IA registrado: {TONE}.',
-        allConversations: 'Todas as Conversas', // NOVO: Tradução para "Todas as Conversas"
-        favoriteConversations: 'Conversas Favoritas', // NOVO: Tradução para "Conversas Favoritas"
-        favoriteButtonAria: 'Marcar/Desmarcar como favorito', // NOVO: Tradução para aria-label do botão de favorito
+        allConversations: 'Todas as Conversas',
+        favoriteConversations: 'Conversas Favoritas',
+        favoriteButtonAria: 'Marcar/Desmarcar como favorito',
     },
     'en': {
         appTitle: 'Almail AI Support - MELI Ecosystem',
-        // NOVO: Traduções para o modal de versão e atualizações
         versionInfoTitle: 'Welcome to Almail AI Support!',
         versionInfoSubtitle: 'Version: Beta 1.4.0',
         latestUpdatesTitle: 'Latest Updates:',
@@ -366,6 +886,16 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         headerSubtitle: 'AI Support - MELI Ecosystem',
         tutorialButtonAria: 'Open Tutorial',
         themeToggleButtonAria: 'Toggle Theme',
+        settingsButtonAria: 'Open Theme Settings',
+        settingsModalTitle: 'Theme Settings',
+        settingsModalSubtitle: 'Choose a color palette to customize your experience.',
+        settingsModalSaveButton: 'Save Theme',
+        themeNameOriginal: 'Original',
+        themeNamePastelDreams: 'Pastel Dreams',
+        themeNameOceanMist: 'Ocean Mist',
+        themeNameSunsetGlow: 'Sunset Glow',
+        themeNameForestWhisper: 'Forest Whisper',
+        themeNameLavenderMist: 'Lavender Mist',
         homeButtonAria: 'Back to Home',
         typingIndicator: 'Almail is typing...',
         thinkingMessage: 'Almail is analyzing your question...',
@@ -432,8 +962,12 @@ You should act as a **support agent for the collaborator**, providing accurate a
                     <p class="text-base"><strong>Home Button:</strong> Located in the upper left corner of the header, click this icon <i data-feather="home" class="inline-block"></i> to return to the home screen at any time and start a new interaction.</p>
                 </li>
                 <li class="mb-3 flex items-center">
+                    <i data-feather="settings" class="text-gray-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Settings Button:</strong> Next to the Home button, click this icon <i data-feather="settings" class="inline-block"></i> to open theme settings and customize the interface colors.</p>
+                </li>
+                <li class="mb-3 flex items-center">
                     <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Toggle Language:</strong> Next to the Quick Guide button, use this button (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) to switch between available languages (Portuguese, English, Spanish). Changing the language will restart the current conversation.</p>
+                    <p class="text-base"><strong>Toggle Language:</strong> Next to the Quick Guide button, use this button (<i data-feather="globe" class="inline-block"></i> PT, EN, ES) to switch between available languages (Portuguese, English, Spanish). Changing the language will clear the current conversation.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="help-circle" class="text-blue-500 mr-3 flex-shrink-0"></i>
@@ -445,11 +979,11 @@ You should act as a **support agent for the collaborator**, providing accurate a
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Toggle Theme:</strong> In the upper right corner of the header, next to the language button, use this button <i data-feather="moon" class="inline-block"></i> (or <i data-feather="sun" class="inline-block"></i>) to switch between light and dark themes, customizing your visual experience.</p>
+                    <p class="text-base"><strong>Toggle Light/Dark Theme:</strong> In the upper right corner of the header, next to the language button, use this button <i data-feather="moon" class="inline-block"></i> (or <i data-feather="sun" class="inline-block"></i>) to switch between light and dark themes, customizing your visual experience.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Enviar Mensagem:</strong> Ubicado en el área de entrada de texto, después de escribir tu pregunta o solicitud, haz clic en este botón <i data-feather="send" class="inline-block"></i> o presiona <strong>Enter</strong> para enviar tu mensaje a Almail.</p>
+                    <p class="text-base"><strong>Send Message:</strong> Located in the text input area, after typing your question or request, click this button <i data-feather="send" class="inline-block"></i> or press <strong>Enter</strong> to send your message to Almail.</p>
                 </li>
             </ul>
             <p class="mt-6 text-lg leading-relaxed">With these resources, you will have full control over your interaction with Almail. We are here to simplify your daily life and offer the best support!</p>
@@ -473,13 +1007,12 @@ You should act as a **support agent for the collaborator**, providing accurate a
         aiToneEmpathetic: 'Empathetic',
         aiToneDirect: 'Direct',
         aiToneSelected: 'AI Tone recorded: {TONE}.',
-        allConversations: 'All Conversations', // NOVO: Tradução para "Todas as Conversas"
-        favoriteConversations: 'Favorite Conversations', // NOVO: Tradução para "Conversas Favoritas"
-        favoriteButtonAria: 'Toggle favorite status', // NOVO: Tradução para aria-label do botão de favorito
+        allConversations: 'All Conversations',
+        favoriteConversations: 'Favorite Conversations',
+        favoriteButtonAria: 'Toggle favorite status',
     },
     'es': {
         appTitle: 'Almail Soporte IA - Ecosistema MELI',
-        // NOVO: Traduções para o modal de versão e atualizações
         versionInfoTitle: '¡Bienvenido(a) a Almail Soporte IA!',
         versionInfoSubtitle: 'Versión: Beta 1.4.0',
         latestUpdatesTitle: 'Últimas Actualizaciones:',
@@ -534,6 +1067,16 @@ You should act as a **support agent for the collaborator**, providing accurate a
         headerSubtitle: 'Soporte IA - Ecosistema MELI',
         tutorialButtonAria: 'Abrir Tutorial',
         themeToggleButtonAria: 'Alternar Tema',
+        settingsButtonAria: 'Abrir Configuración de Tema',
+        settingsModalTitle: 'Configuración de Tema',
+        settingsModalSubtitle: 'Elige una paleta de colores para personalizar tu experiencia.',
+        settingsModalSaveButton: 'Guardar Tema',
+        themeNameOriginal: 'Original',
+        themeNamePastelDreams: 'Sueños Pastel',
+        themeNameOceanMist: 'Niebla del Océano',
+        themeNameSunsetGlow: 'Brilho del Atardecer',
+        themeNameForestWhisper: 'Susurro del Bosque',
+        themeNameLavenderMist: 'Niebla de Lavanda',
         homeButtonAria: 'Volver al Inicio',
         typingIndicator: 'Almail está escribiendo...',
         thinkingMessage: 'Almail está analizando tu pregunta...',
@@ -567,7 +1110,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 * **Nombre del Cliente Final:** {CLIENT_NAME} (Si el cliente no tiene un nombre específico, este campo será "No Informado")
 * **Canal de Atención:** {SERVICE_CHANNEL} (Puede ser "Chat", "Correo Electrónico" o "C2C (Voz)")
 * **Ecossistema de Atendimento:** {ECOSYSTEM}
-* **Sentimiento del Cliente:** {CLIENT_SENTIMENT} (Este es el sentimiento que el colaborador indicó para el cliente: "Satisfecho", "Neutro", "Frustrado" o "Não Informado". Ten en cuenta esto para adaptar el tono y la profundidad de tu respuesta, centrándote en soluciones y empatía.)
+* **Sentimiento del Cliente:** {CLIENT_SENTIMENT} (Ten en cuenta esto para adaptar el tono y la profundidad de tu respuesta, centrándote en soluciones y empatía.)
 * **Tono de Respuesta de la IA:** {AI_TONE} (Este es el tono que la IA debe usar en su respuesta: "Formal", "Empático" o "Directo". Adapta el lenguaje y la estructura de tu respuesta para reflejar este tono.)
 
 **Adaptación de la Respuesta con base no Canal de Atendimento:**
@@ -597,7 +1140,11 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
             <ul class="list-none pl-0">
                 <li class="mb-3 flex items-center">
                     <i data-feather="home" class="text-green-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Home Button:</strong> Ubicado en la esquina superior izquierda del encabezado, haz clic en este icono <i data-feather="home" class="inline-block"></i> para regresar a la pantalla de inicio en cualquier momento y comenzar una nueva interacción.</p>
+                    <p class="text-base"><strong>Botón de Inicio:</strong> Ubicado en la esquina superior izquierda del encabezado, haz clic en este icono <i data-feather="home" class="inline-block"></i> para regresar a la pantalla de inicio en cualquier momento y comenzar una nueva interacción.</p>
+                </li>
+                <li class="mb-3 flex items-center">
+                    <i data-feather="settings" class="text-gray-500 mr-3 flex-shrink-0"></i>
+                    <p class="text-base"><strong>Botón de Configuración:</strong> Junto al botón de Inicio, haz clic en este icono <i data-feather="settings" class="inline-block"></i> para abrir la configuración del tema y personalizar los colores de la interfaz.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="globe" class="text-indigo-500 mr-3 flex-shrink-0"></i>
@@ -613,11 +1160,11 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="moon" class="text-purple-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Alternar Tema:</strong> En la esquina superior derecha del encabezado, al lado del botón de idioma, usa este botón <i data-feather="moon" class="inline-block"></i> (o <i data-feather="sun" class="inline-block"></i>) para cambiar entre el tema claro y el tema oscuro, personalizando tu experiencia visual.</p>
+                    <p class="text-base"><strong>Alternar Tema Claro/Oscuro:</strong> En la esquina superior derecha del encabezado, al lado del botón de idioma, usa este botón <i data-feather="moon" class="inline-block"></i> (o <i data-feather="sun" class="inline-block"></i>) para cambiar entre el tema claro y el tema oscuro, personalizando tu experiencia visual.</p>
                 </li>
                 <li class="mb-3 flex items-center">
                     <i data-feather="send" class="text-indigo-500 mr-3 flex-shrink-0"></i>
-                    <p class="text-base"><strong>Enviar Mensagem:</strong> Ubicado en el área de entrada de texto, después de escribir tu pregunta o solicitud, haz clic en este botón <i data-feather="send" class="inline-block"></i> o presiona <strong>Enter</strong> para enviar tu mensaje a Almail.</p>
+                    <p class="text-base"><strong>Enviar Mensaje:</strong> Ubicado en el área de entrada de texto, después de escribir tu pregunta o solicitud, haz clic en este botón <i data-feather="send" class="inline-block"></i> o presiona <strong>Enter</strong> para enviar tu mensaje a Almail.</p>
                 </li>
             </ul>
             <p class="mt-6 text-lg leading-relaxed">Con estos recursos, tendrás control total sobre tu interacción con la Almail. ¡Estamos aquí para simplificar tu día a día y ofrecerte el mejor soporte!</p>
@@ -641,12 +1188,11 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
         aiToneEmpathetic: 'Empático',
         aiToneDirect: 'Directo',
         aiToneSelected: 'Tono de IA registrado: {TONE}.',
-        allConversations: 'Todas las Conversas', // NOVO: Tradução para "Todas as Conversas"
-        favoriteConversations: 'Conversaciones Favoritas', // NOVO: Tradução para "Conversas Favoritas"
-        favoriteButtonAria: 'Marcar/Desmarcar como favorito', // NOVO: Tradução para aria-label do botão de favorito
+        allConversations: 'Todas las Conversas',
+        favoriteConversations: 'Conversaciones Favoritas',
+        favoriteButtonAria: 'Marcar/Desmarcar como favorito',
     }
 };
-
 // Histórico do chat. Agora, ele armazena apenas as mensagens visíveis da conversa.
 let chatHistory = [];
 let initialUserMessage = null; // Armazena a primeira mensagem do usuário para gerar o título
@@ -743,6 +1289,15 @@ function setLanguage(lang) {
         serviceChannelSelect.querySelector('option[value="email"]').textContent = translations[lang].channelEmail;
         serviceChannelSelect.querySelector('option[value="c2c"]').textContent = translations[lang].channelC2C;
     }
+    // NOVO: Atualiza textos do modal de configurações de tema
+    if (settingsModalOverlay.classList.contains('show')) {
+        document.querySelector('#settings-modal-overlay h2').textContent = translations[lang].settingsModalTitle;
+        document.querySelector('#settings-modal-overlay p').textContent = translations[lang].settingsModalSubtitle;
+        settingsSaveButton.textContent = translations[lang].settingsModalSaveButton;
+    }
+    // Repopula as opções de tema para refletir os nomes traduzidos
+    populateThemeOptions();
+
 
     // Se estiver na tela inicial, atualiza o texto da tela inicial
     if (initialScreen.classList.contains('show') || !chatAndInputArea.classList.contains('show')) {
@@ -1308,14 +1863,99 @@ function applyTheme(theme) {
         themeIcon.innerHTML = '<i data-feather="sun"></i>';
     }
     feather.replace();
+    // NOVO: Aplica a paleta de cores atual, respeitando o modo claro/escuro
+    applyColorPalette(currentPalette, theme);
 }
 
 // Alterna entre tema claro e escuro
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('themePreference', newTheme); // Salva a preferência do tema claro/escuro
     applyTheme(newTheme);
 }
+
+
+// NOVO: Funções para o modal de configurações de tema
+function showSettingsModal() {
+    selectedPaletteForModal = currentPalette; // Inicia com a paleta atual
+    populateThemeOptions();
+    settingsModalOverlay.classList.add('show');
+}
+
+function hideSettingsModal() {
+    settingsModalOverlay.classList.remove('show');
+}
+
+function populateThemeOptions() {
+    themeOptionsContainer.innerHTML = ''; // Limpa opções existentes
+    Object.keys(colorPalettes).forEach(paletteKey => {
+        const palette = colorPalettes[paletteKey];
+        const optionDiv = document.createElement('div');
+        optionDiv.classList.add('theme-option');
+        if (paletteKey === selectedPaletteForModal) {
+            optionDiv.classList.add('selected');
+        }
+        optionDiv.dataset.palette = paletteKey;
+
+        const previewDiv = document.createElement('div');
+        previewDiv.classList.add('theme-preview');
+
+        // Adiciona 3 cores de pré-visualização (pode ajustar quais cores mostrar)
+        const mode = document.documentElement.getAttribute('data-theme') || 'light';
+        const colorsToShow = [
+            palette[mode]['--lm-bg-app'] || palette[mode]['--dm-bg-app'], // Cor de fundo do app
+            palette[mode]['--lm-accent-primary'] || palette[mode]['--dm-accent-primary'], // Cor de destaque primária
+            palette[mode]['--lm-user-message-bg'] ? (palette[mode]['--lm-user-message-bg'].includes('gradient') ? palette[mode]['--lm-accent-secondary'] : palette[mode]['--lm-user-message-bg']) : (palette[mode]['--dm-user-message-bg'].includes('gradient') ? palette[mode]['--dm-accent-secondary'] : palette[mode]['--dm-user-message-bg']) // Cor da mensagem do usuário (ou secundária se gradiente)
+        ];
+
+
+        colorsToShow.forEach(colorValue => {
+            const colorDiv = document.createElement('div');
+            colorDiv.classList.add('theme-preview-color');
+            colorDiv.style.backgroundColor = colorValue;
+            previewDiv.appendChild(colorDiv);
+        });
+
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('theme-name');
+        // Usa o nome traduzido se disponível, senão o nome da paleta original
+        // A chave de tradução é construída a partir do nome da paleta (que agora é um identificador consistente)
+        const translationKey = `themeName${palette.name.charAt(0).toUpperCase() + palette.name.slice(1)}`;
+        nameDiv.textContent = (translations[currentLanguage] && translations[currentLanguage][translationKey])
+            ? translations[currentLanguage][translationKey]
+            : palette.name; // Fallback para o identificador se a tradução não for encontrada
+
+
+        optionDiv.appendChild(previewDiv);
+        optionDiv.appendChild(nameDiv);
+
+        optionDiv.addEventListener('click', () => {
+            selectedPaletteForModal = paletteKey;
+            // Atualiza a classe 'selected' visualmente
+            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('selected'));
+            optionDiv.classList.add('selected');
+        });
+
+        themeOptionsContainer.appendChild(optionDiv);
+    });
+}
+
+function applyColorPalette(paletteKey, mode) {
+    const root = document.documentElement;
+    const palette = colorPalettes[paletteKey];
+
+    if (palette && palette[mode]) {
+        Object.keys(palette[mode]).forEach(variable => {
+            root.style.setProperty(variable, palette[mode][variable]);
+        });
+        currentPalette = paletteKey; // Atualiza a paleta atual
+        localStorage.setItem('selectedPalette', paletteKey); // Salva a paleta
+    } else {
+        console.warn(`Paleta ou modo não encontrado: ${paletteKey}, ${mode}`);
+    }
+}
+
 
 // Mostra o modal de tutorial
 function showTutorialModal() {
@@ -1345,7 +1985,7 @@ function showInitialDataModal() {
     clientNameInput.value = '';
     serviceChannelSelect.value = 'chat';
     ecosystemSelect.value = 'mercadoLivre';
-    setLanguage(currentLanguage);
+    setLanguage(currentLanguage); // Garante que os textos do modal estejam no idioma correto
     initialDataModalOverlay.classList.add('show');
     collaboratorNameInput.focus();
     checkInitialDataInputs();
@@ -1405,7 +2045,7 @@ function hideVersionInfoModal() {
  */
 async function generateConversationTitle(promptText) {
     try {
-        const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ";
+        const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ"; // Chave de API de exemplo
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
         const titleGenerationPrompt = `Gere um título conciso (máximo 5 palavras) para a seguinte conversa, focado no assunto principal. Responda apenas com o título. Se não for possível identificar um assunto claro, use "Conversa Geral".\n\nConversa: "${promptText}"\n\nTítulo:`;
@@ -1518,7 +2158,7 @@ async function sendMessage(isRegeneration = false) {
     chatMessages.scrollTop = chatMessages.scrollHeight; // Rola para a nova mensagem
 
     try {
-        const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ";
+        const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ"; // Chave de API de exemplo
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
         let systemInstructions = translations[currentLanguage].systemInstructions;
@@ -1697,8 +2337,8 @@ async function sendMessage(isRegeneration = false) {
                     clientName: currentClientName || "Não Informado",
                     serviceChannel: serviceChannel || "Não Informado",
                     ecosystem: ecosystem || "Não Informado",
-                    clientSentiment: currentClientSentiment || "Não Informado",
-                    aiTone: currentAiTone || "Não Informado", // NOVO: Salva o tom da IA
+                    clientSentiment: currentClientSentiment,
+                    aiTone: currentAiTone, // NOVO: Salva o tom da IA
                     isFavorite: false // NOVO: Define como não favorito por padrão
                 });
                 currentConversationId = newDocRef.id;
@@ -1969,7 +2609,7 @@ async function loadConversationHistory() {
 
             editButton.addEventListener('click', (event) => {
                 event.stopPropagation();
-                toggleEditMode(data.id, titleSpan, editButton, deleteButton, actionButtons, favoriteButton);
+                toggleEditMode(data.id, titleSpan, editButton, deleteButton, actionButtonsContainer, favoriteButton);
             });
 
             favoriteButton.addEventListener('click', (event) => {
@@ -2257,7 +2897,7 @@ initialDataConfirmButton.addEventListener('click', () => {
                 break;
             default:
                 ecosystemDisplay = 'Ecosistema MELI';
-                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en el **Ecosistema Mercado Libre y Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en el **Ecosistema Mercado Livre e Mercado Pago**. ¿Cómo posso te auxiliar hoje?`;
         }
     }
 
@@ -2294,8 +2934,18 @@ confirmRestartYesButton.addEventListener('click', () => {
 });
 confirmRestartNoButton.addEventListener('click', hideConfirmationModal);
 
-// Botão de alternar tema
+// Botão de alternar tema claro/escuro
 themeToggleButton.addEventListener('click', toggleTheme);
+
+// NOVO: Listeners para o modal de configurações de tema
+settingsButton.addEventListener('click', showSettingsModal);
+settingsCloseButton.addEventListener('click', hideSettingsModal);
+settingsSaveButton.addEventListener('click', () => {
+    const currentThemeMode = document.documentElement.getAttribute('data-theme') || 'light';
+    applyColorPalette(selectedPaletteForModal, currentThemeMode);
+    hideSettingsModal();
+});
+
 
 // Botões do modal de tutorial
 tutorialButton.addEventListener('click', showTutorialModal);
@@ -2343,17 +2993,27 @@ window.addEventListener('load', async () => {
 
     // Carrega a preferência de idioma do localStorage
     const storedLanguage = localStorage.getItem('preferredLanguage') || 'pt-BR';
-    setLanguage(storedLanguage);
+    setLanguage(storedLanguage); // Aplica o idioma primeiro
 
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        applyTheme('dark');
-    } else {
-        applyTheme('light');
-    }
+    // Carrega a paleta de cores salva ANTES de aplicar o tema
+    const storedPalette = localStorage.getItem('selectedPalette') || 'original';
+    currentPalette = storedPalette; // Define a paleta atual
+    selectedPaletteForModal = storedPalette; // Define a paleta selecionada para o modal
+
+    // Carrega a preferência de tema claro/escuro
+    const storedThemePreference = localStorage.getItem('themePreference');
+    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = storedThemePreference || (systemPrefersDark ? 'dark' : 'light');
+    applyTheme(initialTheme); // Aplica o tema claro/escuro, que por sua vez aplicará a currentPalette
+
 
     if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-                applyTheme(event.matches ? 'dark' : 'light');
+            // Só altera o tema se não houver preferência salva
+            if (!localStorage.getItem('themePreference')) {
+                const newMode = event.matches ? 'dark' : 'light';
+                applyTheme(newMode);
+            }
         });
     }
 
@@ -2371,7 +3031,6 @@ window.addEventListener('load', async () => {
     mainSidebarToggleButton.innerHTML = '<i data-feather="chevron-right"></i>';
     feather.replace();
 
-    // NOVO: Exibe o modal de informações de versão ao carregar a página
     showVersionInfoModal();
 
 
@@ -2392,7 +3051,6 @@ window.addEventListener('load', async () => {
             if (user) {
                 userId = user.uid;
                 isAuthReady = true;
-                // console.log("Usuário autenticado:", userId); // Removido
                 if (firebaseConfig.projectId && firebaseConfig.projectId !== "YOUR_PROJECT_ID_PLACEHOLDER") {
                     await loadConversationHistory();
                 }
@@ -2403,7 +3061,6 @@ window.addEventListener('load', async () => {
                 userInput.focus();
 
             } else {
-                // console.log("Nenhum usuário logado. Tentando autenticação anônima..."); // Removido
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
