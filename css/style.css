@@ -225,7 +225,8 @@ body {
     flex-direction: column; /* Empilha cabeçalho, conteúdo e rodapé */
     border-radius: 24px; /* Bordas mais arredondadas */
     box-shadow: 0 20px 40px var(--lm-shadow-color);
-    overflow: hidden;
+    /* ALTERAÇÃO AQUI: Permitir rolagem vertical no app-wrapper */
+    overflow-y: auto;
     background-color: var(--lm-bg-app);
     border: 1px solid var(--lm-border-color);
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
@@ -1545,6 +1546,8 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         box-shadow: none;
         height: 100vh;
         max-height: none; /* Crucial: remove a altura máxima para mobile */
+        /* ALTERAÇÃO AQUI: Permitir rolagem vertical no app-wrapper em mobile */
+        overflow-y: auto;
     }
 
     /* A seção superior agora contém o cabeçalho e a área de conteúdo */
@@ -1559,7 +1562,9 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         flex-direction: column; /* Alterado para coluna para mobile */
         position: relative;
         flex-grow: 1;
-        overflow: hidden;
+        /* ALTERAÇÃO AQUI: Permitir rolagem vertical na content-area em mobile */
+        overflow-y: auto;
+        padding-top: var(--header-height); /* Adiciona padding para o cabeçalho fixo */
     }
 
     /* Sobrescreve a altura do cabeçalho para mobile */
@@ -1574,7 +1579,7 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     .conversation-history-sidebar {
         position: fixed;
         right: 0;
-        top: var(--header-height);
+        top: var(--header-height); /* Fixa abaixo do cabeçalho */
         bottom: 0;
         width: 280px;
         max-width: 80vw;
@@ -1642,7 +1647,16 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         flex-wrap: wrap; /* Permite que os itens quebrem a linha se o espaço for limitado */
         justify-content: center; /* Centraliza os itens quando quebram a linha */
         gap: 8px; /* Ajusta o espaçamento para itens quebrados */
+        position: fixed; /* Torna o cabeçalho fixo */
+        top: 0;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Adiciona uma sombra para destaque */
     }
+    html[data-theme='dark'] .chat-header {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
     .almail-logo-container {
         flex-basis: 100%; /* Faz o contêiner do logo ocupar a largura total quando quebrado */
         justify-content: center;
@@ -1746,6 +1760,7 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         overflow-y: auto; /* Adiciona scroll vertical se o conteúdo for maior que a altura */
         padding-bottom: 20px; /* Garante que o botão "Iniciar Nova Conversa" não seja cortado */
     }
+
 }
 
 /* Estilos específicos para a seção de créditos */
