@@ -10,6 +10,20 @@
     <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body class="antialiased">
+    <div class="notification-modal-overlay" id="version-info-modal-overlay">
+        <div class="notification-modal-content">
+            <h2 class="text-3xl font-bold mb-4" data-i18n="versionInfoTitle"></h2>
+            <p class="text-lg mb-6" data-i18n="versionInfoSubtitle"></p>
+
+            <div class="updates-list-container">
+                <h3 class="text-xl font-semibold mb-3" data-i18n="latestUpdatesTitle"></h3>
+                <ul class="updates-list" data-i18n="latestUpdatesContent">
+                    </ul>
+            </div>
+            <button id="version-info-use-button" class="start-button mt-8" data-i18n="versionInfoUseButton"></button>
+        </div>
+    </div>
+
     <div class="notification-modal-overlay" id="credits-modal-overlay">
         <div class="notification-modal-content">
             <button class="close-button" id="credits-close-button" aria-label="Fechar Créditos">
@@ -150,7 +164,7 @@
                     </button>
                 </div>
                 <button id="main-sidebar-toggle-button" class="control-button" aria-label="Alternar Histórico">
-                    <i data-feather="chevron-right"></i> 
+                    <i data-feather="chevron-right"></i>
                 </button>
             </div>
 
@@ -168,9 +182,9 @@
                                 <line x1="70" y1="30" x2="50" y2="70" stroke-width='4' stroke-linecap='round'/>
                             </g>
                         </svg>
-                        <h2 class="text-3xl font-bold mt-6" data-i18n="initialScreenTitle">Bem-vindo(a) à Almail Suporte IA!</h2>
-                        <p class="text-lg mt-4" data-i18n="initialScreenSubtitle">Sua assistente inteligente para otimizar o suporte no ecossistema Mercado Livre e Mercado Pago.</p>
-                        <p class="text-md mt-2 text-gray-600" data-i18n="initialScreenDescription">Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Nova Conversa" para começar a interagir com a IA.</p>
+                        <h2 class="text-3xl font-bold mt-6" data-i18n="initialScreenTitle">Almail Suporte IA!</h2>
+                        <p class="text-lg mt-4" data-i18n="initialScreenSubtitle">Sua assistente inteligente para otimizar o suporte no Ecossistema Mercado Livre e Mercado Pago.</p>
+                        <p class="text-md mt-2 text-gray-600" data-i18n="initialScreenDescription">Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Iniciar Nova Conversa" para começar a interagir com a IA.</p>
                         <button id="start-chat-button" class="start-button mt-8" data-i18n="startChatButton">Iniciar Nova Conversa</button>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
 
 > 📘 This section is in English. For the Portuguese version, scroll down to the section marked "Versão em Português".
 
-A smart and interactive web application designed to assist **Mercado Libre (MELI) ecosystem** collaborators in providing excellent customer support. It leverages **Artificial Intelligence** to offer precise and structured information, enhancing the efficiency and quality of service.
+A smart and interactive web application designed to assist **Mercado Libre (MELI) Ecosystem** collaborators in providing excellent customer support. It leverages **Artificial Intelligence** to offer precise and structured information, enhancing the efficiency and quality of service.
 
 ## 🚀 Features
 

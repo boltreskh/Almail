@@ -267,7 +267,8 @@ html[data-theme='dark'] .app-wrapper {
 .tutorial-modal-overlay,
 .confirmation-modal-overlay,
 #custom-confirm-overlay,
-#initial-data-modal-overlay {
+#initial-data-modal-overlay,
+#version-info-modal-overlay { /* NOVO: Adicionado o modal de versão */
     position: fixed;
     top: 0;
     left: 0;
@@ -286,7 +287,8 @@ html[data-theme='dark'] .notification-modal-overlay,
 html[data-theme='dark'] .tutorial-modal-overlay,
 html[data-theme='dark'] .confirmation-modal-overlay,
 html[data-theme='dark'] #custom-confirm-overlay,
-html[data-theme='dark'] #initial-data-modal-overlay {
+html[data-theme='dark'] #initial-data-modal-overlay,
+html[data-theme='dark'] #version-info-modal-overlay { /* NOVO: Adicionado o modal de versão */
     background-color: var(--dm-modal-overlay);
 }
 
@@ -294,7 +296,8 @@ html[data-theme='dark'] #initial-data-modal-overlay {
 .tutorial-modal-overlay.show,
 .confirmation-modal-overlay.show,
 #custom-confirm-overlay.show,
-#initial-data-modal-overlay.show {
+#initial-data-modal-overlay.show,
+#version-info-modal-overlay.show { /* NOVO: Adicionado o modal de versão */
     opacity: 1;
     visibility: visible;
 }
@@ -317,7 +320,8 @@ html[data-theme='dark'] #initial-data-modal-overlay {
     transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
 }
-#initial-data-modal-overlay .notification-modal-content {
+#initial-data-modal-overlay .notification-modal-content,
+#version-info-modal-overlay .notification-modal-content { /* NOVO: Adicionado o modal de versão */
     /* Não precisa de estilos específicos aqui, pois já herda de .notification-modal-content */
 }
 
@@ -325,7 +329,8 @@ html[data-theme='dark'] .notification-modal-content,
 html[data-theme='dark'] .tutorial-modal-content,
 html[data-theme='dark'] .confirmation-modal-content,
 html[data-theme='dark'] #custom-confirm-content,
-html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content {
+html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content,
+html[data-theme='dark'] #version-info-modal-overlay .notification-modal-content { /* NOVO: Adicionado o modal de versão */
     background-color: var(--dm-modal-bg);
     color: var(--dm-modal-text-color);
     box-shadow: 0 15px 30px var(--dm-modal-shadow);
@@ -335,7 +340,8 @@ html[data-theme='dark'] #initial-data-modal-overlay .notification-modal-content 
 .tutorial-modal-overlay.show .tutorial-modal-content,
 .confirmation-modal-overlay.show .confirmation-modal-content,
 #custom-confirm-overlay.show #custom-confirm-content,
-#initial-data-modal-overlay.show .notification-modal-content {
+#initial-data-modal-overlay.show .notification-modal-content,
+#version-info-modal-overlay.show .notification-modal-content { /* NOVO: Adicionado o modal de versão */
     transform: scale(1);
     opacity: 1;
 }
@@ -1726,7 +1732,8 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     .notification-modal-content,
     .tutorial-modal-content,
     .confirmation-modal-content,
-    #initial-data-modal-overlay .notification-modal-content {
+    #initial-data-modal-overlay .notification-modal-content,
+    #version-info-modal-overlay .notification-modal-content { /* NOVO: Adicionado o modal de versão */
         padding: 1.5rem;
         padding-top: 2.5rem;
         padding-right: 2.5rem;
@@ -1802,4 +1809,36 @@ html[data-theme='dark'] .credits-list li:hover {
 #credits-modal-overlay p.text-lg {
     font-size: 1.2rem;
     margin-bottom: 25px;
+}
+
+/* NOVO: Estilos para o Modal de Versão e Atualizações */
+.updates-list-container {
+    max-height: 250px; /* Altura máxima para a lista de atualizações */
+    overflow-y: auto; /* Adiciona scroll se o conteúdo exceder a altura */
+    text-align: left;
+    padding-right: 10px; /* Espaçamento para a barra de rolagem */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.updates-list li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: var(--lm-text-secondary);
+}
+html[data-theme='dark'] .updates-list li {
+    color: var(--dm-text-secondary);
+}
+
+.updates-list strong {
+    color: var(--lm-accent-primary);
+}
+html[data-theme='dark'] .updates-list strong {
+    color: var(--dm-accent-primary);
 }

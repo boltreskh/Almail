@@ -43,17 +43,21 @@ let auth;
 let userId = null; // ID do usuário autenticado ou anônimo
 let isAuthReady = false; // Flag para indicar que a autenticação foi concluída
 
+// NOVO: Elementos do DOM para o modal de versão e atualizações
+const versionInfoModalOverlay = document.getElementById('version-info-modal-overlay');
+const versionInfoUseButton = document.getElementById('version-info-use-button');
+
 // Elementos do DOM
-const creditsModalOverlay = document.getElementById('credits-modal-overlay'); // NOVO: Modal de créditos
-const creditsCloseButton = document.getElementById('credits-close-button'); // NOVO: Botão de fechar do modal de créditos
-const creditsOkButton = document.getElementById('credits-ok-button'); // NOVO: Botão "Entendi" do modal de créditos
+const creditsModalOverlay = document.getElementById('credits-modal-overlay');
+const creditsCloseButton = document.getElementById('credits-close-button');
+const creditsOkButton = document.getElementById('credits-ok-button');
 
 // Novos elementos para o modal de dados iniciais
 const initialDataModalOverlay = document.getElementById('initial-data-modal-overlay');
 const collaboratorNameInput = document.getElementById('collaborator-name-input');
 const clientNameInput = document.getElementById('client-name-input');
 const serviceChannelSelect = document.getElementById('service-channel-select');
-const ecosystemSelect = document.getElementById('ecosystem-select'); // NOVO: Elemento de seleção de Ecossistema
+const ecosystemSelect = document.getElementById('ecosystem-select');
 const initialDataConfirmButton = document.getElementById('initial-data-confirm-button');
 const initialDataCloseButton = document.getElementById('initial-data-close-button');
 
@@ -110,7 +114,7 @@ let collaboratorName = null;
 // Nova variável para armazenar o canal de atendimento
 let serviceChannel = null;
 // Nova variável para armazenar o Ecossistema de atendimento
-let ecosystem = null; // NOVO
+let ecosystem = null;
 
 // Variável para armazenar o idioma atual e o idioma pendente de confirmação
 let currentLanguage = 'pt-BR'; // Padrão
@@ -126,6 +130,17 @@ let isSidebarVisible = false;
 const translations = {
     'pt-BR': {
         appTitle: 'Almail Suporte IA - Ecossistema MELI',
+        // NOVO: Traduções para o modal de versão e atualizações
+        versionInfoTitle: 'Bem-vindo(a) à Almail Suporte IA!',
+        versionInfoSubtitle: 'Versão: Beta 1.3.0',
+        latestUpdatesTitle: 'Últimas Atualizações:',
+        latestUpdatesContent: `
+            <li><strong>Acessibilidade & UX Aprimoradas:</strong> Melhoramos a navegação por teclado, aprimoramos os tooltips e otimizamos o foco para garantir uma experiência mais inclusiva e fluida para todos os usuários.</li>
+            <li><strong>Performance Otimizada:</strong> A inteligência artificial agora opera com maior agilidade e proficiência, proporcionando respostas mais rápidas e eficientes.</li>
+            <li><strong>Seleção de Ecossistema:</strong> Introduzimos a funcionalidade de escolha do ecossistema (Mercado Livre ou Mercado Pago), permitindo que a IA adapte suas respostas e sugestões de forma mais precisa às necessidades específicas da sua interação.</li>
+            <li><strong>Segurança Reforçada:</strong> Mantemos nosso compromisso com a sua privacidade e segurança. Nenhuns dados sensíveis do Mercado Livre ou Mercado Pago são armazenados ou processados pela IA, garantindo a confidencialidade das suas informações.</li>
+        `,
+        versionInfoUseButton: 'Utilizar',
         creditsModalTitle: 'Créditos',
         creditsModalSubtitle: 'Uma ferramenta de suporte inteligente para o time de Mercado Livre e Mercado Pago.',
         creditsModalDescription: `
@@ -153,9 +168,9 @@ const translations = {
         channelChat: 'Chat',
         channelEmail: 'Email',
         channelC2C: 'C2C (Voz)',
-        ecosystemLabel: 'Ecossistema:', // NOVO
-        ecosystemMercadoLivre: 'Mercado Livre', // NOVO
-        ecosystemMercadoPago: 'Mercado Pago', // NOVO
+        ecosystemLabel: 'Ecossistema:',
+        ecosystemMercadoLivre: 'Mercado Livre',
+        ecosystemMercadoPago: 'Mercado Pago',
         initialDataConfirmButton: 'Confirmar',
 
         tutorialModalTitle: 'Guia Rápido: Almail Suporte IA',
@@ -173,7 +188,7 @@ const translations = {
         themeToggleButtonAria: 'Alternar Tema',
         homeButtonAria: 'Voltar para o Início',
         typingIndicator: 'Almail está digitando...',
-        thinkingMessage: 'Almail está analisando a sua pergunta...', // NOVO: Mensagem de "pensando"
+        thinkingMessage: 'Almail está analisando a sua pergunta...',
         inputPlaceholder: 'Pergunte à Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
@@ -260,15 +275,26 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         likeFeedback: 'Que ótimo que a resposta foi útil! Continuarei aprimorando para melhor te atender.',
         dislikeFeedback: 'Agradeço seu feedback! Estou aprendendo e vou tentar gerar uma resposta mais útil, estruturada e personalizada para você.',
         dislikePrompt: `A resposta anterior não foi satisfatória. Por favor, gere uma nova resposta mais útil, com melhor argumentação e estruturação de texto, e personalize-a para o cliente se o nome dele estiver disponível. Lembre-se de me ajudar a resolver o problema do problema do cliente.`,
-        initialScreenTitle: 'Bem-vindo(a) à Almail Suporte IA!',
-        initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no ecossistema Mercado Livre e Mercado Pago.',
-        initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Nova Conversa" para começar a interagir com a IA.',
+        initialScreenTitle: 'Almail Suporte IA!', // Título alterado aqui
+        initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no Ecossistema Mercado Livre e Mercado Pago.',
+        initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Iniciar Nova Conversa" para começar a interagir com a IA.',
         startChatButton: 'Iniciar Nova Conversa',
         collaboratorNameRequired: 'Por favor, informe seu nome.',
         clientNameRequired: 'Por favor, informe o nome do cliente.',
     },
     'en': {
         appTitle: 'Almail AI Support - MELI Ecosystem',
+        // NOVO: Traduções para o modal de versão e atualizações
+        versionInfoTitle: 'Welcome to Almail AI Support!',
+        versionInfoSubtitle: 'Version: Beta 1.3.0',
+        latestUpdatesTitle: 'Latest Updates:',
+        latestUpdatesContent: `
+            <li><strong>Enhanced Accessibility & UX:</strong> We've improved keyboard navigation, refined tooltips, and optimized focus for a more inclusive and fluid experience for all users.</li>
+            <li><strong>Optimized Performance:</strong> The artificial intelligence now operates with greater agility and proficiency, providing faster and more efficient responses.</li>
+            <li><strong>Ecosystem Selection:</strong> We've introduced the functionality to choose the ecosystem (Mercado Libre or Mercado Pago), allowing the AI to adapt its responses and suggestions more precisely to the specific needs of your interaction.</li>
+            <li><strong>Reinforced Security:</strong> We maintain our commitment to your privacy and security. No sensitive Mercado Libre or Mercado Pago data is stored or processed by the AI, ensuring the confidentiality of your information.</li>
+        `,
+        versionInfoUseButton: 'Use Application',
         creditsModalTitle: 'Credits',
         creditsModalSubtitle: 'An intelligent support tool for the Mercado Livre and Mercado Pago team.',
         creditsModalDescription: `
@@ -296,9 +322,9 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         channelChat: 'Chat',
         channelEmail: 'Email',
         channelC2C: 'C2C (Voice)',
-        ecosystemLabel: 'Ecosystem:', // NOVO
-        ecosystemMercadoLivre: 'Mercado Libre', // NOVO - Correção aqui
-        ecosystemMercadoPago: 'Mercado Pago', // NOVO
+        ecosystemLabel: 'Ecosystem:',
+        ecosystemMercadoLivre: 'Mercado Libre',
+        ecosystemMercadoPago: 'Mercado Pago',
         initialDataConfirmButton: 'Confirm',
 
         tutorialModalTitle: 'Quick Guide: Almail AI Support',
@@ -316,7 +342,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         themeToggleButtonAria: 'Toggle Theme',
         homeButtonAria: 'Back to Home',
         typingIndicator: 'Almail is typing...',
-        thinkingMessage: 'Almail is analyzing your question...', // NEW
+        thinkingMessage: 'Almail is analyzing your question...',
         inputPlaceholder: 'Ask Almail...',
         sendButtonAria: 'Send Message',
         footerCopyright: '© 2025 Almail AI Support. All rights reserved.',
@@ -403,15 +429,26 @@ You should act as a **support agent for the collaborator**, providing accurate a
         likeFeedback: 'Great that the answer was helpful! I will continue to improve to better serve you.',
         dislikeFeedback: 'Thank you for your feedback! I am learning and will try to generate a more useful, structured, and personalized response for you.',
         dislikePrompt: `The previous response was not satisfactory. Please generate a new, more useful response, with better argumentation and text structuring, and personalize it for the customer if their name is available. Remember to help me solve the customer's problem.`,
-        initialScreenTitle: 'Welcome to Almail AI Support!',
-        initialScreenSubtitle: 'Your intelligent assistant to optimize support for the Mercado Livre and Mercado Pago team.',
-        initialScreenDescription: 'Here you can get quick and accurate information on various topics related to Mercado Livre and Mercado Pago. Click "New Chat" to start interacting with the AI.',
+        initialScreenTitle: 'Almail AI Support!',
+        initialScreenSubtitle: 'Your smart assistant to optimize support in the Mercado Livre and Mercado Pago Ecosystem.',
+        initialScreenDescription: 'Here you can get quick and accurate information on various topics related to Mercado Livre and Mercado Pago. Click "Start New Chat" to start interacting with the AI.',
         startChatButton: 'Start New Chat',
         collaboratorNameRequired: 'Please enter your name.',
         clientNameRequired: 'Please enter the client\'s name.',
     },
     'es': {
         appTitle: 'Almail Soporte IA - Ecosistema MELI',
+        // NOVO: Traduções para o modal de versão e atualizações
+        versionInfoTitle: '¡Bienvenido(a) a Almail Soporte IA!',
+        versionInfoSubtitle: 'Versión: Beta 1.3.0',
+        latestUpdatesTitle: 'Últimas Actualizaciones:',
+        latestUpdatesContent: `
+            <li><strong>Accesibilidad y UX Mejoradas:</strong> Hemos mejorado la navegación por teclado, refinado las descripciones emergentes y optimizado el enfoque para garantizar una experiencia más inclusiva y fluida para todos los usuarios.</li>
+            <li><strong>Rendimiento Optimizado:</strong> La inteligencia artificial ahora opera con mayor agilidad y competencia, proporcionando respuestas más rápidas y eficientes.</li>
+            <li><strong>Selección de Ecosistema:</strong> Hemos introducido la funcionalidad de elección del ecosistema (Mercado Libre o Mercado Pago), permitiendo que la IA adapte sus respuestas y sugerencias de manera más precisa a las necesidades específicas de tu interacción.</li>
+            <li><strong>Seguridad Reforzada:</strong> Mantenemos nuestro compromiso con tu privacidad y seguridad. Ningún dato sensible de Mercado Libre o Mercado Pago es almacenado o procesado por la IA, garantizando la confidencialidad de tu información.</li>
+        `,
+        versionInfoUseButton: 'Usar Aplicación',
         creditsModalTitle: 'Créditos',
         creditsModalSubtitle: 'Una herramienta de soporte inteligente para el equipo de Mercado Libre y Mercado Pago.',
         creditsModalDescription: `
@@ -440,9 +477,9 @@ You should act as a **support agent for the collaborator**, providing accurate a
         channelChat: 'Chat',
         channelEmail: 'Correo Electrónico',
         channelC2C: 'C2C (Voz)',
-        ecosystemLabel: 'Ecosistema:', // NOVO
-        ecosystemMercadoLivre: 'Mercado Libre', // NOVO - Correção aqui
-        ecosystemMercadoPago: 'Mercado Pago', // NOVO
+        ecosystemLabel: 'Ecosistema:',
+        ecosystemMercadoLivre: 'Mercado Libre',
+        ecosystemMercadoPago: 'Mercado Pago',
         initialDataConfirmButton: 'Confirmar',
 
         tutorialModalTitle: 'Guía Rápida: Almail Soporte IA',
@@ -460,7 +497,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         themeToggleButtonAria: 'Alternar Tema',
         homeButtonAria: 'Volver al Inicio',
         typingIndicator: 'Almail está escribiendo...',
-        thinkingMessage: 'Almail está analizando tu pregunta...', // NEW
+        thinkingMessage: 'Almail está analizando tu pregunta...',
         inputPlaceholder: 'Pregunta a Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Soporte IA. Todos los derechos reservados.',
@@ -547,10 +584,10 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
         likeFeedback: '¡Qué bien que la respuesta fue útil! Seguiré mejorando para atenderte mejor.',
         dislikeFeedback: '¡Agradezco tus comentarios! Estoy aprendiendo e intentaré generar una respuesta más útil, estructurada y personalizada para ti.',
         dislikePrompt: `La respuesta anterior no fue satisfactoria. Por favor, genera una nueva respuesta más útil, con mejor argumentación y estructuración de texto, y personalízala para el cliente si su nombre está disponible. Recuerda ayudarme a resolver el problema del cliente.`,
-        initialScreenTitle: '¡Bienvenido(a) a Almail Soporte IA!',
-        initialScreenSubtitle: 'Tu asistente inteligente para optimizar el soporte para el equipo de Mercado Libre y Mercado Pago.',
-        initialScreenDescription: 'Aquí puedes obtener información rápida y precisa sobre diversos temas relacionados con Mercado Libre y Mercado Pago. Haz clic en "Nueva Conversación" para comenzar a interactuar con la IA.',
-        startChatButton: 'Iniciar Nueva Conversação',
+        initialScreenTitle: 'Almail Soporte IA!',
+        initialScreenSubtitle: 'Tu asistente inteligente para optimizar la atención en el Ecosistema de Mercado Libre y Mercado Pago.',
+        initialScreenDescription: 'Aquí puedes obtener información rápida y precisa sobre diversos temas relacionados con Mercado Libre y Mercado Pago. Haz clic en "Iniciar Nueva Conversación" para comenzar a interactuar con la IA.',
+        startChatButton: 'Iniciar Nueva Conversación',
         collaboratorNameRequired: 'Por favor, introduce tu nombre.',
         clientNameRequired: 'Por favor, introduce el nombre del cliente.',
     }
@@ -570,6 +607,8 @@ function setLanguage(lang) {
 
     currentLanguage = lang;
     document.documentElement.setAttribute('lang', lang);
+    // Salva a preferência de idioma no localStorage
+    localStorage.setItem('preferredLanguage', lang);
 
     // Atualiza o texto do botão de idioma
     currentLanguageText.textContent = lang.substring(0, 2).toUpperCase();
@@ -585,7 +624,7 @@ function setLanguage(lang) {
                 element.setAttribute('placeholder', translations[lang][key]);
             } else if (element.hasAttribute('aria-label')) {
                 element.setAttribute('aria-label', translations[lang][key]);
-            } else if (element.classList.contains('credits-list')) {
+            } else if (element.classList.contains('credits-list') || element.classList.contains('updates-list')) { // NOVO: Adicionado .updates-list
                 element.innerHTML = translations[lang][key];
             } else {
                 element.textContent = translations[lang][key];
@@ -729,19 +768,6 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
 function typeMessage(text, addFeedbackButtons = false) {
     loadingIndicator.style.display = 'flex';
     loadingIndicator.classList.add('show');
-    // userInput.disabled = true; // Movido para sendMessage
-    // sendButton.disabled = true; // Movido para sendMessage
-    // userInput.classList.add('disabled'); // Movido para sendMessage
-    // sendButton.classList.add('disabled'); // Movido para sendMessage
-    // historyList.classList.add('disabled'); // Movido para sendMessage
-
-    // languageToggleButton.disabled = true; // Movido para sendMessage
-    // languageToggleButton.classList.add('disabled'); // Movido para sendMessage
-    // homeButton.disabled = true; // Movido para sendMessage
-    // homeButton.classList.add('disabled'); // Movido para sendMessage
-    // creditsButton.disabled = true; // Desabilita o botão de créditos - REMOVIDO
-    // creditsButton.classList.add('disabled'); // Adiciona a classe disabled - REMOVIDO
-
 
     const messageBubble = document.createElement('div');
     messageBubble.classList.add('message-bubble', 'ai-message');
@@ -769,8 +795,6 @@ function typeMessage(text, addFeedbackButtons = false) {
             languageToggleButton.classList.remove('disabled');
             homeButton.disabled = false;
             homeButton.classList.remove('disabled');
-            // creditsButton.disabled = false; // Habilita o botão de créditos - REMOVIDO
-            // creditsButton.classList.remove('disabled'); // Remove a classe disabled - REMOVIDO
             return;
         }
 
@@ -794,8 +818,6 @@ function typeMessage(text, addFeedbackButtons = false) {
             languageToggleButton.classList.remove('disabled');
             homeButton.disabled = false;
             homeButton.classList.remove('disabled');
-            // creditsButton.disabled = false; // Habilita o botão de créditos - REMOVIDO
-            // creditsButton.classList.remove('disabled'); // Remove a classe disabled - REMOVIDO
 
             if (chatAndInputArea.classList.contains('show')) {
                  userInput.focus();
@@ -875,7 +897,7 @@ async function saveConversation(title) {
             collaboratorName: collaboratorName || "Não Informado",
             clientName: currentClientName || "Não Informado",
             serviceChannel: serviceChannel || "Não Informado",
-            ecosystem: ecosystem || "Não Informado" // NOVO: Salva o Ecossistema
+            ecosystem: ecosystem || "Não Informado"
         });
         // console.log("Conversa salva com sucesso!"); // Removido
         loadConversationHistory();
@@ -911,7 +933,7 @@ async function loadConversation(conversationId) {
     currentClientName = null;
     collaboratorName = null;
     serviceChannel = null;
-    ecosystem = null; // NOVO: Reseta o Ecossistema
+    ecosystem = null;
 
     userInput.value = '';
     userInput.style.height = 'auto';
@@ -936,7 +958,7 @@ async function loadConversation(conversationId) {
             collaboratorName = data.collaboratorName || null;
             currentClientName = data.clientName || null;
             serviceChannel = data.serviceChannel || null;
-            ecosystem = data.ecosystem || null; // NOVO: Carrega o Ecossistema
+            ecosystem = data.ecosystem || null;
 
             chatHistory.forEach((msg, index) => {
                 const addFeedback = (msg.role === 'assistant' && index === chatHistory.length - 1);
@@ -987,7 +1009,7 @@ async function startNewConversation() {
     currentClientName = null;
     collaboratorName = null;
     serviceChannel = null;
-    ecosystem = null; // NOVO: Reseta o Ecossistema
+    ecosystem = null;
     currentConversationId = null;
     initialUserMessage = null;
 
@@ -1061,7 +1083,7 @@ function showInitialDataModal() {
     collaboratorNameInput.value = '';
     clientNameInput.value = '';
     serviceChannelSelect.value = 'chat';
-    ecosystemSelect.value = 'mercadoLivre'; // NOVO: Define um valor padrão para o Ecossistema
+    ecosystemSelect.value = 'mercadoLivre';
     setLanguage(currentLanguage);
     initialDataModalOverlay.classList.add('show');
     collaboratorNameInput.focus();
@@ -1095,6 +1117,23 @@ function showCreditsModal() {
 // NOVO: Função para esconder o modal de créditos
 function hideCreditsModal() {
     creditsModalOverlay.classList.remove('show');
+}
+
+// NOVO: Função para mostrar o modal de informações de versão e atualizações
+function showVersionInfoModal() {
+    // Preenche o conteúdo do modal com as traduções
+    document.querySelector('#version-info-modal-overlay h2').textContent = translations[currentLanguage].versionInfoTitle;
+    document.querySelector('#version-info-modal-overlay p').textContent = translations[currentLanguage].versionInfoSubtitle;
+    document.querySelector('#version-info-modal-overlay h3').textContent = translations[currentLanguage].latestUpdatesTitle;
+    document.querySelector('.updates-list').innerHTML = translations[currentLanguage].latestUpdatesContent;
+    document.querySelector('#version-info-use-button').textContent = translations[currentLanguage].versionInfoUseButton;
+
+    versionInfoModalOverlay.classList.add('show');
+}
+
+// NOVO: Função para esconder o modal de informações de versão e atualizações
+function hideVersionInfoModal() {
+    versionInfoModalOverlay.classList.remove('show');
 }
 
 
@@ -1215,7 +1254,7 @@ async function sendMessage(isRegeneration = false) {
         systemInstructions = systemInstructions.replace('{COLLABORATOR_NAME}', collaboratorName || "Não Informado");
         systemInstructions = systemInstructions.replace('{CLIENT_NAME}', currentClientName);
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL}', serviceChannel || "Não Informado");
-        systemInstructions = systemInstructions.replace('{ECOSYSTEM}', ecosystem || "Não Informado"); // NOVO: Adiciona o Ecossistema às instruções
+        systemInstructions = systemInstructions.replace('{ECOSYSTEM}', ecosystem || "Não Informado");
 
         let channelSpecificInstructions = '';
         if (serviceChannel === 'email') {
@@ -1296,7 +1335,7 @@ async function sendMessage(isRegeneration = false) {
 `;
         }
 
-        let ecosystemSpecificInstructions = ''; // NOVO: Bloco de instruções específicas do Ecossistema
+        let ecosystemSpecificInstructions = '';
         if (ecosystem === 'mercadoLivre') {
             ecosystemSpecificInstructions = `
 * **Foco no Mercado Livre:** Priorize informações e procedimentos relacionados a vendas, compras, anúncios, reputação, envios (Mercado Envios) e problemas gerais da plataforma Mercado Livre.
@@ -1312,7 +1351,7 @@ async function sendMessage(isRegeneration = false) {
         }
 
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL_INSTRUCTIONS}', channelSpecificInstructions);
-        systemInstructions = systemInstructions.replace('{ECOSYSTEM_INSTRUCTIONS}', ecosystemSpecificInstructions); // NOVO: Adiciona as instruções do Ecossistema
+        systemInstructions = systemInstructions.replace('{ECOSYSTEM_INSTRUCTIONS}', ecosystemSpecificInstructions);
 
         const contentsToSend = [
             { role: "user", parts: [{ text: systemInstructions }] },
@@ -1376,7 +1415,7 @@ async function sendMessage(isRegeneration = false) {
                     collaboratorName: collaboratorName || "Não Informado",
                     clientName: currentClientName || "Não Informado",
                     serviceChannel: serviceChannel || "Não Informado",
-                    ecosystem: ecosystem || "Não Informado" // NOVO: Salva o Ecossistema
+                    ecosystem: ecosystem || "Não Informado"
                 });
                 currentConversationId = newDocRef.id;
                 loadConversationHistory();
@@ -1710,6 +1749,13 @@ creditsCloseButton.addEventListener('click', () => {
 // NOVO: Listener para o botão de créditos no cabeçalho
 creditsButton.addEventListener('click', showCreditsModal);
 
+// NOVO: Listener para o botão "Utilizar" do modal de versão
+versionInfoUseButton.addEventListener('click', () => {
+    hideVersionInfoModal();
+    // A linha abaixo foi removida para que o modal de dados iniciais não seja aberto automaticamente
+    // showInitialDataModal();
+});
+
 
 // NOVO: Listeners para os inputs do modal de dados iniciais para habilitar/desabilitar o botão
 collaboratorNameInput.addEventListener('input', checkInitialDataInputs);
@@ -1720,7 +1766,7 @@ initialDataConfirmButton.addEventListener('click', () => {
     collaboratorName = collaboratorNameInput.value.trim();
     currentClientName = clientNameInput.value.trim();
     serviceChannel = serviceChannelSelect.value;
-    ecosystem = ecosystemSelect.value; // NOVO: Captura o valor do Ecossistema
+    ecosystem = ecosystemSelect.value;
 
     if (!collaboratorName) {
         collaboratorNameInput.classList.add('input-error');
@@ -1774,7 +1820,7 @@ initialDataConfirmButton.addEventListener('click', () => {
 
     let serviceChannelDisplay = "";
     let finalHelpPhrase = "";
-    let ecosystemDisplay = ""; // NOVO
+    let ecosystemDisplay = "";
 
     if (currentLanguage === 'pt-BR') {
         switch (serviceChannel) {
@@ -1790,7 +1836,7 @@ initialDataConfirmButton.addEventListener('click', () => {
             default:
                 serviceChannelDisplay = 'um canal de atendimento';
         }
-        switch (ecosystem) { // NOVO
+        switch (ecosystem) {
             case 'mercadoLivre':
                 ecosystemDisplay = 'Mercado Livre';
                 finalHelpPhrase = `Estou aqui para te ajudar com agilidade nas suas dúvidas e resolver os problemas de ${clientNameAdapted} no **Mercado Livre**. Como posso te auxiliar hoje?`;
@@ -1817,7 +1863,7 @@ initialDataConfirmButton.addEventListener('click', () => {
             default:
                 serviceChannelDisplay = 'a service channel';
         }
-        switch (ecosystem) { // NOVO
+        switch (ecosystem) {
             case 'mercadoLivre':
                 ecosystemDisplay = 'Mercado Libre';
                 finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} on **Mercado Libre**. How can I assist you today?`;
@@ -1827,7 +1873,7 @@ initialDataConfirmButton.addEventListener('click', () => {
                 finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} on **Mercado Pago**. How can I assist you today?`;
                 break;
             default:
-                ecosystemDisplay = 'MELI ecosystem';
+                ecosystemDisplay = 'MELI Ecosystem';
                 finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} in the **Mercado Libre and Mercado Pago Ecosystem**. How can I assist you today?`;
         }
     } else if (currentLanguage === 'es') {
@@ -1844,7 +1890,7 @@ initialDataConfirmButton.addEventListener('click', () => {
             default:
                 serviceChannelDisplay = 'un canal de atención';
         }
-        switch (ecosystem) { // NOVO
+        switch (ecosystem) {
             case 'mercadoLivre':
                 ecosystemDisplay = 'Mercado Libre';
                 finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en **Mercado Libre**. ¿Cómo puedo asistirte hoy?`;
@@ -1853,8 +1899,9 @@ initialDataConfirmButton.addEventListener('click', () => {
                 ecosystemDisplay = 'Mercado Pago';
                 finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en **Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
                 break;
+                break;
             default:
-                ecosystemDisplay = 'ecosistema MELI';
+                ecosystemDisplay = 'Ecosistema MELI';
                 finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en el **Ecosistema Mercado Libre y Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
         }
     }
@@ -1940,9 +1987,8 @@ homeButton.addEventListener('click', showInitialScreen);
 window.addEventListener('load', async () => {
     userInput.style.height = 'auto';
     userInput.style.height = userInput.scrollHeight + 'px';
-    // O modal de créditos inicial foi removido. A aplicação agora começa na tela inicial.
-    // notificationModalOverlay.classList.add('show');
 
+    // Carrega a preferência de idioma do localStorage
     const storedLanguage = localStorage.getItem('preferredLanguage') || 'pt-BR';
     setLanguage(storedLanguage);
 
@@ -1971,6 +2017,9 @@ window.addEventListener('load', async () => {
     conversationHistorySidebar.classList.add('hidden');
     mainSidebarToggleButton.innerHTML = '<i data-feather="chevron-right"></i>';
     feather.replace();
+
+    // NOVO: Exibe o modal de informações de versão ao carregar a página
+    showVersionInfoModal();
 
 
     try {
