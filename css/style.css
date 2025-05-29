@@ -252,6 +252,7 @@ html[data-theme='dark'] .app-wrapper {
     overflow: hidden; /* Garante que as mensagens e input não causem overflow */
 }
 
+
 /* Área do chat e input */
 .chat-and-input-area {
     display: flex;
@@ -1529,16 +1530,18 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
 @media (max-width: 768px) {
     body {
         padding: 0;
+        /* Garante que o corpo seja rolável se o conteúdo transbordar */
+        overflow-y: auto;
     }
     .app-wrapper {
         border-radius: 0;
         border: none;
         box-shadow: none;
         height: 100vh;
-        max-height: 100vh;
+        max-height: none; /* Crucial: remove a altura máxima para mobile */
     }
 
-    /* Top section agora contém header e content-area */
+    /* A seção superior agora contém o cabeçalho e a área de conteúdo */
     .top-section {
         flex-direction: column;
         flex-shrink: 0;
@@ -1547,18 +1550,18 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     }
 
     .content-area {
-        flex-direction: row;
+        flex-direction: column; /* Alterado para coluna para mobile */
         position: relative;
         flex-grow: 1;
         overflow: hidden;
     }
 
-    /* Override header height for mobile */
+    /* Sobrescreve a altura do cabeçalho para mobile */
     :root {
-        --header-height: 70px;
+        --header-height: 130px; /* Aumentado para acomodar conteúdo quebrado */
     }
     html[data-theme='dark'] {
-        --header-height: 70px;
+        --header-height: 130px; /* Aumentado para acomodar conteúdo quebrado */
     }
 
     /* Sidebar responsiva - sempre à direita e sobrepondo */
@@ -1620,7 +1623,7 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     /* Ajustes para o chat-and-input-area em mobile */
     .chat-and-input-area {
         flex-grow: 1;
-        width: 100%;
+        width: 100%; /* Garante que ocupe a largura total */
         position: relative;
         z-index: 5;
     }
@@ -1629,7 +1632,15 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     .chat-header {
         padding: 12px 16px;
         min-height: var(--header-height);
-        z-index: 101;
+        z-index: 101; /* Mais alto que a sidebar */
+        flex-wrap: wrap; /* Permite que os itens quebrem a linha se o espaço for limitado */
+        justify-content: center; /* Centraliza os itens quando quebram a linha */
+        gap: 8px; /* Ajusta o espaçamento para itens quebrados */
+    }
+    .almail-logo-container {
+        flex-basis: 100%; /* Faz o contêiner do logo ocupar a largura total quando quebrado */
+        justify-content: center;
+        margin-bottom: 8px; /* Adiciona um espaço abaixo do logo */
     }
     .almail-logo-container svg {
         width: 36px;
@@ -1637,6 +1648,11 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
     }
     .header-subtitle {
         display: none;
+    }
+    .header-controls {
+        flex-wrap: wrap; /* Permite que os controles quebrem a linha */
+        justify-content: center; /* Centraliza os controles quando quebram a linha */
+        width: 100%; /* Ocupa a largura total para quebrar a linha */
     }
     .control-button {
         width: 40px;
@@ -1647,27 +1663,31 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         height: 20px;
     }
     /* Aprimoramento para o botão de alternância do histórico em mobile */
-    #main-sidebar-toggle-button { /* Target the specific button */
+    #main-sidebar-toggle-button {
         background-color: var(--lm-accent-primary);
         color: var(--lm-button-text);
         border-color: var(--lm-accent-primary);
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        position: absolute; /* Posiciona-o absolutamente dentro do cabeçalho */
+        right: 16px; /* Alinha à direita */
+        top: 50%; /* Centraliza verticalmente */
+        transform: translateY(-50%); /* Ajusta para centralização vertical */
     }
-    html[data-theme='dark'] #main-sidebar-toggle-button { /* Target the specific button */
+    html[data-theme='dark'] #main-sidebar-toggle-button {
         background-color: var(--dm-accent-primary);
         color: var(--dm-button-text);
         border-color: var(--dm-accent-primary);
         box-shadow: 0 2px 5px rgba(0,0,0,0.4);
     }
-    #main-sidebar-toggle-button:hover:not(:disabled) { /* Target the specific button */
+    #main-sidebar-toggle-button:hover:not(:disabled) {
         background-color: var(--lm-accent-secondary);
         border-color: var(--lm-accent-secondary);
-        transform: translateY(-1px);
+        transform: translateY(-50%) scale(1.05); /* Ajusta a transformação para o hover */
     }
-    html[data-theme='dark'] #main-sidebar-toggle-button:hover:not(:disabled) { /* Target the specific button */
+    html[data-theme='dark'] #main-sidebar-toggle-button:hover:not(:disabled) {
         background-color: var(--dm-accent-secondary);
         border-color: var(--dm-accent-secondary);
-        transform: translateY(-1px);
+        transform: translateY(-50%) scale(1.05); /* Ajusta a transformação para o hover */
     }
 
     .chat-messages {
@@ -1711,6 +1731,13 @@ html[data-theme='dark'] .cancel-button:hover:not(:disabled) {
         padding-top: 2.5rem;
         padding-right: 2.5rem;
         width: 95%;
+    }
+
+    /* NOVO: Ajustes para a tela inicial em mobile */
+    .initial-screen-content {
+        max-height: 100%; /* Permite que o conteúdo ocupe a altura total disponível */
+        overflow-y: auto; /* Adiciona scroll vertical se o conteúdo for maior que a altura */
+        padding-bottom: 20px; /* Garante que o botão "Iniciar Nova Conversa" não seja cortado */
     }
 }
 

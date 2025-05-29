@@ -173,6 +173,7 @@ const translations = {
         themeToggleButtonAria: 'Alternar Tema',
         homeButtonAria: 'Voltar para o Início',
         typingIndicator: 'Almail está digitando...',
+        thinkingMessage: 'Almail está analisando a sua pergunta...', // NOVO: Mensagem de "pensando"
         inputPlaceholder: 'Pergunte à Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Suporte IA. Todos os direitos reservados.',
@@ -260,7 +261,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         dislikeFeedback: 'Agradeço seu feedback! Estou aprendendo e vou tentar gerar uma resposta mais útil, estruturada e personalizada para você.',
         dislikePrompt: `A resposta anterior não foi satisfatória. Por favor, gere uma nova resposta mais útil, com melhor argumentação e estruturação de texto, e personalize-a para o cliente se o nome dele estiver disponível. Lembre-se de me ajudar a resolver o problema do problema do cliente.`,
         initialScreenTitle: 'Bem-vindo(a) à Almail Suporte IA!',
-        initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no Ecossistema Mercado Livre e Mercado Pago.',
+        initialScreenSubtitle: 'Sua assistente inteligente para otimizar o suporte no ecossistema Mercado Livre e Mercado Pago.',
         initialScreenDescription: 'Aqui você pode obter informações rápidas e precisas sobre diversos tópicos relacionados ao Mercado Livre e Mercado Pago. Clique em "Nova Conversa" para começar a interagir com a IA.',
         startChatButton: 'Iniciar Nova Conversa',
         collaboratorNameRequired: 'Por favor, informe seu nome.',
@@ -296,7 +297,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         channelEmail: 'Email',
         channelC2C: 'C2C (Voice)',
         ecosystemLabel: 'Ecosystem:', // NOVO
-        ecosystemMercadoLivre: 'Mercado Livre', // NOVO
+        ecosystemMercadoLivre: 'Mercado Libre', // NOVO - Correção aqui
         ecosystemMercadoPago: 'Mercado Pago', // NOVO
         initialDataConfirmButton: 'Confirm',
 
@@ -315,6 +316,7 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         themeToggleButtonAria: 'Toggle Theme',
         homeButtonAria: 'Back to Home',
         typingIndicator: 'Almail is typing...',
+        thinkingMessage: 'Almail is analyzing your question...', // NEW
         inputPlaceholder: 'Ask Almail...',
         sendButtonAria: 'Send Message',
         footerCopyright: '© 2025 Almail AI Support. All rights reserved.',
@@ -420,6 +422,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoyo y Colaboración:</strong></li>
                 <li class="mb-1">Equipo de Mercado Libre y Mercado Pago (Concentrix)</li>
+                <li class="mb-1">Mercado Livre and Mercado Pago Team (Concentrix)</li>
                 <li class="mb-2 mt-3"><strong>Enlaces:</strong></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositorio del Proyecto</a></li>
@@ -438,7 +441,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         channelEmail: 'Correo Electrónico',
         channelC2C: 'C2C (Voz)',
         ecosystemLabel: 'Ecosistema:', // NOVO
-        ecosystemMercadoLivre: 'Mercado Livre', // NOVO
+        ecosystemMercadoLivre: 'Mercado Libre', // NOVO - Correção aqui
         ecosystemMercadoPago: 'Mercado Pago', // NOVO
         initialDataConfirmButton: 'Confirmar',
 
@@ -457,6 +460,7 @@ You should act as a **support agent for the collaborator**, providing accurate a
         themeToggleButtonAria: 'Alternar Tema',
         homeButtonAria: 'Volver al Inicio',
         typingIndicator: 'Almail está escribiendo...',
+        thinkingMessage: 'Almail está analizando tu pregunta...', // NEW
         inputPlaceholder: 'Pregunta a Almail...',
         sendButtonAria: 'Enviar Mensagem',
         footerCopyright: '© 2025 Almail Soporte IA. Todos los derechos reservados.',
@@ -497,7 +501,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 {ECOSYSTEM_INSTRUCTIONS}
 
 **Directrices operacionales:**
-1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre el **Ecosistema Mercado Libre y Mercado Pago** (ventas, compras, pagos, envíos, cuentas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
+1.  **Enfoque y Alcance:** Tu conocimiento es exclusivo sobre el **Ecosistema Mercado Libre y Mercado Pago** (vendas, compras, pagos, envíos, cuentas, etc.). **No respondas preguntas fuera de este alcance.** Si la pregunta no es clara o está fuera de alcance, pide al colaborador que la reformule o aclare.
 2.  **Linguagem:** Formal, profesional, clara, concisa y directa. **Nunca uses emojis.** Utiliza un lenguaje que sea útil para el colaborador, como si estuvieras proporcionado um "guion" o uma "base de conocimiento".
 3.  **Personalização e Identificação:**
     * **Dirígete siempre al colaborador por su nombre, si está disponible.** Ej: "¡Hola, {COLLABORATOR_NAME}! Respecto a tu pregunta..."
@@ -507,7 +511,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 5.  **Segurança e Dados Sensíveis:** **NUNCA solicites ni proceses informação sensível do cliente** (contraseñas, datos bancarios completos, etc.). Si el colaborador menciona dicha informação, instrúyelo a manejarla de forma segura y fora de linha, sin que la IA la procese o armazene.
 6.  **Resolução e Profundização:** Tu objetivo es ajudar al colaborador a resolver o problema do cliente. Si la resposta inicial não é suficiente, reformula ou profundiza a explicação, sempre pensando em como o colaborador pode usar esta informação.
 7.  **Estructura de la Resposta:** Utiliza Markdown para organizar la informação (negrita, cursiva, listas, blocos de código se é necessário) para facilitar a leitura e o uso por parte do colaborador. Considera usar títulos e subtítulos para respostas mais complexas.
-8.  **Contexto e Continuidade:** Basa tus respuestas en el historial de la conversación para mantener la coerência y la relevancia. Si el colaborador hace uma pergunta de seguimiento, utiliza el contexto anterior para proporcionar uma resposta mais completa.
+8.  **Contexto e Continuidade:** Basa tus respuestas en el historial de la conversa para mantener la coerência y la relevancia. Si el colaborador hace uma pergunta de seguimiento, utiliza el contexto anterior para proporcionar uma resposta mais completa.
 9.  **Proatividade (Opcional):** Si es apropriado, sugiere al colaborador los próximos passos o informação adicional que possa ser relevante para o serviço al cliente.`,
         tutorialText: `
             <h3 class="text-2xl font-bold text-center mb-5 text-blue-700">Descubre Almail: Tu Plataforma de Soporte Inteligente</h3>
@@ -538,7 +542,7 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
                     <p class="text-base"><strong>Enviar Mensagem:</strong> Ubicado en el área de entrada de texto, después de escribir tu pregunta o solicitud, haz clic en este botón <i data-feather="send" class="inline-block"></i> o presiona <strong>Enter</strong> para enviar tu mensaje a Almail.</p>
                 </li>
             </ul>
-            <p class="mt-6 text-lg leading-relaxed">Con estos recursos, tendrás control total sobre tu interacción con Almail. ¡Estamos aquí para simplificar tu día a día y ofrecerte el mejor soporte!</p>
+            <p class="mt-6 text-lg leading-relaxed">Con estos recursos, tendrás control total sobre tu interacción con la Almail. ¡Estamos aquí para simplificar tu día a día y ofrecerte el mejor soporte!</p>
         `,
         likeFeedback: '¡Qué bien que la respuesta fue útil! Seguiré mejorando para atenderte mejor.',
         dislikeFeedback: '¡Agradezco tus comentarios! Estoy aprendiendo e intentaré generar una respuesta más útil, estructurada y personalizada para ti.',
@@ -716,7 +720,8 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
         }
     }
     chatMessages.appendChild(messageBubble);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Removido o scroll automático aqui para permitir que o usuário role livremente
+    // chatMessages.scrollTop = chatMessages.scrollHeight;
     feather.replace();
 }
 
@@ -724,16 +729,16 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
 function typeMessage(text, addFeedbackButtons = false) {
     loadingIndicator.style.display = 'flex';
     loadingIndicator.classList.add('show');
-    userInput.disabled = true;
-    sendButton.disabled = true;
-    userInput.classList.add('disabled');
-    sendButton.classList.add('disabled');
-    historyList.classList.add('disabled');
+    // userInput.disabled = true; // Movido para sendMessage
+    // sendButton.disabled = true; // Movido para sendMessage
+    // userInput.classList.add('disabled'); // Movido para sendMessage
+    // sendButton.classList.add('disabled'); // Movido para sendMessage
+    // historyList.classList.add('disabled'); // Movido para sendMessage
 
-    languageToggleButton.disabled = true;
-    languageToggleButton.classList.add('disabled');
-    homeButton.disabled = true;
-    homeButton.classList.add('disabled');
+    // languageToggleButton.disabled = true; // Movido para sendMessage
+    // languageToggleButton.classList.add('disabled'); // Movido para sendMessage
+    // homeButton.disabled = true; // Movido para sendMessage
+    // homeButton.classList.add('disabled'); // Movido para sendMessage
     // creditsButton.disabled = true; // Desabilita o botão de créditos - REMOVIDO
     // creditsButton.classList.add('disabled'); // Adiciona a classe disabled - REMOVIDO
 
@@ -741,10 +746,11 @@ function typeMessage(text, addFeedbackButtons = false) {
     const messageBubble = document.createElement('div');
     messageBubble.classList.add('message-bubble', 'ai-message');
     chatMessages.appendChild(messageBubble);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Removido o scroll automático aqui para permitir que o usuário role livremente
+    // chatMessages.scrollTop = chatMessages.scrollHeight;
 
     let i = 0;
-    const typingSpeed = 20;
+    const typingSpeed = 1; // Ajuste este valor para controlar a velocidade de digitação (menor = mais rápido)
     let currentRawText = '';
 
     function typeCharacter() {
@@ -772,7 +778,8 @@ function typeMessage(text, addFeedbackButtons = false) {
             currentRawText += text.charAt(i);
             messageBubble.innerHTML = renderMarkdown(currentRawText);
             i++;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Não rola o chat automaticamente enquanto digita
+            // chatMessages.scrollTop = chatMessages.scrollHeight;
             typingTimeoutId = setTimeout(typeCharacter, typingSpeed);
         } else {
             loadingIndicator.classList.remove('show');
@@ -814,6 +821,9 @@ function typeMessage(text, addFeedbackButtons = false) {
                 messageBubble.appendChild(feedbackContainer);
                 feather.replace();
             }
+            // A rolagem automática para o final do chat foi removida aqui para permitir
+            // que o usuário mantenha sua posição de rolagem após a IA terminar de digitar.
+            // chatMessages.scrollTop = chatMessages.scrollHeight;
             typingTimeoutId = null;
         }
     }
@@ -867,7 +877,7 @@ async function saveConversation(title) {
             serviceChannel: serviceChannel || "Não Informado",
             ecosystem: ecosystem || "Não Informado" // NOVO: Salva o Ecossistema
         });
-        console.log("Conversa salva com sucesso!");
+        // console.log("Conversa salva com sucesso!"); // Removido
         loadConversationHistory();
     } catch (error) {
         console.error("Erro ao salvar conversa:", error);
@@ -880,7 +890,7 @@ async function saveConversation(title) {
  */
 async function loadConversation(conversationId) {
     if (!isConversationActive) {
-        console.log("IA está digitando. Não é possível trocar de conversa agora.");
+        // console.log("IA está digitando. Não é possível trocar de conversa agora."); // Removido
         return;
     }
 
@@ -940,7 +950,7 @@ async function loadConversation(conversationId) {
             homeButton.classList.remove('active');
 
         } else {
-            console.log("Nenhuma conversa encontrada com o ID:", conversationId);
+            // console.log("Nenhuma conversa encontrada com o ID:", conversationId); // Removido
             startNewConversation();
         }
     } catch (error) {
@@ -1179,12 +1189,23 @@ async function sendMessage(isRegeneration = false) {
     errorMessage.classList.add('hidden');
     errorMessage.classList.remove('show');
 
+    // Desabilita os controles imediatamente após o envio da mensagem do usuário
     userInput.disabled = true;
     sendButton.disabled = true;
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
-    loadingIndicator.style.display = 'flex';
-    loadingIndicator.classList.add('show');
+    historyList.classList.add('disabled'); // Desabilita a lista de histórico
+    languageToggleButton.disabled = true; // Desabilita o botão de idioma
+    languageToggleButton.classList.add('disabled');
+    homeButton.disabled = true; // Desabilita o botão de início
+    homeButton.classList.add('disabled');
+
+    // NOVO: Adiciona a mensagem de "pensando"
+    const thinkingMessageElement = document.createElement('div');
+    thinkingMessageElement.classList.add('message-bubble', 'ai-message', 'thinking-message');
+    thinkingMessageElement.textContent = translations[currentLanguage].thinkingMessage;
+    chatMessages.appendChild(thinkingMessageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Rola para a nova mensagem
 
     try {
         const apiKey = "AIzaSyDsJZuixotkHJPxpLmdnMeLnKxdOC7ykLQ";
@@ -1298,8 +1319,8 @@ async function sendMessage(isRegeneration = false) {
             ...chatHistory
         ];
 
-        console.log("Sending system instructions for language:", currentLanguage);
-        console.log("System Instructions being sent:", systemInstructions);
+        // console.log("Sending system instructions for language:", currentLanguage); // Removido
+        // console.log("System Instructions being sent:", systemInstructions); // Removido
 
 
         const payload = {
@@ -1312,6 +1333,11 @@ async function sendMessage(isRegeneration = false) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
+
+        // NOVO: Remove a mensagem de "pensando" antes de começar a digitar
+        if (thinkingMessageElement && thinkingMessageElement.parentNode) {
+            thinkingMessageElement.parentNode.removeChild(thinkingMessageElement);
+        }
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -1328,7 +1354,7 @@ async function sendMessage(isRegeneration = false) {
         const result = await response.json();
 
         if (!isConversationActive) {
-            console.log("Resposta da API recebida após o reset da conversa. Descartando.");
+            // console.log("Resposta da API recebida após o reset da conversa. Descartando."); // Removido
             return;
         }
 
@@ -1371,6 +1397,10 @@ async function sendMessage(isRegeneration = false) {
         errorMessage.textContent = `${translations[currentLanguage].errorMessage}: ${error.message || ""}`;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('show');
+        // NOVO: Remove a mensagem de "pensando" em caso de erro
+        if (thinkingMessageElement && thinkingMessageElement.parentNode) {
+            thinkingMessageElement.parentNode.removeChild(thinkingMessageElement);
+        }
         if (loadingIndicator.style.display === 'flex') {
             loadingIndicator.classList.remove('show');
             loadingIndicator.style.display = 'none';
@@ -1380,8 +1410,8 @@ async function sendMessage(isRegeneration = false) {
             errorMessage.classList.remove('show');
         }, 7000);
     } finally {
-        loadingIndicator.classList.remove('show');
-        loadingIndicator.style.display = 'none';
+        // Removed loading indicator hiding from here.
+        // It is now solely handled by the typeMessage function.
     }
 }
 
@@ -1395,7 +1425,7 @@ async function deleteConversation(conversationId) {
         async () => {
             try {
                 await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, conversationId));
-                console.log(`Conversa ${conversationId} excluída.`);
+                // console.log(`Conversa ${conversationId} excluída.`); // Removido
                 if (currentConversationId === conversationId) {
                     showInitialScreen();
                     currentConversationId = null;
@@ -1462,7 +1492,7 @@ async function updateConversationTitleInFirestore(conversationId, newTitle) {
     try {
         const docRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, conversationId);
         await setDoc(docRef, { title: newTitle }, { merge: true });
-        console.log(`Título da conversa ${conversationId} atualizado para: ${newTitle}`);
+        // console.log(`Título da conversa ${conversationId} atualizado para: ${newTitle}`); // Removido
     } catch (error) {
         console.error("Erro ao atualizar título da conversa no Firestore:", error);
         errorMessage.textContent = `${translations[currentLanguage].errorMessage}: ${error.message}`;
@@ -1480,7 +1510,7 @@ async function updateConversationTitleInFirestore(conversationId, newTitle) {
  */
 async function loadConversationHistory() {
     if (!db || !userId || !isAuthReady) {
-        console.log("Firestore ou userId não prontos para carregar histórico.");
+        // console.log("Firestore ou userId não prontos para carregar histórico."); // Removido
         return;
     }
 
@@ -1789,8 +1819,8 @@ initialDataConfirmButton.addEventListener('click', () => {
         }
         switch (ecosystem) { // NOVO
             case 'mercadoLivre':
-                ecosystemDisplay = 'Mercado Livre';
-                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} on **Mercado Livre**. How can I assist you today?`;
+                ecosystemDisplay = 'Mercado Libre';
+                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} on **Mercado Libre**. How can I assist you today?`;
                 break;
             case 'mercadoPago':
                 ecosystemDisplay = 'Mercado Pago';
@@ -1798,7 +1828,7 @@ initialDataConfirmButton.addEventListener('click', () => {
                 break;
             default:
                 ecosystemDisplay = 'MELI ecosystem';
-                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} in the **Mercado Livre and Mercado Pago Ecosystem**. How can I assist you today?`;
+                finalHelpPhrase = `I'm here to help you quickly with your questions and solve the problems of ${clientNameAdapted} in the **Mercado Libre and Mercado Pago Ecosystem**. How can I assist you today?`;
         }
     } else if (currentLanguage === 'es') {
         switch (serviceChannel) {
@@ -1816,8 +1846,8 @@ initialDataConfirmButton.addEventListener('click', () => {
         }
         switch (ecosystem) { // NOVO
             case 'mercadoLivre':
-                ecosystemDisplay = 'Mercado Livre';
-                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en **Mercado Livre**. ¿Cómo puedo asistirte hoy?`;
+                ecosystemDisplay = 'Mercado Libre';
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en **Mercado Libre**. ¿Cómo puedo asistirte hoy?`;
                 break;
             case 'mercadoPago':
                 ecosystemDisplay = 'Mercado Pago';
@@ -1825,7 +1855,7 @@ initialDataConfirmButton.addEventListener('click', () => {
                 break;
             default:
                 ecosystemDisplay = 'ecosistema MELI';
-                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en el **Ecosistema Mercado Livre y Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
+                finalHelpPhrase = `Estoy aquí para ayudarte rápidamente con tus dudas y resolver los problemas de ${clientNameAdapted} en el **Ecosistema Mercado Libre y Mercado Pago**. ¿Cómo puedo asistirte hoy?`;
         }
     }
 
@@ -1960,7 +1990,7 @@ window.addEventListener('load', async () => {
             if (user) {
                 userId = user.uid;
                 isAuthReady = true;
-                console.log("Usuário autenticado:", userId);
+                // console.log("Usuário autenticado:", userId); // Removido
                 if (firebaseConfig.projectId && firebaseConfig.projectId !== "YOUR_PROJECT_ID_PLACEHOLDER") {
                     await loadConversationHistory();
                 }
@@ -1971,7 +2001,7 @@ window.addEventListener('load', async () => {
                 userInput.focus();
 
             } else {
-                console.log("Nenhum usuário logado. Tentando autenticação anônima...");
+                // console.log("Nenhum usuário logado. Tentando autenticação anônima..."); // Removido
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
