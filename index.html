@@ -179,7 +179,7 @@
                                 <circle cx="50" cy="70" r="8"/>
                                 <line x1="30" y1="30" x2="70" y2="30" stroke-width="4" stroke-linecap="round"/>
                                 <line x1="30" y1="30" x2="50" y2="70" stroke-width="4" stroke-linecap="round"/>
-                                <line x1="70" y1="30" x2="50" y2="70" stroke-width='4' stroke-linecap='round'/>
+                                <line x1="70" y1="30" x2="50" y2='70' stroke-width='4' stroke-linecap='round'/>
                             </g>
                         </svg>
                         <h2 class="text-3xl font-bold mt-6" data-i18n="initialScreenTitle">Almail Suporte IA!</h2>
@@ -191,6 +191,23 @@
 
                 <div class="chat-and-input-area hidden" id="chat-and-input-area">
                     <div class="chat-messages" id="chat-messages">
+                    </div>
+                    <div class="sentiment-buttons-container hidden" id="sentiment-buttons-container">
+                        <p class="text-sm font-semibold mb-2" data-i18n="sentimentQuestion">Como você percebe o sentimento do usuário no contato?</p>
+                        <div class="flex justify-center gap-4">
+                            <button class="sentiment-button" data-sentiment="satisfied" data-i18n="sentimentSatisfied">Satisfeito</button>
+                            <button class="sentiment-button" data-sentiment="neutral" data-i18n="sentimentNeutral">Neutro</button>
+                            <button class="sentiment-button" data-sentiment="frustrated" data-i18n="sentimentFrustrado">Frustrado</button>
+                        </div>
+                    </div>
+
+                    <div class="ai-tone-buttons-container hidden" id="ai-tone-buttons-container">
+                        <p class="text-sm font-semibold mb-2" data-i18n="aiToneQuestion">Qual tom a IA deve usar na resposta?</p>
+                        <div class="flex justify-center gap-4">
+                            <button class="ai-tone-button" data-tone="formal" data-i18n="aiToneFormal">Formal</button>
+                            <button class="ai-tone-button" data-tone="empathetic" data-i18n="aiToneEmpathetic">Empático</button>
+                            <button class="ai-tone-button" data-tone="direct" data-i18n="aiToneDirect">Direto</button>
+                        </div>
                     </div>
 
                     <div class="loading-indicator" id="loading-indicator">
@@ -213,9 +230,18 @@
                 <aside class="conversation-history-sidebar hidden" id="conversation-history-sidebar">
                     <div class="sidebar-header">
                         <h3 data-i18n="historyTitle">Histórico de Conversas</h3>
+                    </div>
+                    <div class="sidebar-sections">
+                        <div class="favorites-section section-separator"> <h4 class="section-title" data-i18n="favoriteConversations">Conversas Favoritas</h4>
+                            <ul id="favorites-list" class="history-list">
+                            </ul>
                         </div>
-                    <ul id="history-list" class="history-list">
-                        </ul>
+                        <div class="history-section">
+                            <h4 class="section-title" data-i18n="allConversations">Todas as Conversas</h4>
+                            <ul id="history-list" class="history-list">
+                            </ul>
+                        </div>
+                    </div>
                 </aside>
             </div>
         </div>

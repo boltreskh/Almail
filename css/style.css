@@ -48,7 +48,7 @@
 
     /* Indicadores */
     --lm-loading-bg: #E9ECEF;
-    --lm-loading-text: var(--lm-text-secondary);
+    --lm-loading-text: var(--lm-loading-text);
     --lm-error-bg: #FEE2E2; /* Fundo vermelho claro para erro */
     --lm-error-text: #DC2626; /* Vermelho escuro para texto de erro */
 
@@ -92,6 +92,11 @@
 
     /* Altura do cabeçalho padrão para desktop */
     --header-height: 80px;
+
+    /* NOVO: Cores para o botão de favorito */
+    --lm-favorite-button-color: #718096; /* Cor padrão da estrela */
+    --lm-favorite-button-hover-color: #FFD700; /* Dourado no hover */
+    --lm-favorite-button-filled-color: #FFD700; /* Dourado quando preenchido */
 }
 
 html[data-theme='dark'] {
@@ -185,6 +190,11 @@ html[data-theme='dark'] {
 
     /* Altura do cabeçalho padrão para desktop */
     --header-height: 80px;
+
+    /* NOVO: Cores para o botão de favorito */
+    --dm-favorite-button-color: #8B949E; /* Cor padrão da estrela */
+    --dm-favorite-button-hover-color: #FFD700; /* Dourado no hover */
+    --dm-favorite-button-filled-color: #FFD700; /* Dourado quando preenchido */
 }
 
 /* Define as variáveis CSS com base no tema */
@@ -858,6 +868,7 @@ html[data-theme='dark'] .feedback-button {
 }
 html[data-theme='dark'] .feedback-button:hover:not(:disabled) {
     background-color: var(--dm-feedback-button-hover-bg);
+    transform: translateY(-1px);
 }
 
 .feedback-button.liked {
@@ -1128,11 +1139,46 @@ html[data-theme='dark'] .sidebar-header {
     font-weight: 600;
 }
 
-.history-list {
+/* NOVO: Seções dentro da sidebar (para histórico e favoritos) */
+.sidebar-sections {
     flex-grow: 1;
-    list-style: none;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Permite rolagem para as seções combinadas */
+}
+
+.history-section,
+.favorites-section {
     padding: 10px 0;
-    overflow-y: auto;
+    /* Removida a borda inferior padrão aqui para controlar via 'section-separator' */
+}
+
+/* Adicionada a classe 'section-separator' para controlar a borda inferior */
+.section-separator {
+    border-bottom: 1px solid var(--lm-border-color); /* Separador entre seções */
+}
+html[data-theme='dark'] .section-separator {
+    border-bottom: 1px solid var(--dm-border-color);
+}
+
+
+.section-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--lm-text-secondary);
+    padding: 8px 20px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+html[data-theme='dark'] .section-title {
+    color: var(--dm-text-secondary);
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     transition: opacity 0.3s ease, pointer-events 0.3s ease;
 }
 /* Estilo para desabilitar a lista de histórico */
@@ -1249,7 +1295,8 @@ html[data-theme='dark'] .history-item .conversation-title.editing {
 
 /* Estilos para os botões de editar e excluir */
 .edit-conversation-button,
-.delete-conversation-button {
+.delete-conversation-button,
+.favorite-conversation-button { /* NOVO: Adicionado favorite-conversation-button */
     background: none;
     border: none;
     color: var(--lm-text-tertiary);
@@ -1264,7 +1311,8 @@ html[data-theme='dark'] .history-item .conversation-title.editing {
 }
 
 .edit-conversation-button i,
-.delete-conversation-button i {
+.delete-conversation-button i,
+.favorite-conversation-button i { /* NOVO: Adicionado favorite-conversation-button */
     width: 16px;
     height: 16px;
 }
@@ -1282,7 +1330,8 @@ html[data-theme='dark'] .history-item .conversation-title.editing {
 }
 
 html[data-theme='dark'] .edit-conversation-button,
-html[data-theme='dark'] .delete-conversation-button {
+html[data-theme='dark'] .delete-conversation-button,
+html[data-theme='dark'] .favorite-conversation-button { /* NOVO: Adicionado favorite-conversation-button */
     color: var(--dm-text-tertiary);
 }
 
@@ -1294,6 +1343,31 @@ html[data-theme='dark'] .edit-conversation-button:hover:not(:disabled) {
 html[data-theme='dark'] .delete-conversation-button:hover:not(:disabled) {
     color: var(--dm-feedback-disliked-bg);
     background-color: rgba(255, 0, 0, 0.1);
+}
+
+/* NOVO: Estilos para o botão de favorito */
+.favorite-conversation-button {
+    color: var(--lm-favorite-button-color); /* Cor padrão da estrela */
+}
+html[data-theme='dark'] .favorite-conversation-button {
+    color: var(--dm-favorite-button-color);
+}
+
+.favorite-conversation-button:hover:not(:disabled) {
+    color: var(--lm-favorite-button-hover-color); /* Dourado no hover */
+    background-color: rgba(255, 215, 0, 0.1);
+}
+html[data-theme='dark'] .favorite-conversation-button:hover:not(:disabled) {
+    color: var(--dm-favorite-button-hover-color);
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+.favorite-conversation-button.favorited {
+    color: var(--lm-favorite-button-filled-color); /* Dourado quando preenchido */
+    opacity: 1; /* Garante que a estrela preenchida esteja sempre visível */
+}
+html[data-theme='dark'] .favorite-conversation-button.favorited {
+    color: var(--dm-favorite-button-filled-color);
 }
 
 
@@ -1856,4 +1930,146 @@ html[data-theme='dark'] .updates-list li {
 }
 html[data-theme='dark'] .updates-list strong {
     color: var(--dm-accent-primary);
+}
+
+/* NOVO: Estilos para o contêiner dos botões de sentimento */
+.sentiment-buttons-container {
+    padding: 16px 24px;
+    background-color: var(--lm-bg-chat);
+    border-top: 1px solid var(--lm-border-color);
+    text-align: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+html[data-theme='dark'] .sentiment-buttons-container {
+    background-color: var(--dm-bg-chat);
+    border-color: var(--dm-border-color);
+}
+
+.sentiment-buttons-container p {
+    color: var(--lm-text-primary);
+}
+html[data-theme='dark'] .sentiment-buttons-container p {
+    color: var(--dm-text-primary);
+}
+
+.sentiment-button {
+    background-color: var(--lm-control-button-bg);
+    color: var(--lm-control-button-text);
+    border: 1px solid var(--lm-border-color);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+html[data-theme='dark'] .sentiment-button {
+    background-color: var(--dm-control-button-bg);
+    color: var(--dm-control-button-text);
+    border-color: var(--dm-border-color);
+}
+
+.sentiment-button:hover:not(:disabled) {
+    background-color: var(--lm-control-button-hover-bg);
+    border-color: var(--lm-accent-primary);
+    color: var(--lm-accent-primary);
+    transform: translateY(-1px);
+}
+
+html[data-theme='dark'] .sentiment-button:hover:not(:disabled) {
+    background-color: var(--dm-control-button-hover-bg);
+    border-color: var(--dm-accent-primary);
+    color: var(--dm-accent-primary);
+}
+
+.sentiment-button.selected {
+    background-color: var(--lm-accent-primary);
+    color: var(--lm-button-text);
+    border-color: var(--lm-accent-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+html[data-theme='dark'] .sentiment-button.selected {
+    background-color: var(--dm-accent-primary);
+    color: var(--dm-button-text);
+    border-color: var(--dm-accent-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* NOVO: Estilos para o contêiner dos botões de tom da IA */
+.ai-tone-buttons-container {
+    padding: 16px 24px;
+    background-color: var(--lm-bg-chat);
+    border-top: 1px solid var(--lm-border-color);
+    text-align: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+html[data-theme='dark'] .ai-tone-buttons-container {
+    background-color: var(--dm-bg-chat);
+    border-color: var(--dm-border-color);
+}
+
+.ai-tone-buttons-container p {
+    color: var(--lm-text-primary);
+}
+html[data-theme='dark'] .ai-tone-buttons-container p {
+    color: var(--dm-text-primary);
+}
+
+.ai-tone-button {
+    background-color: var(--lm-control-button-bg);
+    color: var(--lm-control-button-text);
+    border: 1px solid var(--lm-border-color);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+html[data-theme='dark'] .ai-tone-button {
+    background-color: var(--dm-control-button-bg);
+    color: var(--dm-control-button-text);
+    border-color: var(--dm-border-color);
+}
+
+.ai-tone-button:hover:not(:disabled) {
+    background-color: var(--lm-control-button-hover-bg);
+    border-color: var(--lm-accent-primary);
+    color: var(--lm-accent-primary);
+    transform: translateY(-1px);
+}
+
+html[data-theme='dark'] .ai-tone-button:hover:not(:disabled) {
+    background-color: var(--dm-control-button-hover-bg);
+    border-color: var(--dm-accent-primary);
+    color: var(--dm-accent-primary);
+}
+
+.ai-tone-button.selected {
+    background-color: var(--lm-accent-primary);
+    color: var(--lm-button-text);
+    border-color: var(--lm-accent-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+html[data-theme='dark'] .ai-tone-button.selected {
+    background-color: var(--dm-accent-primary);
+    color: var(--dm-button-text);
+    border-color: var(--dm-accent-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }

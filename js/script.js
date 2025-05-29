@@ -98,8 +98,15 @@ const confirmLanguageNoButton = document.getElementById('confirm-language-no');
 // Elementos do histórico de conversas
 const conversationHistorySidebar = document.getElementById('conversation-history-sidebar');
 const historyList = document.getElementById('history-list');
+const favoritesList = document.getElementById('favorites-list'); // NOVO: Lista de favoritos
 const mainSidebarToggleButton = document.getElementById('main-sidebar-toggle-button');
 const contentArea = document.getElementById('content-area');
+
+// NOVO: Elementos para os botões de sentimento
+const sentimentButtonsContainer = document.getElementById('sentiment-buttons-container');
+
+// NOVO: Elementos para os botões de tom da IA
+const aiToneButtonsContainer = document.getElementById('ai-tone-buttons-container');
 
 // Variável para armazenar o ID do timeout da digitação, permitindo cancelá-lo.
 let typingTimeoutId = null;
@@ -115,6 +122,12 @@ let collaboratorName = null;
 let serviceChannel = null;
 // Nova variável para armazenar o Ecossistema de atendimento
 let ecosystem = null;
+
+// NOVO: Variável para armazenar o sentimento do cliente
+let currentClientSentiment = null; // Pode ser 'satisfeito', 'neutro', 'frustrado' ou null
+
+// NOVO: Variável para armazenar o tom da IA
+let currentAiTone = null; // Pode ser 'formal', 'empathetic', 'direct' ou null
 
 // Variável para armazenar o idioma atual e o idioma pendente de confirmação
 let currentLanguage = 'pt-BR'; // Padrão
@@ -132,13 +145,12 @@ const translations = {
         appTitle: 'Almail Suporte IA - Ecossistema MELI',
         // NOVO: Traduções para o modal de versão e atualizações
         versionInfoTitle: 'Bem-vindo(a) à Almail Suporte IA!',
-        versionInfoSubtitle: 'Versão: Beta 1.3.0',
+        versionInfoSubtitle: 'Versão: Beta 1.4.0',
         latestUpdatesTitle: 'Últimas Atualizações:',
         latestUpdatesContent: `
-            <li><strong>Acessibilidade & UX Aprimoradas:</strong> Melhoramos a navegação por teclado, aprimoramos os tooltips e otimizamos o foco para garantir uma experiência mais inclusiva e fluida para todos os usuários.</li>
-            <li><strong>Performance Otimizada:</strong> A inteligência artificial agora opera com maior agilidade e proficiência, proporcionando respostas mais rápidas e eficientes.</li>
-            <li><strong>Seleção de Ecossistema:</strong> Introduzimos a funcionalidade de escolha do ecossistema (Mercado Livre ou Mercado Pago), permitindo que a IA adapte suas respostas e sugestões de forma mais precisa às necessidades específicas da sua interação.</li>
-            <li><strong>Segurança Reforçada:</strong> Mantemos nosso compromisso com a sua privacidade e segurança. Nenhuns dados sensíveis do Mercado Livre ou Mercado Pago são armazenados ou processados pela IA, garantindo a confidencialidade das suas informações.</li>
+            <li><strong>Performance:</strong> A inteligência artificial agora opera com maior agilidade.</li>
+            <li><strong>Visual:</strong> Agora é possível adicionar conversas aos favoritos na seção de Histórico de Conversas.</li>
+            <li><strong>Escolhas e Aprimoramento:</strong> Adição de escolhas de sentimentos para aprimorar as respostas da IA de acordo com a dúvida do usuário e qual tom a IA deve usar na resposta, adicionando qual tom a IA pode agir.</li>
         `,
         versionInfoUseButton: 'Utilizar',
         creditsModalTitle: 'Créditos',
@@ -200,7 +212,7 @@ const translations = {
         newChat: 'Nova Conversa',
         deleteConfirm: 'Tem certeza que deseja excluir esta conversa?',
         deleteConfirmYes: 'Sim, Excluir',
-        deleteConfirmNo: 'Não, Manter',
+        deleteConfirmNo: 'No, Manter',
         confirmYesDefault: 'Sim',
         confirmNoDefault: 'Não',
         editTitle: 'Editar Título',
@@ -219,6 +231,8 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
 * **Nome do Cliente Final:** {CLIENT_NAME} (Se o cliente não tiver um nome específico, este campo será "Não Informado")
 * **Canal de Atendimento:** {SERVICE_CHANNEL} (Pode ser "Chat", "Email" ou "C2C (Voz)")
 * **Ecossistema de Atendimento:** {ECOSYSTEM}
+* **Sentimento do Cliente:** {CLIENT_SENTIMENT} (Este é o sentimento que o colaborador indicou para o cliente: "Satisfeito", "Neutro", "Frustrado" ou "Não Informado". Leve isso em consideração para adaptar o tone e a profundidade da sua resposta, focando em soluções e empatia.)
+* **Tom da Resposta da IA:** {AI_TONE} (Este é o tom que a IA deve usar na sua resposta: "Formal", "Empático" ou "Direto". Adapte a linguagem e a estrutura da sua resposta para refletir este tom.)
 
 **Adaptação da Resposta com base no Canal de Atendimento:**
 
@@ -235,12 +249,12 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
     * **Sempre se dirija ao colaborador pelo nome, se disponível.** Ex: "Olá, {COLLABORATOR_NAME}! Para a sua dúvida..."
     * **Nunca confunda o colaborador com o cliente.** Se o nome do cliente for fornecido, use-o para personalizar a *resposta que o colaborador dará ao cliente*. Ex: "Para o cliente {CLIENT_NAME}, você pode informar que...".
     * Se o nome do cliente não for fornecido, use termos neutros como "o cliente" ou "o usuário" ao se referir a ele, mas sempre no contexto de como o *colaborador* deve interagir.
-4.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Livre/Mercado Pago. Evite divagações.
-5.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
-6.  **Resolução e Aprofundamento:** Seu objetivo é ajudar o colaborador a resolver o problema do cliente. Se a resposta inicial não for suficiente, reformule ou aprofunde a explicação, sempre pensando em como o colaborador pode usar essa informação.
-7.  **Estrutura da Resposta:** Utilize Markdown para organizar as informações (negrito, itálico, listas, blocos de código se necessário) para facilitar a leitura e o uso pelo colaborador. Considere usar títulos e subtítulos para respostas mais complexas.
-8.  **Contexto e Continuidade:** Baseie-se no histórico da conversa para manter a coerência e a relevância. Se o colaborador fizer uma pergunta de acompanhamento, use o contexto anterior para fornecer uma resposta mais completa.
-9.  **Proatividade (Opcional):** Se apropriado, sugira ao colaborador próximos passos ou informações adicionais que possam ser relevantes para o atendimento do cliente.`,
+3.  **Objetividade e Clareza:** Responda apenas ao que foi perguntado, fornecendo informações precisas e baseadas em políticas e procedimentos do Mercado Livre/Mercado Pago. Evite divagações.
+4.  **Segurança e Dados Sensíveis:** **NUNCA solicite ou processe informações sensíveis do cliente** (senhas, dados bancários completos, etc.). Se tais informações forem mencionadas pelo colaborador, instrua-o a lidar com elas de forma segura e offline, sem que a IA as processe ou as armazene.
+5.  **Resolução e Aprofundamento:** Seu objetivo é ajudar o colaborador a resolver o problema do cliente. Se a resposta inicial não for suficiente, reformule ou aprofunde a explicação, sempre pensando em como o colaborador pode usar essa informação.
+6.  **Estrutura da Resposta:** Utilize Markdown para organizar as informações (negrito, itálico, listas, blocos de código se necessário) para facilitar a leitura e o uso pelo colaborador. Considere usar títulos e subtítulos para respostas mais complexas.
+7.  **Contexto e Continuidade:** Baseie-se no histórico da conversa para manter a coerência e a relevância. Se o colaborador fizer uma pergunta de acompanhamento, use o contexto anterior para fornecer uma resposta mais completa.
+8.  **Proatividade (Opcional):** Se apropriado, sugira ao colaborador próximos passos ou informações adicionais que possam ser relevantes para o atendimento do cliente.`,
         tutorialText: `
             <h3 class="2xl font-bold text-center mb-5 text-blue-700">Desvende a Almail: Sua Plataforma de Suporte Inteligente</h3>
             <p class="mb-4 text-lg leading-relaxed">Abaixo, explore os principais botões e suas funções:</p>
@@ -281,18 +295,30 @@ Você deve agir como um **agente de suporte para o colaborador**, fornecendo inf
         startChatButton: 'Iniciar Nova Conversa',
         collaboratorNameRequired: 'Por favor, informe seu nome.',
         clientNameRequired: 'Por favor, informe o nome do cliente.',
+        sentimentQuestion: 'Como você percebe o sentimento do usuário no contato?',
+        sentimentSatisfied: 'Satisfeito',
+        sentimentNeutral: 'Neutro',
+        sentimentFrustrated: 'Frustrado',
+        sentimentSelected: 'Sentimento registrado: {SENTIMENT}.',
+        aiToneQuestion: 'Qual tom a IA deve usar na resposta?',
+        aiToneFormal: 'Formal',
+        aiToneEmpathetic: 'Empático',
+        aiToneDirect: 'Direto',
+        aiToneSelected: 'Tom da IA registrado: {TONE}.',
+        allConversations: 'Todas as Conversas', // NOVO: Tradução para "Todas as Conversas"
+        favoriteConversations: 'Conversas Favoritas', // NOVO: Tradução para "Conversas Favoritas"
+        favoriteButtonAria: 'Marcar/Desmarcar como favorito', // NOVO: Tradução para aria-label do botão de favorito
     },
     'en': {
         appTitle: 'Almail AI Support - MELI Ecosystem',
         // NOVO: Traduções para o modal de versão e atualizações
         versionInfoTitle: 'Welcome to Almail AI Support!',
-        versionInfoSubtitle: 'Version: Beta 1.3.0',
+        versionInfoSubtitle: 'Version: Beta 1.4.0',
         latestUpdatesTitle: 'Latest Updates:',
         latestUpdatesContent: `
-            <li><strong>Enhanced Accessibility & UX:</strong> We've improved keyboard navigation, refined tooltips, and optimized focus for a more inclusive and fluid experience for all users.</li>
-            <li><strong>Optimized Performance:</strong> The artificial intelligence now operates with greater agility and proficiency, providing faster and more efficient responses.</li>
-            <li><strong>Ecosystem Selection:</strong> We've introduced the functionality to choose the ecosystem (Mercado Libre or Mercado Pago), allowing the AI to adapt its responses and suggestions more precisely to the specific needs of your interaction.</li>
-            <li><strong>Reinforced Security:</strong> We maintain our commitment to your privacy and security. No sensitive Mercado Libre or Mercado Pago data is stored or processed by the AI, ensuring the confidentiality of your information.</li>
+            <li><strong>Performance:</strong> The artificial intelligence now operates with greater agility.</li>
+            <li><strong>Visual:</strong> It's now possible to add conversations to favorites in the Conversation History section.</li>
+            <li><strong>Choices and Enhancement:</strong> Added sentiment choices to enhance AI responses according to user queries and "What tone should the AI use in the response?", allowing the AI to act with a specific tone.</li>
         `,
         versionInfoUseButton: 'Use Application',
         creditsModalTitle: 'Credits',
@@ -373,6 +399,8 @@ You should act as a **support agent for the collaborator**, providing accurate a
 * **End Client Name:** {CLIENT_NAME} (If the client does not have a specific name, this field will be "Not Informed")
 * **Service Channel:** {SERVICE_CHANNEL} (Can be "Chat", "Email", or "C2C (Voice)")
 * **Ecosystem of Service:** {ECOSYSTEM}
+* **Client Sentiment:** {CLIENT_SENTIMENT} (This is the sentiment the collaborator indicated for the client: "Satisfied", "Neutral", "Frustrated" or "Not Informed". Take this into account to adapt the tone and depth of your response, focusing on solutions and empathy.)
+* **AI Response Tone:** {AI_TONE} (This is the tone the AI should use in its response: "Formal", "Empathetic" or "Direct". Adapt the language and structure of your response to reflect this tone.)
 
 **Adapting the Response based on the Service Channel:**
 
@@ -435,32 +463,43 @@ You should act as a **support agent for the collaborator**, providing accurate a
         startChatButton: 'Start New Chat',
         collaboratorNameRequired: 'Please enter your name.',
         clientNameRequired: 'Please enter the client\'s name.',
+        sentimentQuestion: 'How do you perceive the user\'s feeling when getting in touch?',
+        sentimentSatisfied: 'Satisfied',
+        sentimentNeutral: 'Neutral',
+        sentimentFrustrated: 'Frustrated',
+        sentimentSelected: 'Sentiment recorded: {SENTIMENT}.',
+        aiToneQuestion: 'What tone should the AI use in the response?',
+        aiToneFormal: 'Formal',
+        aiToneEmpathetic: 'Empathetic',
+        aiToneDirect: 'Direct',
+        aiToneSelected: 'AI Tone recorded: {TONE}.',
+        allConversations: 'All Conversations', // NOVO: Tradução para "Todas as Conversas"
+        favoriteConversations: 'Favorite Conversations', // NOVO: Tradução para "Conversas Favoritas"
+        favoriteButtonAria: 'Toggle favorite status', // NOVO: Tradução para aria-label do botão de favorito
     },
     'es': {
         appTitle: 'Almail Soporte IA - Ecosistema MELI',
         // NOVO: Traduções para o modal de versão e atualizações
         versionInfoTitle: '¡Bienvenido(a) a Almail Soporte IA!',
-        versionInfoSubtitle: 'Versión: Beta 1.3.0',
+        versionInfoSubtitle: 'Versión: Beta 1.4.0',
         latestUpdatesTitle: 'Últimas Actualizaciones:',
         latestUpdatesContent: `
-            <li><strong>Accesibilidad y UX Mejoradas:</strong> Hemos mejorado la navegación por teclado, refinado las descripciones emergentes y optimizado el enfoque para garantizar una experiencia más inclusiva y fluida para todos los usuarios.</li>
-            <li><strong>Rendimiento Optimizado:</strong> La inteligencia artificial ahora opera con mayor agilidad y competencia, proporcionando respuestas más rápidas y eficientes.</li>
-            <li><strong>Selección de Ecosistema:</strong> Hemos introducido la funcionalidad de elección del ecosistema (Mercado Libre o Mercado Pago), permitiendo que la IA adapte sus respuestas y sugerencias de manera más precisa a las necesidades específicas de tu interacción.</li>
-            <li><strong>Seguridad Reforzada:</strong> Mantenemos nuestro compromiso con tu privacidad y seguridad. Ningún dato sensible de Mercado Libre o Mercado Pago es almacenado o procesado por la IA, garantizando la confidencialidad de tu información.</li>
+            <li><strong>Rendimiento:</strong> La inteligencia artificial ahora opera con mayor agilidad.</li>
+            <li><strong>Visual:</strong> Ahora es posible agregar conversaciones a favoritos en la sección de Historial de Conversaciones.</li>
+            <li><strong>Opciones y Mejora:</strong> Se agregaron opciones de sentimiento para mejorar las respuestas de la IA según las preguntas del usuario y "¿Qué tono debe usar la IA en la respuesta?", permitiendo que la IA actúe con un tono específico.</li>
         `,
         versionInfoUseButton: 'Usar Aplicación',
         creditsModalTitle: 'Créditos',
         creditsModalSubtitle: 'Una herramienta de soporte inteligente para el equipo de Mercado Libre y Mercado Pago.',
         creditsModalDescription: `
             <ul class="list-none p-0 text-center">
-                <li class="mb-2"><strong>Desarrolladores:</strong></li>
+                <li class="mb-2"><strong>Desenvolvedores:</strong></li>
                 <li class="mb-1">Lucas Carneiro</li>
                 <li class="mb-1">Lucas Candido</li>
                 <li class="mb-1">Vitória Pinheiro</li>
                 <li class="mb-2 mt-3"><strong>Apoyo y Colaboración:</strong></li>
-                <li class="mb-1">Equipo de Mercado Libre y Mercado Pago (Concentrix)</li>
                 <li class="mb-1">Mercado Livre and Mercado Pago Team (Concentrix)</li>
-                <li class="mb-2 mt-3"><strong>Enlaces:</strong></li>
+                <li class="mb-2 mt-3"><strong>Links:</strong></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh" target="_blank" class="text-blue-500 hover:underline">Candido GitHub</a></li>
                 <li class="mb-1"><a href="https://github.com/boltreskh/Almail" target="_blank" class="text-blue-500 hover:underline">Repositorio del Proyecto</a></li>
             </ul>
@@ -528,6 +567,8 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
 * **Nombre del Cliente Final:** {CLIENT_NAME} (Si el cliente no tiene un nombre específico, este campo será "No Informado")
 * **Canal de Atención:** {SERVICE_CHANNEL} (Puede ser "Chat", "Correo Electrónico" o "C2C (Voz)")
 * **Ecossistema de Atendimento:** {ECOSYSTEM}
+* **Sentimiento del Cliente:** {CLIENT_SENTIMENT} (Este es el sentimiento que el colaborador indicó para el cliente: "Satisfecho", "Neutro", "Frustrado" o "Não Informado". Ten en cuenta esto para adaptar el tono y la profundidad de tu respuesta, centrándote en soluciones y empatía.)
+* **Tono de Respuesta de la IA:** {AI_TONE} (Este es el tono que la IA debe usar en su respuesta: "Formal", "Empático" o "Directo". Adapta el lenguaje y la estructura de tu respuesta para reflejar este tono.)
 
 **Adaptación de la Respuesta con base no Canal de Atendimento:**
 
@@ -590,6 +631,19 @@ Debes actuar como un **agente de soporte para el colaborador**, proporcionando i
         startChatButton: 'Iniciar Nueva Conversación',
         collaboratorNameRequired: 'Por favor, introduce tu nombre.',
         clientNameRequired: 'Por favor, introduce el nombre del cliente.',
+        sentimentQuestion: '¿Cómo percibes las sensaciones del usuario al contacto?',
+        sentimentSatisfied: 'Satisfecho',
+        sentimentNeutral: 'Neutro',
+        sentimentFrustrated: 'Frustrado',
+        sentimentSelected: 'Sentimiento registrado: {SENTIMENT}.',
+        aiToneQuestion: '¿Qué tono debe usar la IA en la respuesta?',
+        aiToneFormal: 'Formal',
+        aiToneEmpathetic: 'Empático',
+        aiToneDirect: 'Directo',
+        aiToneSelected: 'Tono de IA registrado: {TONE}.',
+        allConversations: 'Todas las Conversas', // NOVO: Tradução para "Todas as Conversas"
+        favoriteConversations: 'Conversaciones Favoritas', // NOVO: Tradução para "Conversas Favoritas"
+        favoriteButtonAria: 'Marcar/Desmarcar como favorito', // NOVO: Tradução para aria-label do botão de favorito
     }
 };
 
@@ -631,6 +685,36 @@ function setLanguage(lang) {
             }
         }
     });
+
+    // Explicitamente atualiza o texto dos botões de sentimento
+    const sentimentSatisfiedButton = document.querySelector('.sentiment-button[data-sentiment="satisfied"]');
+    const sentimentNeutralButton = document.querySelector('.sentiment-button[data-sentiment="neutral"]');
+    const sentimentFrustratedButton = document.querySelector('.sentiment-button[data-sentiment="frustrated"]');
+
+    if (sentimentSatisfiedButton) {
+        sentimentSatisfiedButton.textContent = translations[lang].sentimentSatisfied;
+    }
+    if (sentimentNeutralButton) {
+        sentimentNeutralButton.textContent = translations[lang].sentimentNeutral;
+    }
+    if (sentimentFrustratedButton) {
+        sentimentFrustratedButton.textContent = translations[lang].sentimentFrustrated;
+    }
+
+    // NOVO: Explicitamente atualiza o texto dos botões de tom da IA
+    const aiToneFormalButton = document.querySelector('.ai-tone-button[data-tone="formal"]');
+    const aiToneEmpatheticButton = document.querySelector('.ai-tone-button[data-tone="empathetic"]');
+    const aiToneDirectButton = document.querySelector('.ai-tone-button[data-tone="direct"]');
+
+    if (aiToneFormalButton) {
+        aiToneFormalButton.textContent = translations[lang].aiToneFormal;
+    }
+    if (aiToneEmpatheticButton) {
+        aiToneEmpatheticButton.textContent = translations[lang].aiToneEmpathetic;
+    }
+    if (aiToneDirectButton) {
+        aiToneDirectButton.textContent = translations[lang].aiToneDirect;
+    }
 
     // Atualiza o conteúdo do tutorial
     if (translations[lang] && translations[lang].tutorialText) {
@@ -726,37 +810,56 @@ function renderInlineMarkdown(text) {
 }
 
 // Adiciona uma mensagem à interface do chat
-function appendMessageToUI(sender, text, addFeedbackButtons = false) {
+function appendMessageToUI(messageObject, addFeedbackButtons = false) {
     const messageBubble = document.createElement('div');
     messageBubble.classList.add('message-bubble');
 
-    messageBubble.innerHTML = renderMarkdown(text);
+    let displayText = '';
+    let isUserMessage = false;
 
-    if (sender === 'user') {
-        messageBubble.classList.add('user-message');
+    if (messageObject.type === 'sentiment_selection') {
+        const sentimentKey = `sentiment${messageObject.sentiment.charAt(0).toUpperCase() + messageObject.sentiment.slice(1)}`;
+        const translatedSentiment = translations[currentLanguage][sentimentKey];
+        displayText = translations[currentLanguage].sentimentSelected.replace('{SENTIMENT}', translatedSentiment);
+        isUserMessage = true; // Sentiment selection is from the user
+    } else if (messageObject.type === 'ai_tone_selection') { // NOVO: Tipo de mensagem para seleção de tom da IA
+        const toneKey = `aiTone${messageObject.tone.charAt(0).toUpperCase() + messageObject.tone.slice(1)}`;
+        const translatedTone = translations[currentLanguage][toneKey];
+        displayText = translations[currentLanguage].aiToneSelected.replace('{TONE}', translatedTone);
+        isUserMessage = true; // AI tone selection is from the user
     }
     else {
+        displayText = messageObject.parts[0].text;
+        isUserMessage = (messageObject.role === 'user');
+    }
+
+    if (isUserMessage) {
+        messageBubble.classList.add('user-message');
+    } else {
         messageBubble.classList.add('ai-message');
-        if (addFeedbackButtons) {
-            const feedbackContainer = document.createElement('div');
-            feedbackContainer.classList.add('feedback-buttons');
+    }
 
-            const likeButton = document.createElement('button');
-            likeButton.classList.add('feedback-button', 'like-button');
-            likeButton.innerHTML = '<i data-feather="thumbs-up"></i>';
-            likeButton.title = translations[currentLanguage].likeFeedback;
-            likeButton.addEventListener('click', () => handleFeedback(messageBubble, 'like', text));
+    messageBubble.innerHTML = renderMarkdown(displayText);
 
-            const dislikeButton = document.createElement('button');
-            dislikeButton.classList.add('feedback-button', 'dislike-button');
-            dislikeButton.innerHTML = '<i data-feather="thumbs-down"></i>';
-            dislikeButton.title = translations[currentLanguage].dislikeFeedback;
-            dislikeButton.addEventListener('click', () => handleFeedback(messageBubble, 'dislike', text));
+    if (messageObject.role === 'assistant' && addFeedbackButtons) {
+        const feedbackContainer = document.createElement('div');
+        feedbackContainer.classList.add('feedback-buttons');
 
-            feedbackContainer.appendChild(likeButton);
-            feedbackContainer.appendChild(dislikeButton);
-            messageBubble.appendChild(feedbackContainer);
-        }
+        const likeButton = document.createElement('button');
+        likeButton.classList.add('feedback-button', 'like-button');
+        likeButton.innerHTML = '<i data-feather="thumbs-up"></i>';
+        likeButton.title = translations[currentLanguage].likeFeedback;
+        likeButton.addEventListener('click', () => handleFeedback(messageBubble, 'like', messageObject));
+
+        const dislikeButton = document.createElement('button');
+        dislikeButton.classList.add('feedback-button', 'dislike-button');
+        dislikeButton.innerHTML = '<i data-feather="thumbs-down"></i>';
+        dislikeButton.title = translations[currentLanguage].dislikeFeedback;
+        dislikeButton.addEventListener('click', () => handleFeedback(messageBubble, 'dislike', messageObject));
+
+        feedbackContainer.appendChild(likeButton);
+        feedbackContainer.appendChild(dislikeButton);
+        messageBubble.appendChild(feedbackContainer);
     }
     chatMessages.appendChild(messageBubble);
     // Removido o scroll automático aqui para permitir que o usuário role livremente
@@ -765,7 +868,7 @@ function appendMessageToUI(sender, text, addFeedbackButtons = false) {
 }
 
 // Simula o efeito de digitação para a mensagem da IA
-function typeMessage(text, addFeedbackButtons = false) {
+function typeMessage(messageObject, addFeedbackButtons = false, isInitialWelcome = false) {
     loadingIndicator.style.display = 'flex';
     loadingIndicator.classList.add('show');
 
@@ -778,6 +881,7 @@ function typeMessage(text, addFeedbackButtons = false) {
     let i = 0;
     const typingSpeed = 1; // Ajuste este valor para controlar a velocidade de digitação (menor = mais rápido)
     let currentRawText = '';
+    const textToType = messageObject.parts[0].text; // Get the actual text from the message object
 
     function typeCharacter() {
         if (!isConversationActive) {
@@ -790,6 +894,7 @@ function typeMessage(text, addFeedbackButtons = false) {
             userInput.classList.remove('disabled');
             sendButton.classList.remove('disabled');
             historyList.classList.remove('disabled');
+            favoritesList.classList.remove('disabled'); // NOVO: Habilita lista de favoritos
 
             languageToggleButton.disabled = false;
             languageToggleButton.classList.remove('disabled');
@@ -798,8 +903,8 @@ function typeMessage(text, addFeedbackButtons = false) {
             return;
         }
 
-        if (i < text.length) {
-            currentRawText += text.charAt(i);
+        if (i < textToType.length) {
+            currentRawText += textToType.charAt(i);
             messageBubble.innerHTML = renderMarkdown(currentRawText);
             i++;
             // Não rola o chat automaticamente enquanto digita
@@ -813,6 +918,7 @@ function typeMessage(text, addFeedbackButtons = false) {
             userInput.classList.remove('disabled');
             sendButton.classList.remove('disabled');
             historyList.classList.remove('disabled');
+            favoritesList.classList.remove('disabled'); // NOVO: Habilita lista de favoritos
 
             languageToggleButton.disabled = false;
             languageToggleButton.classList.remove('disabled');
@@ -830,13 +936,13 @@ function typeMessage(text, addFeedbackButtons = false) {
                 likeButton.classList.add('feedback-button', 'like-button');
                 likeButton.innerHTML = '<i data-feather="thumbs-up"></i>';
                 likeButton.title = translations[currentLanguage].likeFeedback;
-                likeButton.addEventListener('click', () => handleFeedback(messageBubble, 'like', text));
+                likeButton.addEventListener('click', () => handleFeedback(messageBubble, 'like', messageObject));
 
                 const dislikeButton = document.createElement('button');
                 dislikeButton.classList.add('feedback-button', 'dislike-button');
                 dislikeButton.innerHTML = '<i data-feather="thumbs-down"></i>';
                 dislikeButton.title = translations[currentLanguage].dislikeFeedback;
-                dislikeButton.addEventListener('click', () => handleFeedback(messageBubble, 'dislike', text));
+                dislikeButton.addEventListener('click', () => handleFeedback(messageBubble, 'dislike', messageObject));
 
                 feedbackContainer.appendChild(likeButton);
                 feedbackContainer.appendChild(dislikeButton);
@@ -847,13 +953,20 @@ function typeMessage(text, addFeedbackButtons = false) {
             // que o usuário mantenha sua posição de rolagem após a IA terminar de digitar.
             // chatMessages.scrollTop = chatMessages.scrollHeight;
             typingTimeoutId = null;
+
+            // NOVO: Se for a mensagem de boas-vindas inicial, exibe os botões de sentimento
+            if (isInitialWelcome) {
+                displaySentimentButtons();
+            } else if (currentClientSentiment !== null && currentAiTone === null) { // NOVO: Se o sentimento já foi selecionado e o tom da IA ainda não
+                displayAiToneButtons();
+            }
         }
     }
     typeCharacter();
 }
 
 // Lida com o feedback do usuário
-async function handleFeedback(messageBubble, feedbackType, originalAiText) {
+async function handleFeedback(messageBubble, feedbackType, originalAiMessageObject) {
     const feedbackButtons = messageBubble.querySelectorAll('.feedback-button');
     feedbackButtons.forEach(button => {
         button.disabled = true;
@@ -862,12 +975,16 @@ async function handleFeedback(messageBubble, feedbackType, originalAiText) {
 
     if (feedbackType === 'like') {
         messageBubble.querySelector('.like-button').classList.add('liked');
-        appendMessageToUI('ai', translations[currentLanguage].likeFeedback);
+        appendMessageToUI({ role: 'assistant', parts: [{ text: translations[currentLanguage].likeFeedback }] });
     } else if (feedbackType === 'dislike') {
         messageBubble.querySelector('.dislike-button').classList.add('disliked');
-        appendMessageToUI('ai', translations[currentLanguage].dislikeFeedback);
+        appendMessageToUI({ role: 'assistant', parts: [{ text: translations[currentLanguage].dislikeFeedback }] });
 
-        chatHistory.pop();
+        // Remove the disliked AI message from chatHistory
+        const indexToRemove = chatHistory.indexOf(originalAiMessageObject);
+        if (indexToRemove !== -1) {
+            chatHistory.splice(indexToRemove, 1);
+        }
 
         chatHistory.push({
             role: "user",
@@ -879,10 +996,129 @@ async function handleFeedback(messageBubble, feedbackType, originalAiText) {
 }
 
 /**
+ * Exibe os botões de sentimento ao cliente.
+ */
+function displaySentimentButtons() {
+    sentimentButtonsContainer.classList.remove('hidden');
+    aiToneButtonsContainer.classList.add('hidden'); // Esconde os botões de tom da IA
+    const buttons = sentimentButtonsContainer.querySelectorAll('.sentiment-button');
+    buttons.forEach(button => {
+        button.classList.remove('selected'); // Remove a seleção anterior, se houver
+        button.disabled = false;
+        button.classList.remove('disabled');
+        button.onclick = () => handleSentimentSelection(button.dataset.sentiment);
+    });
+    // Disable input and send button when sentiment selection is active
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled');
+    sendButton.classList.add('disabled');
+}
+
+/**
+ * Lida com a seleção de sentimento do cliente.
+ * @param {string} sentiment O sentimento escolhido ('satisfied', 'neutral', 'frustrated').
+ */
+function handleSentimentSelection(sentiment) {
+    currentClientSentiment = sentiment; // Armazena o sentimento selecionado
+
+    // Desabilita e marca o botão selecionado
+    const buttons = sentimentButtonsContainer.querySelectorAll('.sentiment-button');
+    buttons.forEach(button => {
+        button.disabled = true;
+        button.classList.add('disabled');
+        if (button.dataset.sentiment === sentiment) {
+            button.classList.add('selected');
+        }
+    });
+
+    // Adicionar a mensagem estruturada ao chatHistory
+    const sentimentMessageObject = {
+        role: "user",
+        type: "sentiment_selection",
+        sentiment: sentiment
+    };
+    chatHistory.push(sentimentMessageObject);
+    appendMessageToUI(sentimentMessageObject); // Pass the full object
+
+    // Esconde os botões após a seleção
+    sentimentButtonsContainer.classList.add('hidden');
+
+    // NOVO: Exibe os botões de tom da IA após a seleção de sentimento
+    displayAiToneButtons();
+
+    // Enable input and send button after sentiment is selected
+    userInput.disabled = true; // Keep disabled until AI tone is selected
+    sendButton.disabled = true; // Keep disabled until AI tone is selected
+    userInput.classList.add('disabled');
+    sendButton.classList.add('disabled');
+    // userInput.focus(); // Focus back on the input
+}
+
+/**
+ * NOVO: Exibe os botões de tom da IA.
+ */
+function displayAiToneButtons() {
+    aiToneButtonsContainer.classList.remove('hidden');
+    sentimentButtonsContainer.classList.add('hidden'); // Esconde os botões de sentimento
+    const buttons = aiToneButtonsContainer.querySelectorAll('.ai-tone-button');
+    buttons.forEach(button => {
+        button.classList.remove('selected'); // Remove a seleção anterior, se houver
+        button.disabled = false;
+        button.classList.remove('disabled');
+        button.onclick = () => handleAiToneSelection(button.dataset.tone);
+    });
+    // Disable input and send button when AI tone selection is active
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled');
+    sendButton.classList.add('disabled');
+}
+
+/**
+ * NOVO: Lida com a seleção de tom da IA.
+ * @param {string} tone O tom escolhido ('formal', 'empathetic', 'direct').
+ */
+function handleAiToneSelection(tone) {
+    currentAiTone = tone; // Armazena o tom selecionado
+
+    // Desabilita e marca o botão selecionado
+    const buttons = aiToneButtonsContainer.querySelectorAll('.ai-tone-button');
+    buttons.forEach(button => {
+        button.disabled = true;
+        button.classList.add('disabled');
+        if (button.dataset.tone === tone) {
+            button.classList.add('selected');
+        }
+    });
+
+    // Adicionar a mensagem estruturada ao chatHistory
+    const aiToneMessageObject = {
+        role: "user",
+        type: "ai_tone_selection",
+        tone: tone
+    };
+    chatHistory.push(aiToneMessageObject);
+    appendMessageToUI(aiToneMessageObject); // Pass the full object
+
+    // Esconde os botões após a seleção
+    aiToneButtonsContainer.classList.add('hidden');
+
+    // Enable input and send button after AI tone is selected
+    userInput.disabled = false;
+    sendButton.disabled = false;
+    userInput.classList.remove('disabled');
+    sendButton.classList.remove('disabled');
+    userInput.focus(); // Focus back on the input
+}
+
+
+/**
  * Salva a conversa atual no Firestore.
  * @param {string} title O título da conversa.
+ * @param {boolean} isFavorite Indica se a conversa é favorita.
  */
-async function saveConversation(title) {
+async function saveConversation(title, isFavorite = false) { // NOVO: Adicionado isFavorite
     if (!db || !userId || !isAuthReady || chatHistory.length <= 1) {
         console.warn("Firebase ou userId não prontos para salvar conversa, ou histórico muito curto.");
         return;
@@ -897,7 +1133,10 @@ async function saveConversation(title) {
             collaboratorName: collaboratorName || "Não Informado",
             clientName: currentClientName || "Não Informado",
             serviceChannel: serviceChannel || "Não Informado",
-            ecosystem: ecosystem || "Não Informado"
+            ecosystem: ecosystem || "Não Informado",
+            clientSentiment: currentClientSentiment || "Não Informado", // NOVO: Salva o sentimento
+            aiTone: currentAiTone || "Não Informado", // NOVO: Salva o tom da IA
+            isFavorite: isFavorite // NOVO: Salva o status de favorito
         });
         // console.log("Conversa salva com sucesso!"); // Removido
         loadConversationHistory();
@@ -934,6 +1173,10 @@ async function loadConversation(conversationId) {
     collaboratorName = null;
     serviceChannel = null;
     ecosystem = null;
+    currentClientSentiment = null; // NOVO: Reseta o sentimento
+    currentAiTone = null; // NOVO: Reseta o tom da IA
+    sentimentButtonsContainer.classList.add('hidden'); // Esconde os botões de sentimento
+    aiToneButtonsContainer.classList.add('hidden'); // Esconde os botões de tom da IA
 
     userInput.value = '';
     userInput.style.height = 'auto';
@@ -946,6 +1189,9 @@ async function loadConversation(conversationId) {
     sendButton.disabled = true;
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
+    historyList.classList.add('disabled'); // Desabilita a lista de histórico
+    favoritesList.classList.add('disabled'); // NOVO: Desabilita lista de favoritos
+
 
     try {
         const docRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, conversationId);
@@ -959,10 +1205,12 @@ async function loadConversation(conversationId) {
             currentClientName = data.clientName || null;
             serviceChannel = data.serviceChannel || null;
             ecosystem = data.ecosystem || null;
+            currentClientSentiment = data.clientSentiment || null; // NOVO: Carrega o sentimento
+            currentAiTone = data.aiTone || null; // NOVO: Carrega o tom da IA
 
             chatHistory.forEach((msg, index) => {
                 const addFeedback = (msg.role === 'assistant' && index === chatHistory.length - 1);
-                appendMessageToUI(msg.role, msg.parts[0].text, addFeedback);
+                appendMessageToUI(msg, addFeedback); // Pass the full message object
             });
 
             document.querySelectorAll('.history-item').forEach(item => {
@@ -985,6 +1233,8 @@ async function loadConversation(conversationId) {
         sendButton.classList.remove('disabled');
         userInput.focus();
         isConversationActive = true;
+        historyList.classList.remove('disabled'); // Habilita a lista de histórico
+        favoritesList.classList.remove('disabled'); // NOVO: Habilita lista de favoritos
     }
 }
 
@@ -994,7 +1244,14 @@ async function loadConversation(conversationId) {
 async function startNewConversation() {
     if (chatHistory.length > 1 && currentConversationId !== null) {
         const title = await generateConversationTitle(initialUserMessage || chatHistory[1]?.parts[0]?.text || "Conversa sem Título");
-        await saveConversation(title);
+        // Ao iniciar uma nova conversa, o status de favorito da conversa anterior não é alterado,
+        // mas é importante garantir que ele seja salvo corretamente.
+        // Para simplificar, vamos assumir que não estamos alterando o status de favorito aqui,
+        // mas sim salvando a conversa com o status que ela já possui.
+        // Se a lógica exigir que uma conversa "nova" seja sempre não favorita, isso precisaria ser ajustado.
+        const currentConversationDoc = await getDoc(doc(db, `artifacts/${appId}/users/${userId}/conversations`, currentConversationId));
+        const isFavorite = currentConversationDoc.exists() ? currentConversationDoc.data().isFavorite : false;
+        await saveConversation(title, isFavorite); // NOVO: Passa o status de favorito
     }
 
     showChatArea();
@@ -1010,8 +1267,12 @@ async function startNewConversation() {
     collaboratorName = null;
     serviceChannel = null;
     ecosystem = null;
+    currentClientSentiment = null; // NOVO: Reseta o sentimento
+    currentAiTone = null; // NOVO: Reseta o tom da IA
     currentConversationId = null;
     initialUserMessage = null;
+    sentimentButtonsContainer.classList.add('hidden'); // Esconde os botões de sentimento
+    aiToneButtonsContainer.classList.add('hidden'); // NOVO: Esconde os botões de tom da IA
 
     showInitialDataModal();
 
@@ -1214,13 +1475,22 @@ async function sendMessage(isRegeneration = false) {
         return;
     }
 
-    if (!isRegeneration && chatHistory.length === 1 && chatHistory[0].role === "assistant" && chatHistory[0].parts[0].text.startsWith(translations[currentLanguage].welcomeMessage.split('{')[0])) {
-        initialUserMessage = prompt;
+    // NOVO: Esconde os botões de sentimento e tom da IA se o usuário enviar uma mensagem
+    sentimentButtonsContainer.classList.add('hidden');
+    aiToneButtonsContainer.classList.add('hidden');
+    // NOVO: Se o sentimento não foi selecionado, define como "Não Informado"
+    if (currentClientSentiment === null) {
+        currentClientSentiment = "Não Informado";
+    }
+    // NOVO: Se o tom da IA não foi selecionado, define como "Não Informado"
+    if (currentAiTone === null) {
+        currentAiTone = "Não Informado";
     }
 
     if (!isRegeneration) {
-        appendMessageToUI('user', prompt);
-        chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+        const userMessageObject = { role: "user", parts: [{ text: prompt }] };
+        appendMessageToUI(userMessageObject);
+        chatHistory.push(userMessageObject);
     }
 
     userInput.value = '';
@@ -1234,6 +1504,7 @@ async function sendMessage(isRegeneration = false) {
     userInput.classList.add('disabled');
     sendButton.classList.add('disabled');
     historyList.classList.add('disabled'); // Desabilita a lista de histórico
+    favoritesList.classList.add('disabled'); // NOVO: Desabilita lista de favoritos
     languageToggleButton.disabled = true; // Desabilita o botão de idioma
     languageToggleButton.classList.add('disabled');
     homeButton.disabled = true; // Desabilita o botão de início
@@ -1255,6 +1526,8 @@ async function sendMessage(isRegeneration = false) {
         systemInstructions = systemInstructions.replace('{CLIENT_NAME}', currentClientName);
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL}', serviceChannel || "Não Informado");
         systemInstructions = systemInstructions.replace('{ECOSYSTEM}', ecosystem || "Não Informado");
+        systemInstructions = systemInstructions.replace('{CLIENT_SENTIMENT}', currentClientSentiment); // NOVO: Adiciona o sentimento
+        systemInstructions = systemInstructions.replace('{AI_TONE}', currentAiTone); // NOVO: Adiciona o tom da IA
 
         let channelSpecificInstructions = '';
         if (serviceChannel === 'email') {
@@ -1353,9 +1626,12 @@ async function sendMessage(isRegeneration = false) {
         systemInstructions = systemInstructions.replace('{SERVICE_CHANNEL_INSTRUCTIONS}', channelSpecificInstructions);
         systemInstructions = systemInstructions.replace('{ECOSYSTEM_INSTRUCTIONS}', ecosystemSpecificInstructions);
 
+        // Filter chatHistory to only include messages suitable for the API
+        const filteredChatHistory = chatHistory.filter(msg => msg.role && msg.parts && msg.parts[0] && msg.parts[0].text);
+
         const contentsToSend = [
             { role: "user", parts: [{ text: systemInstructions }] },
-            ...chatHistory
+            ...filteredChatHistory
         ];
 
         // console.log("Sending system instructions for language:", currentLanguage); // Removido
@@ -1402,8 +1678,13 @@ async function sendMessage(isRegeneration = false) {
             result.candidates[0].content.parts.length > 0) {
             let aiResponseText = result.candidates[0].content.parts[0].text;
 
-            typeMessage(aiResponseText, true);
-            chatHistory.push({ role: "assistant", parts: [{ text: aiResponseText }] });
+            const aiMessageObject = { role: "assistant", parts: [{ text: aiResponseText }] }; // Create the object here
+
+            // NOVO: Verifica se é a primeira mensagem da IA para exibir os botões de sentimento
+            const isInitialWelcomeMessage = chatHistory.length === 0 || (chatHistory.length === 1 && chatHistory[0].role === "assistant" && chatHistory[0].parts[0].text.startsWith(translations[currentLanguage].welcomeMessage.split('{')[0]));
+
+            typeMessage(aiMessageObject, true, isInitialWelcomeMessage); // Pass the object
+            chatHistory.push(aiMessageObject); // Push the same object to history
 
             if (currentConversationId === null && chatHistory.length > 2) {
                 const title = await generateConversationTitle(initialUserMessage || prompt);
@@ -1415,7 +1696,10 @@ async function sendMessage(isRegeneration = false) {
                     collaboratorName: collaboratorName || "Não Informado",
                     clientName: currentClientName || "Não Informado",
                     serviceChannel: serviceChannel || "Não Informado",
-                    ecosystem: ecosystem || "Não Informado"
+                    ecosystem: ecosystem || "Não Informado",
+                    clientSentiment: currentClientSentiment || "Não Informado",
+                    aiTone: currentAiTone || "Não Informado", // NOVO: Salva o tom da IA
+                    isFavorite: false // NOVO: Define como não favorito por padrão
                 });
                 currentConversationId = newDocRef.id;
                 loadConversationHistory();
@@ -1423,12 +1707,14 @@ async function sendMessage(isRegeneration = false) {
                 const docRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, currentConversationId);
                 await setDoc(docRef, {
                     messages: JSON.stringify(chatHistory),
+                    clientSentiment: currentClientSentiment,
+                    aiTone: currentAiTone // NOVO: Atualiza o tom da IA
                 }, { merge: true });
             }
 
         } else {
             console.error('Estrutura de resposta inesperada da API Gemini:', result);
-            typeMessage(translations[currentLanguage].errorMessage, false);
+            typeMessage({ role: 'assistant', parts: [{ text: translations[currentLanguage].errorMessage }] }, false); // Pass object for error
         }
 
     } catch (error) {
@@ -1469,6 +1755,10 @@ async function deleteConversation(conversationId) {
                     showInitialScreen();
                     currentConversationId = null;
                     chatHistory = [];
+                    currentClientSentiment = null; // NOVO: Reseta o sentimento
+                    currentAiTone = null; // NOVO: Reseta o tom da IA
+                    sentimentButtonsContainer.classList.add('hidden'); // Esconde os botões de sentimento
+                    aiToneButtonsContainer.classList.add('hidden'); // NOVO: Esconde os botões de tom da IA
                 }
                 loadConversationHistory();
             } catch (error) {
@@ -1545,6 +1835,33 @@ async function updateConversationTitleInFirestore(conversationId, newTitle) {
 }
 
 /**
+ * Alterna o status de favorito de uma conversa no Firestore.
+ * @param {string} conversationId O ID do documento da conversa.
+ * @param {boolean} currentFavoriteStatus O status atual de favorito da conversa.
+ */
+async function toggleFavoriteStatus(conversationId, currentFavoriteStatus) {
+    if (!db || !userId || !isAuthReady) {
+        console.error("Firebase ou userId não prontos para atualizar favorito.");
+        return;
+    }
+    try {
+        const docRef = doc(db, `artifacts/${appId}/users/${userId}/conversations`, conversationId);
+        await setDoc(docRef, { isFavorite: !currentFavoriteStatus }, { merge: true });
+        loadConversationHistory(); // Recarrega o histórico para atualizar as listas
+    } catch (error) {
+        console.error("Erro ao alternar status de favorito:", error);
+        errorMessage.textContent = `${translations[currentLanguage].errorMessage}: ${error.message}`;
+        errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('show');
+        setTimeout(() => {
+            errorMessage.classList.add('hidden');
+            errorMessage.classList.remove('show');
+        }, 7000);
+    }
+}
+
+
+/**
  * Carrega o histórico de conversas do Firestore e renderiza na sidebar.
  */
 async function loadConversationHistory() {
@@ -1564,9 +1881,10 @@ async function loadConversationHistory() {
         });
 
         // Ordenar as conversas pelo timestamp no cliente
-        conversations.sort((a, b) => a.timestamp - b.timestamp);
+        conversations.sort((a, b) => b.timestamp - a.timestamp); // Ordena do mais recente para o mais antigo
 
         historyList.innerHTML = '';
+        favoritesList.innerHTML = ''; // Limpa a lista de favoritos
 
         conversations.forEach((data) => {
             const li = document.createElement('li');
@@ -1589,19 +1907,35 @@ async function loadConversationHistory() {
             actionButtons.style.display = 'none';
             titleAndActions.appendChild(actionButtons);
 
+            // Botão de Favorito
+            const favoriteButton = document.createElement('button');
+            favoriteButton.classList.add('favorite-conversation-button');
+            favoriteButton.innerHTML = data.isFavorite ? '<i data-feather="star" class="filled"></i>' : '<i data-feather="star"></i>';
+            favoriteButton.title = translations[currentLanguage].favoriteButtonAria;
+            if (data.isFavorite) {
+                favoriteButton.classList.add('favorited');
+            }
+            actionButtons.appendChild(favoriteButton);
+
+
             const editButton = document.createElement('button');
             editButton.classList.add('edit-conversation-button');
             editButton.innerHTML = '<i data-feather="edit-2"></i>';
             editButton.title = translations[currentLanguage].editTitle;
             actionButtons.appendChild(editButton);
 
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('delete-conversation-button');
+            const deleteButton = document.createElement('button'); // Create the button element
+            deleteButton.classList.add('delete-conversation-button'); // Add the class to the button
             deleteButton.innerHTML = '<i data-feather="x"></i>';
             deleteButton.title = translations[currentLanguage].deleteConfirm;
             actionButtons.appendChild(deleteButton);
 
-            historyList.appendChild(li);
+            if (data.isFavorite) {
+                favoritesList.appendChild(li); // Adiciona à lista de favoritos
+            } else {
+                historyList.appendChild(li); // Adiciona à lista de todas as conversas
+            }
+
 
             li.addEventListener('mouseenter', () => {
                 actionButtons.style.display = 'flex';
@@ -1617,7 +1951,11 @@ async function loadConversationHistory() {
                 li.classList.add('active');
             }
 
-            li.addEventListener('click', () => {
+            li.addEventListener('click', (event) => {
+                // Previne que o clique nos botões de ação propague para o item da lista
+                if (event.target.closest('.action-buttons')) {
+                    return;
+                }
                 if (titleSpan.contentEditable === 'true') {
                     return;
                 }
@@ -1631,7 +1969,12 @@ async function loadConversationHistory() {
 
             editButton.addEventListener('click', (event) => {
                 event.stopPropagation();
-                toggleEditMode(data.id, titleSpan, editButton, deleteButton, actionButtons);
+                toggleEditMode(data.id, titleSpan, editButton, deleteButton, actionButtons, favoriteButton);
+            });
+
+            favoriteButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                toggleFavoriteStatus(data.id, data.isFavorite);
             });
         });
 
@@ -1643,7 +1986,8 @@ async function loadConversationHistory() {
 
         currentLanguageText.textContent = currentLanguage.substring(0, 2).toUpperCase();
         feather.replace();
-    } catch (error) {
+    }
+    catch (error) {
         console.error("Erro ao carregar histórico de conversas:", error);
     }
 }
@@ -1655,8 +1999,9 @@ async function loadConversationHistory() {
  * @param {HTMLElement} editButton O botão de editar/salvar.
  * @param {HTMLElement} deleteButton O botão de excluir.
  * @param {HTMLElement} actionButtonsContainer O contêiner dos botões de ação.
+ * @param {HTMLElement} favoriteButton O botão de favorito. // NOVO: Adicionado favoriteButton
  */
-function toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer) {
+function toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer, favoriteButton) {
     const isEditing = titleElement.contentEditable === 'true';
 
     if (isEditing) {
@@ -1671,6 +2016,7 @@ function toggleEditMode(conversationId, titleElement, editButton, deleteButton, 
         editButton.innerHTML = '<i data-feather="edit-2"></i>';
         editButton.title = translations[currentLanguage].editTitle;
         deleteButton.style.display = 'flex';
+        favoriteButton.style.display = 'flex'; // NOVO: Mostra o botão de favorito
         actionButtonsContainer.style.display = 'flex';
         feather.replace();
     } else {
@@ -1680,6 +2026,7 @@ function toggleEditMode(conversationId, titleElement, editButton, deleteButton, 
         editButton.innerHTML = '<i data-feather="check"></i>';
         editButton.title = translations[currentLanguage].saveTitle;
         deleteButton.style.display = 'none';
+        favoriteButton.style.display = 'none'; // NOVO: Esconde o botão de favorito
         actionButtonsContainer.style.display = 'flex';
         titleElement.focus();
         const range = document.createRange();
@@ -1692,12 +2039,12 @@ function toggleEditMode(conversationId, titleElement, editButton, deleteButton, 
         const handleKeyDown = (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer);
+                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer, favoriteButton);
                 titleElement.removeEventListener('keydown', handleKeyDown);
             } else if (e.key === 'Escape') {
                 e.preventDefault();
                 titleElement.textContent = titleElement.dataset.originalTitle;
-                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer);
+                toggleEditMode(conversationId, titleElement, editButton, deleteButton, actionButtonsContainer, favoriteButton);
                 titleElement.removeEventListener('keydown', handleKeyDown);
             }
         };
@@ -1716,6 +2063,11 @@ function showInitialScreen() {
     currentConversationId = null;
     initialUserMessage = null;
     chatHistory = [];
+    currentClientSentiment = null; // NOVO: Reseta o sentimento
+    currentAiTone = null; // NOVO: Reseta o tom da IA
+    sentimentButtonsContainer.classList.add('hidden'); // Esconde os botões de sentimento
+    aiToneButtonsContainer.classList.add('hidden'); // NOVO: Esconde os botões de tom da IA
+
     userInput.disabled = true;
     sendButton.disabled = true;
     userInput.classList.add('disabled');
@@ -1728,11 +2080,12 @@ function showInitialScreen() {
 function showChatArea() {
     initialScreen.classList.add('hidden');
     chatAndInputArea.classList.remove('hidden');
-    userInput.disabled = false;
-    sendButton.disabled = false;
-    userInput.classList.remove('disabled');
-    sendButton.classList.remove('disabled');
-    userInput.focus();
+    // Initially disable them until sentiment is chosen
+    userInput.disabled = true;
+    sendButton.disabled = true;
+    userInput.classList.add('disabled');
+    sendButton.classList.add('disabled');
+    userInput.focus(); // Still focus, but it will be disabled
     homeButton.classList.remove('active');
 }
 
@@ -1767,6 +2120,8 @@ initialDataConfirmButton.addEventListener('click', () => {
     currentClientName = clientNameInput.value.trim();
     serviceChannel = serviceChannelSelect.value;
     ecosystem = ecosystemSelect.value;
+    currentClientSentiment = null; // Garante que o sentimento é resetado ao iniciar uma nova conversa
+    currentAiTone = null; // NOVO: Garante que o tom da IA é resetado ao iniciar uma nova conversa
 
     if (!collaboratorName) {
         collaboratorNameInput.classList.add('input-error');
@@ -1911,11 +2266,9 @@ initialDataConfirmButton.addEventListener('click', () => {
         .replace(/{CLIENT_NAME_ADAPTED}/g, clientNameAdapted)
         .replace('{SERVICE_CHANNEL_ADAPTED}', serviceChannelDisplay) + " " + finalHelpPhrase;
 
-
-    chatHistory = [
-        { role: "assistant", parts: [{ text: fullWelcomeMessage }] }
-    ];
-    appendMessageToUI('ai', fullWelcomeMessage, false);
+    const welcomeMessageObject = { role: "assistant", parts: [{ text: fullWelcomeMessage }] };
+    chatHistory = [welcomeMessageObject]; // Store the object
+    typeMessage(welcomeMessageObject, false, true); // Pass the object
     userInput.focus();
 });
 
