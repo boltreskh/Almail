@@ -13,7 +13,7 @@
 * **Specialized AI Responses**: Context-aware assistance tailored to each business unit's specific needs
 * **SOS Restricted Mode**: Secure, limited-scope responses for emergency support channels
 
-### � **Advanced Chat Interface**
+### 💬 **Advanced Chat Interface**
 * Modern, responsive chat interface optimized for customer support workflows
 * **Persistent Conversation History**: All conversations securely stored in Firebase Firestore
 * **Smart Conversation Management**: Create, edit, delete, and organize support conversations
