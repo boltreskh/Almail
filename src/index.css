@@ -80,3 +80,54 @@ body {
 .dark ::selection {
   background-color: rgba(138, 180, 248, 0.3);
 }
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  /* Improve touch targets */
+  button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text legibility on small screens */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  /* Prevent zoom on input focus in iOS Safari */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* Optimize scrollbar for mobile */
+  .custom-scrollbar::-webkit-scrollbar { 
+    width: 6px; 
+    height: 6px; 
+  }
+}
+
+/* High DPI screens optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .custom-scrollbar::-webkit-scrollbar-thumb { 
+    border-radius: 6px; 
+  }
+}
+
+/* Safe area support for devices with notches */
+@supports (padding: max(0px)) {
+  .safe-area-inset {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .animate-gemini-pulse-custom,
+  .animate-fade-in-scale {
+    animation: none;
+  }
+}

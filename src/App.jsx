@@ -667,8 +667,8 @@ const Sidebar = ({ conversations, onSelectConversation, onCreateNewChat, current
       <button
         onClick={onClick} title={title || text}
         disabled={disabled}
-        className={`w-full p-3 flex items-center rounded-full transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-1 focus:ring-offset-neutral-100 dark:focus:ring-offset-neutral-800
-                    ${isCollapsed ? 'justify-center h-12 w-12 mx-auto' : 'justify-start space-x-3.5 h-[46px]'} 
+        className={`w-full p-2 sm:p-3 flex items-center rounded-full transition-all duration-200 ease-in-out group focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-1 focus:ring-offset-neutral-100 dark:focus:ring-offset-neutral-800
+                    ${isCollapsed ? 'justify-center h-10 w-10 sm:h-12 sm:w-12 mx-auto' : 'justify-start space-x-2.5 sm:space-x-3.5 h-[42px] sm:h-[46px]'} 
                     ${isNewChatButton 
                         ? '' 
                         : isActive 
@@ -681,11 +681,11 @@ const Sidebar = ({ conversations, onSelectConversation, onCreateNewChat, current
                     ${additionalClasses}`}
       >
         <Icon 
-          size={isCollapsed ? 20 : 19} 
+          size={isCollapsed ? (window.innerWidth < 640 ? 18 : 20) : (window.innerWidth < 640 ? 17 : 19)} 
           className={iconClassName} 
         />
         {!isCollapsed && (
-          <span className={textClassName}>
+          <span className={`${textClassName} text-xs sm:text-sm truncate`}>
             {text}
           </span>
         )}
@@ -694,21 +694,21 @@ const Sidebar = ({ conversations, onSelectConversation, onCreateNewChat, current
   };
 
   return (
-    <div className={`bg-neutral-100 dark:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-64 sm:w-72 md:w-[280px]' : 'w-0 md:w-[76px]'} overflow-hidden relative h-full border-r border-neutral-200/80 dark:border-neutral-700/70 shadow-lg`}>
-      <div className={`p-3 flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} border-b border-neutral-200/80 dark:border-neutral-700/70 flex-shrink-0 h-[68px]`}>
+    <div className={`bg-neutral-100 dark:bg-neutral-800/90 text-neutral-700 dark:text-neutral-200 flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-full sm:w-64 md:w-72 lg:w-[280px]' : 'w-0 sm:w-[60px] md:w-[76px]'} ${isSidebarOpen ? 'absolute sm:relative' : 'relative'} ${isSidebarOpen ? 'z-40 sm:z-auto' : ''} overflow-hidden h-full border-r border-neutral-200/80 dark:border-neutral-700/70 shadow-lg`}>
+      <div className={`p-2 sm:p-3 flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} border-b border-neutral-200/80 dark:border-neutral-700/70 flex-shrink-0 h-[60px] sm:h-[68px]`}>
         {isSidebarOpen && (
-          <button onClick={onNavigateHome} className="flex items-center space-x-2.5 hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md -ml-1 px-1 py-0.5">
-            <Sparkles size={24} className="text-blue-600 dark:text-blue-400" />
-            <h1 className="text-xl font-semibold text-neutral-800 dark:text-white">Almail+</h1> 
+          <button onClick={onNavigateHome} className="flex items-center space-x-2 sm:space-x-2.5 hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md -ml-1 px-1 py-0.5">
+            <Sparkles size={20} className="sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
+            <h1 className="text-lg sm:text-xl font-semibold text-neutral-800 dark:text-white">Almail+</h1> 
           </button>
         )}
-        <button onClick={toggleSidebar} className="text-neutral-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 p-2 rounded-full hover:bg-neutral-200/80 dark:hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
-          {isSidebarOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
+        <button onClick={toggleSidebar} className="text-neutral-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 p-1.5 sm:p-2 rounded-full hover:bg-neutral-200/80 dark:hover:bg-neutral-700/70 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+          {isSidebarOpen ? <ChevronLeft size={18} className="sm:w-5 sm:h-5" /> : <Menu size={18} className="sm:w-5 sm:h-5" />}
         </button>
       </div>
 
-      <div className={`flex-grow flex flex-col overflow-y-auto custom-scrollbar py-3.5 transition-opacity duration-200 ${isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-        <div className={`px-3 ${isSidebarOpen ? 'mb-3.5' : 'mb-2.5'}`}>
+      <div className={`flex-grow flex flex-col overflow-y-auto custom-scrollbar py-2 sm:py-3.5 transition-opacity duration-200 ${isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+        <div className={`px-2 sm:px-3 ${isSidebarOpen ? 'mb-2.5 sm:mb-3.5' : 'mb-2 sm:mb-2.5'}`}>
           <SidebarButton
               icon={Plus} text="Nova Conversa" onClick={onCreateNewChat} title="Iniciar uma nova conversa" isCollapsed={!isSidebarOpen}
               isNewChatButton={true} 
@@ -717,7 +717,7 @@ const Sidebar = ({ conversations, onSelectConversation, onCreateNewChat, current
           />
         </div>
 
-        <div className={`flex-grow px-3 space-y-1.5 ${!isSidebarOpen ? 'flex flex-col items-center mt-2.5 space-y-3' : ''}`}>
+        <div className={`flex-grow px-2 sm:px-3 space-y-1 sm:space-y-1.5 ${!isSidebarOpen ? 'flex flex-col items-center mt-2 sm:mt-2.5 space-y-2 sm:space-y-3' : ''}`}>
           {isSidebarOpen ? (
             conversations.map((conv) => (
               <div
@@ -902,61 +902,61 @@ const NewChatModal = ({ isOpen, onClose, onStart, isLoading }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
-            <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
-                <div className="flex justify-between items-center p-5 border-b border-neutral-200 dark:border-neutral-700">
-                    <h2 className="text-lg font-semibold text-neutral-800 dark:text-neutral-100">Iniciar Nova Conversa</h2>
-                    <button onClick={onClose} className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <X size={20} />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 transition-opacity duration-300 ease-in-out">
+            <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl w-full max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[95vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
+                <div className="flex justify-between items-center p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-700">
+                    <h2 className="text-base sm:text-lg font-semibold text-neutral-800 dark:text-neutral-100">Iniciar Nova Conversa</h2>
+                    <button onClick={onClose} className="p-1.5 sm:p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-500 dark:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <X size={18} className="sm:w-5 sm:h-5" />
                     </button>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="p-6 space-y-5">
+                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
                         <div>
-                            <label htmlFor="agentName" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Seu Nome (Atendente)</label>
+                            <label htmlFor="agentName" className="block text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Seu Nome (Atendente)</label>
                             <input type="text" name="agentName" id="agentName" value={info.agentName} onChange={handleChange}
-                                className={`w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-700/60 border ${errors.agentName ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'} rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-sm`}
+                                className={`w-full px-3 py-2 sm:py-2.5 bg-neutral-50 dark:bg-neutral-700/60 border ${errors.agentName ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'} rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-sm`}
                                 placeholder="Ex: João Silva"
                             />
                             {errors.agentName && <p className="text-xs text-red-500 mt-1.5">{errors.agentName}</p>}
                         </div>
                         <div>
-                            <label htmlFor="customerName" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Nome do Cliente</label>
+                            <label htmlFor="customerName" className="block text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">Nome do Cliente</label>
                             <input type="text" name="customerName" id="customerName" value={info.customerName} onChange={handleChange}
-                                className={`w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-700/60 border ${errors.customerName ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'} rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-sm`}
+                                className={`w-full px-3 py-2 sm:py-2.5 bg-neutral-50 dark:bg-neutral-700/60 border ${errors.customerName ? 'border-red-500' : 'border-neutral-300 dark:border-neutral-600'} rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-sm`}
                                 placeholder="Ex: Maria Souza"
                             />
                             {errors.customerName && <p className="text-xs text-red-500 mt-1.5">{errors.customerName}</p>}
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
                             <div>
-                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Canal de Atendimento</label>
+                                <label className="block text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Canal de Atendimento</label>
                                 <div className="flex flex-col space-y-2">
                                     {['Chat', 'Voz', 'E-mail'].map(channel => (
-                                        <label key={channel} className="flex items-center p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 cursor-pointer transition-colors duration-150 border border-transparent has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/40 dark:has-[:checked]:border-blue-500">
-                                            <input type="radio" name="channel" value={channel} checked={info.channel === channel} onChange={handleChange} className="h-4 w-4 text-blue-600 border-neutral-300 focus:ring-blue-500" />
-                                            <span className="ml-3 text-sm font-medium text-neutral-800 dark:text-neutral-200">{channel}</span>
+                                        <label key={channel} className="flex items-center p-2 sm:p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 cursor-pointer transition-colors duration-150 border border-transparent has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/40 dark:has-[:checked]:border-blue-500">
+                                            <input type="radio" name="channel" value={channel} checked={info.channel === channel} onChange={handleChange} className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 border-neutral-300 focus:ring-blue-500" />
+                                            <span className="ml-2 sm:ml-3 text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-200">{channel}</span>
                                         </label>
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Ecossistema</label>
+                                <label className="block text-xs sm:text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Ecossistema</label>
                                 <div className="flex flex-col space-y-2">
                                     {['Mercado Pago', 'Mercado Livre', 'SOS - Mercado Livre'].map(ecosystem => (
-                                         <label key={ecosystem} className="flex items-center p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 cursor-pointer transition-colors duration-150 border border-transparent has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/40 dark:has-[:checked]:border-blue-500">
-                                            <input type="radio" name="ecosystem" value={ecosystem} checked={info.ecosystem === ecosystem} onChange={handleChange} className="h-4 w-4 text-blue-600 border-neutral-300 focus:ring-blue-500" />
-                                            <span className="ml-3 text-sm font-medium text-neutral-800 dark:text-neutral-200">{ecosystem}</span>
+                                         <label key={ecosystem} className="flex items-center p-2 sm:p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700/60 cursor-pointer transition-colors duration-150 border border-transparent has-[:checked]:bg-blue-50 has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-900/40 dark:has-[:checked]:border-blue-500">
+                                            <input type="radio" name="ecosystem" value={ecosystem} checked={info.ecosystem === ecosystem} onChange={handleChange} className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 border-neutral-300 focus:ring-blue-500" />
+                                            <span className="ml-2 sm:ml-3 text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-200">{ecosystem}</span>
                                         </label>
                                     ))}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl">
+                    <div className="px-4 sm:px-6 py-3 sm:py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl">
                         <button type="submit" disabled={isLoading}
-                            className="w-full flex justify-center items-center px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 dark:disabled:bg-blue-800 disabled:cursor-not-allowed transition-colors duration-200">
-                            {isLoading ? <Loader2 className="animate-spin" size={20} /> : 'Iniciar Conversa'}
+                            className="w-full flex justify-center items-center px-4 py-2.5 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 dark:disabled:bg-blue-800 disabled:cursor-not-allowed transition-colors duration-200 text-sm sm:text-base">
+                            {isLoading ? <Loader2 className="animate-spin w-4 h-4 sm:w-5 sm:h-5" /> : 'Iniciar Conversa'}
                         </button>
                     </div>
                 </form>
@@ -1445,34 +1445,34 @@ const WelcomeModal = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
-      <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
-        <div className="p-6 text-center">
-          <div className="flex justify-center items-center mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-5 shadow-lg">
-             <Sparkles className="text-white" size={32} />
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 transition-opacity duration-300 ease-in-out">
+      <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl w-full max-w-xs sm:max-w-lg md:max-w-xl max-h-[95vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
+        <div className="p-4 sm:p-6 text-center">
+          <div className="flex justify-center items-center mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 mb-4 sm:mb-5 shadow-lg">
+             <Sparkles className="text-white w-6 h-6 sm:w-8 sm:h-8" />
           </div>
-          <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-50 mb-2">Bem-vindo(a) ao Almail+!</h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-1">De <span className="font-semibold text-neutral-600 dark:text-neutral-300">Beta 1.4.0</span> para a <span className="font-semibold text-green-500">Versão Oficial 1.0.0</span></p>
-          <p className="text-neutral-600 dark:text-neutral-300 mb-6">O Almail evoluiu! Confira as novidades que preparamos para você:</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-50 mb-2">Bem-vindo(a) ao Almail+!</h1>
+          <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 mb-1">De <span className="font-semibold text-neutral-600 dark:text-neutral-300">Beta 1.4.0</span> para a <span className="font-semibold text-green-500">Versão Oficial 1.0.0</span></p>
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 mb-4 sm:mb-6">O Almail evoluiu! Confira as novidades que preparamos para você:</p>
           
-          <div className="space-y-4 text-left my-6">
+          <div className="space-y-3 sm:space-y-4 text-left my-4 sm:my-6">
             {improvements.map((item, index) => (
-              <div key={index} className="flex items-start space-x-4 p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
-                <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 rounded-full">
-                  <item.icon className="text-blue-600 dark:text-blue-400" size={18} />
+              <div key={index} className="flex items-start space-x-3 sm:space-x-4 p-2.5 sm:p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
+                <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 rounded-full">
+                  <item.icon className="text-blue-600 dark:text-blue-400 w-3.5 h-3.5 sm:w-4.5 sm:h-4.5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-neutral-700 dark:text-neutral-200">{item.title}</h3>
-                  <p className="text-sm text-neutral-500 dark:text-neutral-400">{item.text}</p>
+                  <h3 className="font-semibold text-neutral-700 dark:text-neutral-200 text-sm sm:text-base">{item.title}</h3>
+                  <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">{item.text}</p>
                 </div>
               </div>
             ))}
           </div>
 
         </div>
-        <div className="px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl">
             <button onClick={onClose}
-                className="w-full flex justify-center items-center px-4 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                className="w-full flex justify-center items-center px-4 py-2.5 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 text-sm sm:text-base">
                 Começar a Usar
             </button>
         </div>
@@ -1491,29 +1491,29 @@ const CreditsModal = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out">
-      <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
-        <div className="p-6 text-center">
-          <div className="flex justify-center items-center mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mb-5 shadow-lg">
-             <Award className="text-white" size={32} />
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 transition-opacity duration-300 ease-in-out">
+      <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl w-full max-w-xs sm:max-w-lg md:max-w-xl max-h-[95vh] overflow-y-auto transform transition-all duration-300 ease-in-out scale-95 opacity-0 animate-fade-in-scale">
+        <div className="p-4 sm:p-6 text-center">
+          <div className="flex justify-center items-center mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mb-4 sm:mb-5 shadow-lg">
+             <Award className="text-white w-6 h-6 sm:w-8 sm:h-8" />
           </div>
-          <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-50 mb-2">Créditos</h1>
-          <p className="text-neutral-600 dark:text-neutral-300 mb-6">Uma ferramenta de suporte inteligente desenvolvida com dedicação para o time de Mercado Livre e Mercado Pago.</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-50 mb-2">Créditos</h1>
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 mb-4 sm:mb-6">Uma ferramenta de suporte inteligente desenvolvida com dedicação para o time de Mercado Livre e Mercado Pago.</p>
           
-          <div className="space-y-4 text-left my-6">
-            <div className="mb-4">
-              <h3 className="font-semibold text-neutral-700 dark:text-neutral-200 mb-3 flex items-center justify-center">
-                <User className="mr-2" size={18} />
+          <div className="space-y-3 sm:space-y-4 text-left my-4 sm:my-6">
+            <div className="mb-3 sm:mb-4">
+              <h3 className="font-semibold text-neutral-700 dark:text-neutral-200 mb-2 sm:mb-3 flex items-center justify-center text-sm sm:text-base">
+                <User className="mr-2 w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 Equipe de Desenvolvimento
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {teamMembers.map((member, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
-                    <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 rounded-full">
-                      <member.icon className="text-blue-600 dark:text-blue-400" size={16} />
+                  <div key={index} className="flex items-center space-x-3 sm:space-x-4 p-2.5 sm:p-3 bg-neutral-50 dark:bg-neutral-700/50 rounded-lg">
+                    <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 rounded-full">
+                      <member.icon className="text-blue-600 dark:text-blue-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
-                    <div className="flex-grow">
-                      <h4 className="font-semibold text-neutral-700 dark:text-neutral-200 text-sm">{member.name}</h4>
+                    <div className="flex-grow min-w-0">
+                      <h4 className="font-semibold text-neutral-700 dark:text-neutral-200 text-xs sm:text-sm truncate">{member.name}</h4>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">{member.role}</p>
                     </div>
                     {member.github && (
@@ -1521,9 +1521,9 @@ const CreditsModal = ({ isOpen, onClose }) => {
                         href={member.github} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex-shrink-0"
                       >
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
                         </svg>
                       </a>
@@ -1533,28 +1533,28 @@ const CreditsModal = ({ isOpen, onClose }) => {
               </div>
             </div>
             
-            <div className="flex items-start space-x-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-100 dark:border-blue-800/30">
-              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 rounded-full">
-                <Building className="text-blue-600 dark:text-blue-400" size={18} />
+            <div className="flex items-start space-x-3 sm:space-x-4 p-2.5 sm:p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-100 dark:border-blue-800/30">
+              <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/40 rounded-full">
+                <Building className="text-blue-600 dark:text-blue-400 w-3.5 h-3.5 sm:w-4.5 sm:h-4.5" />
               </div>
               <div>
-                <h3 className="font-semibold text-neutral-700 dark:text-neutral-200">Apoio e Colaboração</h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-300">Time de Mercado Livre e Mercado Pago</p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Concentrix</p>
+                <h3 className="font-semibold text-neutral-700 dark:text-neutral-200 text-sm sm:text-base">Apoio e Colaboração</h3>
+                <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300">Time de Mercado Livre e Mercado Pago</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Concentrix - Parceiro oficial</p>
               </div>
             </div>
 
             <div className="text-center pt-2">
               <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                Versão Oficial 1.0.0 • Desenvolvido com ❤️ para melhorar o atendimento
+                Versão 1.0.0 • Desenvolvido com ❤️ para melhorar o atendimento
               </p>
             </div>
           </div>
         </div>
-        <div className="px-6 py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-neutral-50 dark:bg-neutral-800/50 border-t border-neutral-200 dark:border-neutral-700 rounded-b-2xl">
             <button onClick={onClose}
-                className="w-full flex justify-center items-center px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 shadow-md">
-                <Award className="mr-2" size={16} />
+                className="w-full flex justify-center items-center px-4 py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 shadow-md text-sm sm:text-base">
+                <Award className="mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 Fechar
             </button>
         </div>
