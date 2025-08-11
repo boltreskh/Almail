@@ -1540,7 +1540,7 @@ const CreditsModal = ({ isOpen, onClose }) => {
               <div>
                 <h3 className="font-semibold text-neutral-700 dark:text-neutral-200 text-sm sm:text-base">Apoio e Colaboração</h3>
                 <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-300">Time de Mercado Livre e Mercado Pago</p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Concentrix - Parceiro oficial</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">Concentrix</p>
               </div>
             </div>
 

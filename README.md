@@ -52,7 +52,7 @@
 - ESLint integration for code quality
 - Modern browser compatibility
 
-## �️ Technologies
+## 🏢 Technologies
 
 ### **Frontend Stack**
 * **React 18** - Modern component-based architecture
@@ -193,7 +193,7 @@ MIT License. See `LICENSE` file for details.
 - Integração ESLint para qualidade de código
 - Compatibilidade com navegadores modernos
 
-## �️ Tecnologias
+## 🏢 Tecnologias
 
 ### **Stack Frontend**
 * **React 18** - Arquitetura moderna baseada em componentes
