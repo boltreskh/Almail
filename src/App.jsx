@@ -1487,7 +1487,7 @@ const CreditsModal = ({ isOpen, onClose }) => {
   const teamMembers = [
     { name: "Lucas de Sousa Carneiro", role: "Desenvolvedor do Prompt", icon: User },
     { name: "Lucas Candido Luiz", role: "Desenvolvedor Fullstack", icon: BrainCircuit, github: "https://github.com/boltreskh" },
-    { name: "Vitória de Freitas Pinheiro", role: "Desenvolvedora do Prompt", icon: Building }
+    { name: "Vitória de Freitas Pinheiro", role: "Desenvolvedora do Prompt", icon: User }
   ];
 
   return (
@@ -1546,7 +1546,7 @@ const CreditsModal = ({ isOpen, onClose }) => {
 
             <div className="text-center pt-2">
               <p className="text-xs text-neutral-400 dark:text-neutral-500">
-                Versão 1.0.0 • Desenvolvido com ❤️ para melhorar o atendimento
+                Versão Oficial 1.0.0 • Desenvolvido com ❤️ para melhorar o atendimento
               </p>
             </div>
           </div>
