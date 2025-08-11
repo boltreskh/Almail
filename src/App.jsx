@@ -488,29 +488,31 @@ const MessageInput = ({ onSendMessage, isLoading }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-3xl lg:max-w-[900px] mx-auto">
-      <div className="flex items-end bg-neutral-100 dark:bg-neutral-800/70 rounded-full px-2.5 py-2 sm:px-3 sm:py-2.5 shadow-lg ring-1 ring-neutral-200 dark:ring-neutral-700/60 focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-500 transition-all duration-200">
-        <button type="button" onClick={() => fileInputRef.current && fileInputRef.current.click()} className="p-2 sm:p-2.5 text-neutral-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-150" title="Anexar arquivo" disabled={isLoading}>
+      <div className="flex items-center bg-neutral-100 dark:bg-neutral-800/70 rounded-full px-2.5 py-2 sm:px-3 sm:py-2.5 shadow-lg ring-1 ring-neutral-200 dark:ring-neutral-700/60 focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-500 transition-all duration-200">
+        <button type="button" onClick={() => fileInputRef.current && fileInputRef.current.click()} className="flex-shrink-0 p-2 sm:p-2.5 text-neutral-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-150" title="Anexar arquivo" disabled={isLoading}>
           <Paperclip size={19} />
         </button>
         <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".txt,.md,.js,.json,.py,.html,.css,.csv,.log,text/plain,text/markdown,text/javascript,application/json,text/x-python,text/html,text/css,text/csv" />
-        <textarea
-          ref={textareaRef}
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Digite sua mensagem aqui..."
-          rows="1"
-          className="flex-grow mx-2 px-2.5 py-2 bg-transparent text-neutral-800 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none resize-none max-h-[144px] overflow-y-auto text-base leading-relaxed custom-scrollbar"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e);
-            }
-          }}
-          disabled={isLoading}
-        />
+        <div className="flex-grow mx-2 relative">
+          <textarea
+            ref={textareaRef}
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Digite sua mensagem aqui..."
+            rows="1"
+            className="w-full px-2.5 py-2 bg-transparent text-neutral-800 dark:text-neutral-100 placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none resize-none max-h-[144px] overflow-y-auto text-base leading-relaxed custom-scrollbar"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+            disabled={isLoading}
+          />
+        </div>
         <button
           type="submit"
-          className={`p-2 sm:p-2.5 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-100 dark:focus:ring-offset-neutral-800 focus:ring-blue-500
+          className={`flex-shrink-0 p-2 sm:p-2.5 rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-100 dark:focus:ring-offset-neutral-800 focus:ring-blue-500
             ${isLoading || !input.trim()
               ? 'bg-neutral-200 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed scale-95'
               : 'bg-blue-600 hover:bg-blue-700 text-white transform hover:scale-105'
